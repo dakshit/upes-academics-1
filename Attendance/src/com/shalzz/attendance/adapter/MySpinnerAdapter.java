@@ -40,7 +40,7 @@ public class MySpinnerAdapter extends BaseAdapter {
         LayoutInflater mInflater = (LayoutInflater)
                 mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         
-    	if ( position == 0) {
+    	if ( position == 2) {
             convertView = mInflater.inflate(R.layout.spinner_header, null);
         }
     	else  

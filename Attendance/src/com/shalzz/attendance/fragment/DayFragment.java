@@ -20,20 +20,18 @@
 package com.shalzz.attendance.fragment;
 
 import java.util.Date;
-import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
+import com.shalzz.attendance.adapter.DayListAdapter;
 import com.shalzz.attendance.model.Day;
-import com.shalzz.attendance.model.Period;
 import com.shalzz.attendance.wrapper.DateHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -42,7 +40,6 @@ public class DayFragment extends SherlockListFragment {
 	
 	private Context mContext;
 	private Date date = null;
-	public static final String ARG_WEEKDAY = "weekday";
 	public static final String ARG_DATE = "date";
 	
 	@Override
@@ -75,15 +72,7 @@ public class DayFragment extends SherlockListFragment {
 		if(weekday.equals("sun"))
 			return;
 		Day day = db.getDay(weekday);
-		String PeriodArray[] = new String[20]; ;
-		List<Period> periods = day.getAllPeriods();
-		int i =0;
-		for(Period period : periods)
-		{
-			PeriodArray[i]= period.getName();
-			++i;
-		}
-		setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,PeriodArray ));
+		setListAdapter(new DayListAdapter(mContext, day));
 	}
 
 	public String getWeekDay() {

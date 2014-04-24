@@ -75,12 +75,8 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 
 	@Override
 	public View getContentView(int position, View convertView, ViewGroup parent) {
-		View view =convertView;
-		if(view==null)
-		{
-			LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(R.layout.list_child_item, null);
-		}
+		LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.list_child_item, null);
 
 		TextView tvAbsent = (TextView) view.findViewById(R.id.tvAbsent);
 		TextView tvProjected = (TextView) view.findViewById(R.id.tvProjected);
@@ -109,6 +105,9 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 				break;
 			case 1:
 				tvReach.setText("Attend 1 more class to reach 67%");
+				tvReach.setTextColor(myContext.getResources().getColor(R.color.holo_orange_light));
+				tvReach.setVisibility(View.VISIBLE);
+				ivAlert.setVisibility(View.VISIBLE);
 				break;
 			default:
 				tvReach.setText("Attend "+x+" more classes to reach 67%");
@@ -128,6 +127,9 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 				break;
 			case 1:
 				tvReach.setText("Attend 1 more class to reach 75%");
+				tvReach.setTextColor(myContext.getResources().getColor(R.color.holo_orange_light));
+				tvReach.setVisibility(View.VISIBLE);
+				ivAlert.setVisibility(View.VISIBLE);
 				break;
 			default:
 				tvReach.setText("Attend "+x+" more classes to reach 75%");

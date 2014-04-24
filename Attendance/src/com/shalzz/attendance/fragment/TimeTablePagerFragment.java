@@ -56,7 +56,7 @@ import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class TimeTablePagerFragment extends SherlockFragment{
+public class TimeTablePagerFragment extends SherlockFragment {
 
 	private TimeTablePagerAdapter mTimeTablePagerAdapter;
 	private ViewPager mViewPager;
@@ -89,7 +89,7 @@ public class TimeTablePagerFragment extends SherlockFragment{
 					return true;
 				}
 
-				return true;
+				return false;
 			}
 		};
 
@@ -119,8 +119,10 @@ public class TimeTablePagerFragment extends SherlockFragment{
 			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
 			misc.showProgressDialog("Loading your TimeTable...", true, pdCancelListener());
 		}
-		else
+		else {
 			scrollToToday();
+			persistCurrentTab();
+		}
 		super.onStart();
 	}
 
@@ -176,7 +178,7 @@ public class TimeTablePagerFragment extends SherlockFragment{
 	}
 
 	private void scrollToToday() {
-		mViewPager.setCurrentItem(14, true);
+		mViewPager.setCurrentItem(15, true);
 	}
 
 	private void persistCurrentTab() {
