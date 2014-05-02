@@ -50,4 +50,8 @@ public class TimeTablePagerAdapter extends FragmentStatePagerAdapter {
 	public Collection<DayFragment> getActiveFragments() {
 		return activeFragments.values();
 	}
+	
+	public DayFragment getFragment(int position) {
+		return activeFragments.get(position);
+	}
 }

@@ -25,13 +25,13 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.SpinnerAdapter;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -65,6 +65,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	private Miscellaneous misc;
 	private ActionBar actionbar;
 	private static final String PREFERENCE_ACTIVATED_TAB = "ActivatedTab";
+	private MySpinnerAdapter mSpinnerAdapter ;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,23 +74,25 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		actionbar= getSherlockActivity().getSupportActionBar();
 		actionbar.setDisplayShowTitleEnabled(false);
 
-		SpinnerAdapter mSpinnerAdapter = new MySpinnerAdapter(mContext);
+		mSpinnerAdapter = new MySpinnerAdapter(mContext);
 		
 		OnNavigationListener mOnNavigationListener = new OnNavigationListener() {
 
 			@Override
 			public boolean onNavigationItemSelected(int position, long itemId) {
 				if(position == 0) {
-
+					actionbar.setSelectedNavigationItem(2);
+					return true;
 				}
 				else if (position == 1) {
 					scrollToToday();
 					persistCurrentTab();
 					Log.d(myTag,"Scrolling to Today");
+					actionbar.setSelectedNavigationItem(2);
 					return true;
 				}
 
-				return false;
+				return true;
 			}
 		};
 
@@ -108,6 +111,17 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		mTimeTablePagerAdapter = new TimeTablePagerAdapter(getSherlockActivity().getSupportFragmentManager());
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);
 		mViewPager.setAdapter(mTimeTablePagerAdapter);
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			
+		    public void onPageScrollStateChanged(int state) {}
+		    
+		    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+		        updateSpinner();
+		        }
+
+		    public void onPageSelected(int position) {}
+		});
+		
 		return view;
 	}
 
@@ -176,6 +190,11 @@ public class TimeTablePagerFragment extends SherlockFragment {
 			fragment.setTimeTable();
 		}
 	}
+	
+	private void updateSpinner() {
+		DayFragment fragment = mTimeTablePagerAdapter.getFragment(mViewPager.getCurrentItem());
+		mSpinnerAdapter.setDate(fragment.getDate());
+	}
 
 	private void scrollToToday() {
 		mViewPager.setCurrentItem(15, true);
@@ -218,7 +237,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 				DataAssembler.parseTimeTable(response,mContext);
 				misc.dismissProgressDialog();
 				updateFragments();
-				reloadCurrentTab();
+				scrollToToday();
 				Log.i(myTag,"Sync complete");
 			}
 		};
@@ -230,7 +249,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 			public void onErrorResponse(VolleyError error) {
 				misc.dismissProgressDialog();
 				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
-				Miscellaneous.makeCroutonInfinity((Activity)mContext, msg);
+				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 				Log.e(myTag, msg);
 			}
 		};

@@ -68,6 +68,11 @@ public class MainActivity extends SherlockFragmentActivity {
 		mNavTitles = getResources().getStringArray(R.array.drawer_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+		
+		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Drawerheader = inflater.inflate(R.layout.drawer_header, null);
+		if(mDrawerList.getHeaderViewsCount()==0)
+			mDrawerList.addHeaderView(Drawerheader);
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -100,11 +105,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		// Set the drawer toggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		Drawerheader = inflater.inflate(R.layout.drawer_header, null);
-		if(mDrawerList.getHeaderViewsCount()==0)
-			mDrawerList.addHeaderView(Drawerheader);
 
 		if (savedInstanceState == null) {
 			// on first time display view for first nav item

@@ -36,6 +36,9 @@ import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Period;
 import com.shalzz.attendance.model.Subject;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
 public class DataAssembler {
 
 	private static String mTag = "Data Assembler";
@@ -63,7 +66,7 @@ public class DataAssembler {
 			// TODO: relogin
 			String msg ="It seems your session has expired.\nPlease Login again.";
 			if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-				Miscellaneous.makeCroutonInfinity((Activity)mContext, msg);
+				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 			Log.e(mTag,"Login Session Expired");
 		}
 		else if (tddata != null && tddata.size() > 0)
@@ -166,7 +169,7 @@ public class DataAssembler {
 		{
 			String msg ="It seems your session has expired.\nPlease Login again.";
 			if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-				Miscellaneous.makeCroutonInfinity((Activity)mContext, msg);
+				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 			Log.e(mTag,"Login Session Expired");
 		}
 		else if (thdata != null && thdata.size() > 0)

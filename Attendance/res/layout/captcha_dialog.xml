@@ -35,7 +35,7 @@
         android:gravity="center"
         android:hint="Captcha"
         android:imeOptions="flagNoExtractUi"
-        android:inputType="text|textNoSuggestions"
+        android:inputType="textVisiblePassword|textNoSuggestions"
         android:padding="10dp"
         android:singleLine="true" >
     </EditText>

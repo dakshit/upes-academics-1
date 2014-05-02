@@ -498,7 +498,7 @@ public abstract class ExpandableListItemAdapter<T> extends ArrayAdapter<T> imple
                     if (bottom > listViewHeight) {
                         final int top = v.getTop();
                         if (top > 0) {
-                            listView.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding, top), 0);
+                            listView.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding+20, top), 0);
                         }
                     }
                 }

@@ -78,7 +78,7 @@ public class DayFragment extends SherlockListFragment {
 	public String getWeekDay() {
 		if(date == null)
 			setDate();
-		return DateHelper.getWeekday(date);
+		return DateHelper.getTechnicalWeekday(date);
 	}
 	
 	public void setDate() {

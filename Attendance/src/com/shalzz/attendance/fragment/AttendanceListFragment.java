@@ -276,7 +276,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			public void onErrorResponse(VolleyError error) {
 				misc.dismissProgressDialog();
 				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
-				Miscellaneous.makeCroutonInfinity((Activity)mContext, msg);
+				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 				Log.e(myTag, msg);
 			}
 		};

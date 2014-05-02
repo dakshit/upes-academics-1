@@ -8,14 +8,22 @@ import java.util.Locale;
 
 public class DateHelper {
 	
-	private static String weekdays[] = {"sun","mon","tue","wed","thur","fri","sat"};
-	private static DateFormat technicalDateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.US);
+	private static String tWeekdays[] = {"sun","mon","tue","wed","thur","fri","sat"};
+	private static String pWeekdays[] = {"Sunday","Monday","Tuesday","Wednesday","Thusday","Friday","Saturday"};
+	private static DateFormat technicalDateFormat = new SimpleDateFormat("dd/MM/yyyy",Locale.US);
 	
-	public static String getWeekday(Date date) {
+	public static String getTechnicalWeekday(Date date) {
 		Calendar today = Calendar.getInstance();
 		today.setTime(date);
 		int weekday = today.get(Calendar.DAY_OF_WEEK);
-		return weekdays[weekday-1];
+		return tWeekdays[weekday-1];
+	}
+
+	public static String getProperWeekday(Date date) {
+		Calendar today = Calendar.getInstance();
+		today.setTime(date);
+		int weekday = today.get(Calendar.DAY_OF_WEEK);
+		return pWeekdays[weekday-1];
 	}
 	
 	public static Date getToDay() {

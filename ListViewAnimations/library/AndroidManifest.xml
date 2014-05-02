@@ -1,1 +1,3 @@
-<manifest package="com.nhaarman.listviewanimations" />
+<manifest package="com.nhaarman.listviewanimations" xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="18"/>
+</manifest>
