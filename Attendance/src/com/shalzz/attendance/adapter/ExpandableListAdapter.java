@@ -76,7 +76,18 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 	@Override
 	public View getContentView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.list_child_item, null);
+		View view ;
+
+		// Check if can recycle the view
+		if (convertView == null || ((Integer) convertView.getTag()).intValue()!= R.layout.spinner_header+position) 
+		{
+			view = inflater.inflate(R.layout.list_child_item, parent, false);
+			// Set the tag to make sure you can recycle it when you get it as a convert view
+			view.setTag(Integer.valueOf(R.layout.spinner_header+position));
+		}
+		else {
+			view = convertView;
+		}
 
 		TextView tvAbsent = (TextView) view.findViewById(R.id.tvAbsent);
 		TextView tvProjected = (TextView) view.findViewById(R.id.tvProjected);
