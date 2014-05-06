@@ -65,7 +65,7 @@ public class MySpinnerAdapter extends BaseAdapter {
         TextView date = (TextView) v.findViewById(R.id.spinner_list_subtitle);
         
         weekDay.setText(DateHelper.getProperWeekday(mDate));
-        date.setText(DateHelper.formatToTechnicalFormat(mDate));
+        date.setText(DateHelper.formatToProperFormat(mDate));
 
 		return v;
 	}
@@ -83,7 +83,8 @@ public class MySpinnerAdapter extends BaseAdapter {
 	
 
     public void setDate(Date date) {
-        mDate = date;
+    	if(date!=null)
+    		mDate = date;
         notifyDataSetChanged();
     }
 }
