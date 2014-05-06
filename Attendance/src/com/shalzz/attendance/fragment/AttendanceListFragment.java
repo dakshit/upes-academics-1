@@ -72,6 +72,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private Miscellaneous misc;
 	private String myTag ;
 	Object syncObserverHandle;
+	ExpandableListAdapter mAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -133,7 +134,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			else 
 				subjects = db.getAllSubjects();
 			ListView listview = getListView();
-			ExpandableListAdapter mAdapter = new ExpandableListAdapter(mContext,subjects);
+			mAdapter = new ExpandableListAdapter(mContext,subjects);
 			SwingRightInAnimationAdapter animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
 			animationAdapter.setAbsListView(listview);
 			animationAdapter.setInitialDelayMillis(500);

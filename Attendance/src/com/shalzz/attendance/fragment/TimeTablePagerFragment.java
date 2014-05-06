@@ -19,6 +19,8 @@
 
 package com.shalzz.attendance.fragment;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,8 +36,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -80,19 +82,18 @@ public class TimeTablePagerFragment extends SherlockFragment {
 
 			@Override
 			public boolean onNavigationItemSelected(int position, long itemId) {
+				Log.d(myTag,""+itemId);
 				if(position == 0) {
-					actionbar.setSelectedNavigationItem(2);
-					return true;
+					return false;
 				}
 				else if (position == 1) {
 					scrollToToday();
 					persistCurrentTab();
 					Log.d(myTag,"Scrolling to Today");
-					actionbar.setSelectedNavigationItem(2);
-					return true;
+					return false;
 				}
 
-				return true;
+				return false;
 			}
 		};
 

@@ -39,7 +39,7 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 public class DayFragment extends SherlockListFragment {
 	
 	private Context mContext;
-	private Date date = null;
+	private Date mDate = new Date();
 	public static final String ARG_DATE = "date";
 	
 	@Override
@@ -76,17 +76,19 @@ public class DayFragment extends SherlockListFragment {
 	}
 
 	public String getWeekDay() {
-		if(date == null)
+		if(mDate == null)
 			setDate();
-		return DateHelper.getTechnicalWeekday(date);
+		return DateHelper.getTechnicalWeekday(mDate);
 	}
 	
 	public void setDate() {
-		date = (Date) getArguments().getSerializable(ARG_DATE);
+		Date date = (Date) getArguments().getSerializable(ARG_DATE);
+		if(date!=null)
+			mDate =date;
 	}
 	
 	public Date getDate() {
-		return date;
+		return mDate;
 	}
 	
 	@Override
