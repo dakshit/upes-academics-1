@@ -53,6 +53,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 	private ProgressBar pbar;
 	private EditText Captxt;
 	private Context mContext;
+	private String mTag = "Captcha Dialog";
 
 	// Use this instance of the interface to deliver action events
 	CaptchaDialogListener mListener;
@@ -195,7 +196,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 					view.setImageResource(errorImageResId);
 					String msg = MyVolleyErrorHelper.getMessage(error, mContext);
 					Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-					Log.e(getActivity().getClass().getName(), msg);
+					Log.e(mTag, msg);
 				}
 			}
 
@@ -206,7 +207,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 					view.setVisibility(View.VISIBLE);
 					view.setImageBitmap(response.getBitmap());
 					view.setScaleType(ImageView.ScaleType.FIT_XY);
-					Log.i(LoginActivity.class.getName(), "Loaded captcha image.");
+					Log.i(mTag, "Loaded captcha image.");
 				} else if (defaultImageResId != 0) {
 					pbar.setVisibility(ProgressBar.VISIBLE);
 					view.setVisibility(View.INVISIBLE);
