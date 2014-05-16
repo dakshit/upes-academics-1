@@ -19,8 +19,6 @@
 
 package com.shalzz.attendance.fragment;
 
-import java.util.Date;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -132,7 +130,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		if(db.getRowCountofTimeTable()<=0) {
 			MySyncManager.addPeriodicSync(mContext);
 			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
-			misc.showProgressDialog("Loading your TimeTable...", true, pdCancelListener());
+			misc.showProgressDialog("Loading your TimeTable...","Loading", true, pdCancelListener());
 		}
 		else {
 			scrollToToday();
@@ -180,7 +178,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		{
 			persistCurrentTab();
 			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
-			misc.showProgressDialog("Refreshing your TimeTable...", true, pdCancelListener());
+			misc.showProgressDialog("Refreshing your TimeTable...","Refreshing", true, pdCancelListener());
 		}
 		return super.onOptionsItemSelected(item);
 	}

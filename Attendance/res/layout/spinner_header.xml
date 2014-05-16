@@ -26,7 +26,6 @@
         android:singleLine="true"
         android:text="Monday"
         android:textSize="@dimen/action_bar_title_text_size"
-        android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textColor="@color/white"/>
 
 </LinearLayout>

@@ -112,7 +112,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 		if(db.getRowCount()<=0) {
 			MySyncManager.addPeriodicSync(mContext);
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
-			misc.showProgressDialog("Loading your attendance...", true, pdCancelListener());
+			misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
 		}
 		else
 			setAttendance();
@@ -255,7 +255,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 		else if(item.getItemId() == R.id.menu_refresh)
 		{
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
-			misc.showProgressDialog("Refreshing your attendance...", true, pdCancelListener());
+			misc.showProgressDialog("Refreshing your attendance...","Refreshing",true, pdCancelListener());
 		}
 		return super.onOptionsItemSelected(item);
 	}

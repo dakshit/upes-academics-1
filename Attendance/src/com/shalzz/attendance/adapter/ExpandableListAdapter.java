@@ -39,7 +39,8 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 	private List<Subject> mSubjects;
 
 	public ExpandableListAdapter(Context context,List<Subject> subjects) {
-		super(context,R.layout.card, R.id.activity_expandablelistitem_title, R.id.activity_expandablelistitem_content, subjects);
+		super(context, subjects);
+		// super(context,R.layout.card, R.id.activity_expandablelistitem_title, R.id.activity_expandablelistitem_content, subjects);
 		myContext = context;
 		mSubjects = subjects;
 	}
@@ -56,7 +57,7 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 		else if(percent<75.0) {
 			convertView = inflater.inflate(R.layout.list_group_item_yellow,null);
 		}
-		else{
+		else {
 			convertView = inflater.inflate(R.layout.list_group_item_green,null);
 		}
 
@@ -82,6 +83,7 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 		if (convertView == null || ((Integer) convertView.getTag()).intValue()!= R.layout.spinner_header+position) 
 		{
 			view = inflater.inflate(R.layout.list_child_item, parent, false);
+			// view = parent.findViewById(R.id.activity_expandablelistitem_content);
 			// Set the tag to make sure you can recycle it when you get it as a convert view
 			view.setTag(Integer.valueOf(R.layout.spinner_header+position));
 		}
@@ -172,5 +174,9 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 			}
 		}
 		return view;
+	}
+	
+	public void dataSetChanged() {
+		notifyDataSetChanged();
 	}
 }

@@ -18,11 +18,12 @@ public class MySpinnerAdapter extends BaseAdapter {
 	private Context mContext;
 	private String[] dropDownList;
 	private final LayoutInflater mInflater;
-	private Date mDate = DateHelper.getToDay();
+	private Date mDate;
 
 	public MySpinnerAdapter(Context context){
 		// initialise
 		mContext = context;
+		mDate = new Date();
 		dropDownList = mContext.getResources().getStringArray(R.array.action_list);
 		mInflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 	}

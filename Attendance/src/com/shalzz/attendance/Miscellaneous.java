@@ -115,6 +115,28 @@ public class Miscellaneous {
 		}
 		pd.show();
 	}
+	
+	/**
+	 * Displays the default Progress Dialog.
+	 * @param mMessage
+	 * @param mTitle
+	 */
+	public void showProgressDialog(String mMessage,String mTitle,boolean cancable, DialogInterface.OnCancelListener progressDialogCancelListener) {
+		// lazy initialise
+		if(pd==null)
+		{
+			// Setup the Progress Dialog
+			pd = new ProgressDialog(mContext);
+			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pd.setMessage(mMessage);
+			pd.setTitle(mTitle);
+			pd.setIndeterminate(true);
+			pd.setCancelable(cancable);
+			pd.setCanceledOnTouchOutside(false);
+			pd.setOnCancelListener(progressDialogCancelListener);
+		}
+		pd.show();
+	}
 
 	/**
 	 * Dismisses the Progress Dialog.
