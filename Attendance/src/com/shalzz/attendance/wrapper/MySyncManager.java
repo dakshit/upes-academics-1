@@ -43,9 +43,9 @@ public class MySyncManager {
 	 *
 	 * @param context The application context
 	 */
-	public static Account CreateSyncAccount(Context context) {
+	public static Account CreateSyncAccount(Context context, String accountName) {
 		// Create the account type and default account
-		Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
+		Account newAccount = new Account(accountName, ACCOUNT_TYPE);
 		// Get an instance of the Android account manager
 		AccountManager accountManager =
 				(AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -76,7 +76,7 @@ public class MySyncManager {
 
 	}	
 	
-	public static void addPeriodicSync(Context mContext) {
+	public static void addPeriodicSync(Context mContext,String accountName) {
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 		final boolean sync = sharedPref.getBoolean("data_sync", false);
 		Log.d(mTag,"Enable sync: "+sync);
@@ -86,7 +86,7 @@ public class MySyncManager {
 		Account mAccount = getSyncAccount(mContext);
 		
 		if(mAccount==null)
-			mAccount = CreateSyncAccount(mContext);	
+			mAccount = CreateSyncAccount(mContext,accountName);	
 		
 		if(sync) 
 		{	// Create the dummy account
