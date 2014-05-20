@@ -45,5 +45,7 @@
         <item name="background">@drawable/ab_solid_myactionbar</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_myactionbar</item>
     </style>
+    
+    <style name="listViewActivatedStyle"/>
 
 </resources>

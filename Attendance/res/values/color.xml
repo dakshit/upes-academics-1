@@ -43,6 +43,7 @@
     <color name="white">#ffffff</color>
     <color name="list_item_title">#fff</color>
     <color name="list_background">#303030</color>
-    <color name="list_background_pressed">#25AAE1</color>
+    <color name="list_background_pressed">#2093C3</color>
+    <color name="list_background_selected">#60C8F3</color>
     <color name="list_divider">#272727</color>
 </resources>
