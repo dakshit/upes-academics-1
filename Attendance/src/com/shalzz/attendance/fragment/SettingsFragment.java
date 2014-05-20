@@ -19,6 +19,7 @@
 
 package com.shalzz.attendance.fragment;
 
+import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.FeedbackUtils;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.wrapper.MySyncManager;
@@ -83,9 +84,10 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             connectionPref.setSummary(connectionPref.getEntry());
         }
         else if(key.equals("data_sync_interval")) {
+        	DatabaseHandler db = new DatabaseHandler(mContext);
             ListPreference connectionPref = (ListPreference) findPreference(key);
             connectionPref.setSummary(connectionPref.getEntry());
-    		MySyncManager.addPeriodicSync(mContext);
+    		MySyncManager.addPeriodicSync(mContext,""+db.getListHeader().getSAPId());
         }
     }
 

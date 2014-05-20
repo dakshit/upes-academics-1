@@ -159,6 +159,7 @@ public class UserAccount {
 
 					misc.dismissProgressDialog();
 					Intent ourIntent = new Intent(mContext, MainActivity.class);
+					ourIntent.putExtra("SAPID", mUsername);
 					mContext.startActivity(ourIntent);
 					((Activity) mContext).finish();
 				}

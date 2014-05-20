@@ -83,7 +83,7 @@ public class DayFragment extends SherlockListFragment {
 	
 	public void setDate() {
 		Date date = (Date) getArguments().getSerializable(ARG_DATE);
-		if(date!=null)
+		if(date!=null) // Can happen because of asynchronous fragment transactions.
 			mDate = date;
 	}
 	

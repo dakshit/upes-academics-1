@@ -22,6 +22,8 @@ package com.shalzz.attendance.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,26 +32,34 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
+import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.model.Subject;
 
 public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 
-	private Context myContext;
+	private Context mContext;
 	private List<Subject> mSubjects;
 
 	public ExpandableListAdapter(Context context,List<Subject> subjects) {
-		super(context, subjects);
+		super(context,subjects);
 		// super(context,R.layout.card, R.id.activity_expandablelistitem_title, R.id.activity_expandablelistitem_content, subjects);
-		myContext = context;
-		mSubjects = subjects;
+		mContext = context;
+		DatabaseHandler db = new DatabaseHandler(mContext);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+		boolean alpha = sharedPref.getBoolean("alpha_subject_order", true);
+		
+		if(alpha) 
+			mSubjects = db.getAllOrderedSubjects();
+		else 
+			mSubjects = db.getAllSubjects();
 	}
 
 	@Override
 	public View getTitleView(int position, View convertView, ViewGroup parent) {
 
 		Float percent = mSubjects.get(position).getPercentage();
-		LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if(percent<67.0) {
 			convertView = inflater.inflate(R.layout.list_group_item_amber,null);
@@ -76,7 +86,7 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 
 	@Override
 	public View getContentView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view ;
 
 		// Check if can recycle the view
@@ -118,13 +128,13 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 				break;
 			case 1:
 				tvReach.setText("Attend 1 more class to reach 67%");
-				tvReach.setTextColor(myContext.getResources().getColor(R.color.holo_orange_light));
+				tvReach.setTextColor(mContext.getResources().getColor(R.color.holo_orange_light));
 				tvReach.setVisibility(View.VISIBLE);
 				ivAlert.setVisibility(View.VISIBLE);
 				break;
 			default:
 				tvReach.setText("Attend "+x+" more classes to reach 67%");
-				tvReach.setTextColor(myContext.getResources().getColor(R.color.holo_orange_light));
+				tvReach.setTextColor(mContext.getResources().getColor(R.color.holo_orange_light));
 				tvReach.setVisibility(View.VISIBLE);
 				ivAlert.setVisibility(View.VISIBLE);
 				break;
@@ -140,13 +150,13 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 				break;
 			case 1:
 				tvReach.setText("Attend 1 more class to reach 75%");
-				tvReach.setTextColor(myContext.getResources().getColor(R.color.holo_orange_light));
+				tvReach.setTextColor(mContext.getResources().getColor(R.color.holo_orange_light));
 				tvReach.setVisibility(View.VISIBLE);
 				ivAlert.setVisibility(View.VISIBLE);
 				break;
 			default:
 				tvReach.setText("Attend "+x+" more classes to reach 75%");
-				tvReach.setTextColor(myContext.getResources().getColor(R.color.holo_orange_light));
+				tvReach.setTextColor(mContext.getResources().getColor(R.color.holo_orange_light));
 				tvReach.setVisibility(View.VISIBLE);
 				ivAlert.setVisibility(View.VISIBLE);
 				break;
@@ -161,22 +171,18 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 				break;
 			case 1:
 				tvReach.setText("You can safely miss 1 class");
-				tvReach.setTextColor(myContext.getResources().getColor(R.color.holo_green_light));
+				tvReach.setTextColor(mContext.getResources().getColor(R.color.holo_green_light));
 				tvReach.setVisibility(View.VISIBLE);
 				ivAlert.setVisibility(View.GONE);
 				break;
 			default:
 				tvReach.setText("You can safely miss "+x+" classes");
-				tvReach.setTextColor(myContext.getResources().getColor(R.color.holo_green_light));
+				tvReach.setTextColor(mContext.getResources().getColor(R.color.holo_green_light));
 				tvReach.setVisibility(View.VISIBLE);
 				ivAlert.setVisibility(View.GONE);
 				break;
 			}
 		}
 		return view;
-	}
-	
-	public void dataSetChanged() {
-		notifyDataSetChanged();
 	}
 }

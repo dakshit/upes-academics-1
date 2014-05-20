@@ -71,8 +71,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private Context mContext;
 	private Miscellaneous misc;
 	private String myTag ;
-	Object syncObserverHandle;
-	ExpandableListAdapter mAdapter;
+	private ExpandableListAdapter mAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +109,8 @@ public class AttendanceListFragment extends SherlockListFragment{
 	public void onStart() {
 		DatabaseHandler db = new DatabaseHandler(mContext);
 		if(db.getRowCount()<=0) {
-			MySyncManager.addPeriodicSync(mContext);
+			String SAPID = getSherlockActivity().getIntent().getExtras().getString("SAPID");
+			MySyncManager.addPeriodicSync(mContext,SAPID);
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
 			misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
 		}
@@ -134,11 +134,15 @@ public class AttendanceListFragment extends SherlockListFragment{
 			else 
 				subjects = db.getAllSubjects();
 			ListView listview = getListView();
+			if(mAdapter==null) {
 			mAdapter = new ExpandableListAdapter(mContext,subjects);
 			SwingRightInAnimationAdapter animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
 			animationAdapter.setAbsListView(listview);
 			animationAdapter.setInitialDelayMillis(500);
 			listview.setAdapter(animationAdapter);
+			} else {
+				mAdapter.notifyDataSetChanged();
+			}
 
 			mAdapter.setLimit(expandLimit);
 		}
@@ -285,7 +289,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 
 	@Override
 	public void onResume() {
-		setAttendance();
+		//mAdapter.notifyDataSetChanged();
 		super.onResume();
 	}
 

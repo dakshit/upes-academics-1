@@ -20,6 +20,7 @@
 package com.shalzz.attendance.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -41,8 +42,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.fragment.AttendanceListFragment;
-import com.shalzz.attendance.fragment.TimeTablePagerFragment;
 import com.shalzz.attendance.fragment.SettingsFragment;
+import com.shalzz.attendance.fragment.TimeTablePagerFragment;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.wrapper.MyVolley;
 
@@ -50,7 +51,7 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class MainActivity extends SherlockFragmentActivity {
 
-	private String myTag = getClass().getName();
+	private String mTag = "Main Activity";
 	private String[] mNavTitles;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -58,7 +59,16 @@ public class MainActivity extends SherlockFragmentActivity {
 	private CharSequence mTitle;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private View Drawerheader;
+	private FragmentManager mFragmentManager;
 	public static MainActivity mActivity;
+	private static final String BUNDLE_KEY_PREVIOUS_FRAGMENT = "MainActivity.PREVIOUS_FRAGMENT";
+	private static final String BUNDLE_KEY_ACTIVATED_TAB = "Activated_Tab";
+	private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
+	private static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
+	private Boolean DEBUG_FRAGMENTS = false;
+
+	// Our custom poor-man's back stack which has only one entry at maximum.
+	private Fragment mPreviousFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +78,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		mNavTitles = getResources().getStringArray(R.array.drawer_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-		
+		mFragmentManager = getSupportFragmentManager();
+
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Drawerheader = inflater.inflate(R.layout.drawer_header, null);
 		if(mDrawerList.getHeaderViewsCount()==0)
@@ -106,37 +117,34 @@ public class MainActivity extends SherlockFragmentActivity {
 		// Set the drawer toggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		if (savedInstanceState == null) {
-			// on first time display view for first nav item
-			displayView(1);
-		}
-		
+		reloadCurrentFragment();
+
 		updateDrawerHeader();
 		mActivity =this;
-		
+
 		//getAttendance(); // TODO: needed?
 		//		
 		//		ViewTarget target = new ViewTarget(R.id.tvSubj,this);
 		//		PointTarget pt = new PointTarget(20, 50);
 		//		ShowcaseView.insertShowcaseView(pt, this, "Details", "Touch a Subject for more details about it");
 	}
-	
+
 	public static MainActivity getInstance(){
-		   return mActivity;
-		 }
+		return mActivity;
+	}
 
 	public void updateDrawerHeader() {
 		DatabaseHandler db = new DatabaseHandler(this);
 		if(db.getRowCount()>0) {
-		ListHeader listheader = db.getListHeader();
-		
-		TextView tv_name = (TextView) Drawerheader.findViewById(R.id.drawer_header_name);
-		TextView tv_course = (TextView) Drawerheader.findViewById(R.id.drawer_header_course);
-		tv_name.setText(listheader.getName());
-		tv_course.setText(listheader.getCourse());
+			ListHeader listheader = db.getListHeader();
+
+			TextView tv_name = (TextView) Drawerheader.findViewById(R.id.drawer_header_name);
+			TextView tv_course = (TextView) Drawerheader.findViewById(R.id.drawer_header_course);
+			tv_name.setText(listheader.getName());
+			tv_course.setText(listheader.getCourse());
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home)
@@ -161,11 +169,8 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void displayView(int position) {
 		// update the main content by replacing fragments
 		Fragment fragment = null;
-		FragmentManager manager = getSupportFragmentManager();
-		FragmentTransaction transaction = manager.beginTransaction();
 		switch (position) {
 		case 0:
-			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
 		case 1:
 			fragment = new AttendanceListFragment();
@@ -182,24 +187,51 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 
 		if (fragment != null) {
-			transaction.replace(R.id.frame_container, fragment);
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			transaction.commit();
-			
+			// show the fragment
+			showFragment(fragment);
+
 			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 			mDrawerTitle = mNavTitles[position-1];
 			//mDrawerList.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.list_background_pressed));
-			if(position == 2)
-				setTitle("");
-			else
-				setTitle(mDrawerTitle);
+			setTitle(mDrawerTitle);
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
-			Log.e(myTag, "Error in creating fragment");
+			Log.e(mTag, "Error in creating fragment");
 		}
 	}
+	
+	private void persistCurrentFragment() {
+		SharedPreferences settings = this.getSharedPreferences("SETTINGS", 0);
+		SharedPreferences.Editor editor = settings.edit();
+		int fragmentPosition = 1;
+		Fragment installed = getInstalledFragment();
+		
+		if(installed instanceof AttendanceListFragment) {
+			fragmentPosition = 1;
+		} else if(installed instanceof TimeTablePagerFragment) {
+			fragmentPosition = 2;
+		}		
+		
+		if (DEBUG_FRAGMENTS) {
+			Log.i(mTag, this + " showFragment: Saving fragment " + installed + " at position " + fragmentPosition);
+		}
+		
+		editor.putInt(PREFERENCE_ACTIVATED_FRAGMENT, fragmentPosition);
+		editor.commit();
+	}
+
+	private void reloadCurrentFragment() {
+		SharedPreferences settings = this.getSharedPreferences("SETTINGS", 0);
+		int fragmentPosition = settings.getInt(PREFERENCE_ACTIVATED_FRAGMENT, 1);
+		
+		if (DEBUG_FRAGMENTS) {
+			Log.i(mTag, this + " showFragment: Restoring fragment positon" + fragmentPosition);
+		}
+		
+		displayView(fragmentPosition);
+		}
 
 	@Override
 	public void setTitle(CharSequence title) {
@@ -207,12 +239,200 @@ public class MainActivity extends SherlockFragmentActivity {
 		getSupportActionBar().setTitle(mTitle);
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (mPreviousFragment != null) {
+			mFragmentManager.putFragment(outState,
+					BUNDLE_KEY_PREVIOUS_FRAGMENT, mPreviousFragment);
+			if (DEBUG_FRAGMENTS) {
+				Log.i(mTag, this + " showFragment: Saving fragment " + mPreviousFragment);
+			}
+		}
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+
+		int activatedTab = savedInstanceState.getInt(BUNDLE_KEY_ACTIVATED_TAB, 14);
+
+		if(isTimeTablePagerInstalled()) {
+			TimeTablePagerFragment fragment = (TimeTablePagerFragment) getInstalledFragment();
+			fragment.scrollToPosition(activatedTab);
+			
+			if (DEBUG_FRAGMENTS) {
+				Log.i(mTag, this.getClass().getName() + 
+						" onRestoreInstanceState: Restoring TimeTable Tab " + activatedTab);
+			}
+		}
+	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
 		mDrawerToggle.syncState();
+	}
+
+	/**
+	 * Push the installed fragment into our custom back stack (or optionally
+	 * {@link FragmentTransaction#remove} it) and {@link FragmentTransaction#add} {@code fragment}.
+	 *
+	 * @param fragment {@link Fragment} to be added.
+	 *
+	 */
+	private void showFragment(Fragment fragment) {
+		final FragmentTransaction ft = mFragmentManager.beginTransaction();
+		final Fragment installed = getInstalledFragment();
+
+		// return if the fragment is already installed 
+		if(isAttendanceListInstalled() && fragment instanceof AttendanceListFragment ||
+		   isTimeTablePagerInstalled() && fragment instanceof TimeTablePagerFragment ||
+		   isSettingsInstalled() && fragment instanceof SettingsFragment) {
+			
+			if (DEBUG_FRAGMENTS) {
+				Log.i(mTag, this + " showFragment: " + fragment + " is already installed");
+			}
+			return;
+		}
+
+		if (DEBUG_FRAGMENTS) {
+			Log.i(mTag, this + " backstack: [push] " + installed
+					+ " -> " + fragment);
+		}
+
+		if (mPreviousFragment != null) {
+			if (DEBUG_FRAGMENTS) {
+				Log.d(mTag, this + " showFragment: destroying previous fragment "
+						+ mPreviousFragment);
+			}
+			ft.remove(mPreviousFragment);
+			mPreviousFragment = null;
+		}
+
+		// Remove the current fragment or push it into the backstack.
+		if (installed != null) {
+			mPreviousFragment = installed;
+			if (DEBUG_FRAGMENTS) {
+				Log.d(mTag, this + " showFragment: detaching "
+						+ mPreviousFragment);
+			}
+			ft.detach(mPreviousFragment);
+		}
+		// Show the new one
+		if (DEBUG_FRAGMENTS) {
+			Log.d(mTag, this + " showFragment: replacing with " + fragment);
+		}
+		ft.replace(R.id.frame_container, fragment, FRAGMENT_TAG);
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		ft.commit();
+	}
+
+	@Override
+	public void onBackPressed() {
+		// Custom back stack
+		if (shouldPopFromBackStack(true)) {
+			if (DEBUG_FRAGMENTS) {
+				Log.d(mTag, this + " Back: Popping from back stack");
+			}
+			popFromBackStack();
+		}
+		else
+			super.onBackPressed();
+	}
+
+	/**
+	 * @param isSystemBackKey <code>true</code> if the system back key was pressed.
+	 *        <code>false</code> if it's caused by the "home" icon click on the action bar.
+	 * @return true if we should pop from our custom back stack.
+	 */
+	private boolean shouldPopFromBackStack(boolean isSystemBackKey) {
+
+		if (mPreviousFragment == null) {
+			return false; // Nothing in the back stack
+		}
+		final Fragment installed = getInstalledFragment();
+		if (installed == null) {
+			// If no fragment is installed right now, do nothing.
+			return false;
+		}
+		// Okay now we have 2 fragments; the one in the back stack and the one that's currently
+		// installed.
+		if (installed instanceof AttendanceListFragment ||
+				installed instanceof TimeTablePagerFragment) {
+			// These are the top level lists - never go back from here.
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Pop from our custom back stack.
+	 *
+	 * TODO Delay-call the whole method and use the synchronous transaction.
+	 */
+	private void popFromBackStack() {
+		if (mPreviousFragment == null) {
+			return;
+		}
+		final FragmentTransaction ft = mFragmentManager.beginTransaction();
+		final Fragment installed = getInstalledFragment();     
+		int position = 0 ;
+		Log.i(mTag, this + " backstack: [pop] " + installed + " -> "
+				+ mPreviousFragment);
+		ft.remove(installed);
+		// Restore listContext.
+		if (mPreviousFragment instanceof AttendanceListFragment) {
+			position = 1;
+		} else if (mPreviousFragment instanceof TimeTablePagerFragment) {
+			position = 2;
+		} else if (mPreviousFragment instanceof SettingsFragment) {
+			position = 3;
+		}
+		mDrawerList.setItemChecked(position, true);
+		mDrawerList.setSelection(position-1);
+		mDrawerTitle = mNavTitles[position-1];
+		setTitle(mDrawerTitle);
+
+		ft.attach(mPreviousFragment);
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+		mPreviousFragment = null;
+		ft.commit();
+		return;
+	}
+
+	/**
+	 * @return currently installed {@link Fragment} (1-pane has only one at most), or null if none
+	 *         exists.
+	 */
+	private Fragment getInstalledFragment() {
+		return mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
+	}
+
+	private boolean isAttendanceListInstalled() {
+		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
+		if (mFragment instanceof AttendanceListFragment) {
+			return true;
+		}
+		return false;   	
+	}
+	
+	private boolean isTimeTablePagerInstalled() {
+		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
+		if (mFragment instanceof TimeTablePagerFragment) {
+			return true;
+		}
+		return false;   	
+	}
+	
+	private boolean isSettingsInstalled() {
+		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
+		if (mFragment instanceof SettingsFragment) {
+			return true;
+		}
+		return false;   	
 	}
 
 	@Override
@@ -225,6 +445,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void onDestroy() {
 		MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.AttendanceListFragment");
 		Crouton.cancelAllCroutons();
+		persistCurrentFragment();
 		super.onDestroy();
 	}
 
