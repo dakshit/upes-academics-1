@@ -21,6 +21,22 @@ package com.shalzz.attendance.fragment;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -48,21 +64,6 @@ import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class AttendanceListFragment extends SherlockListFragment{
 
@@ -72,6 +73,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private Miscellaneous misc;
 	private String myTag ;
 	private ExpandableListAdapter mAdapter;
+	private SwingRightInAnimationAdapter animationAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -136,15 +138,17 @@ public class AttendanceListFragment extends SherlockListFragment{
 			ListView listview = getListView();
 			if(mAdapter==null) {
 			mAdapter = new ExpandableListAdapter(mContext,subjects);
-			SwingRightInAnimationAdapter animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
+			mAdapter.setLimit(expandLimit);
+			animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
 			animationAdapter.setAbsListView(listview);
-			animationAdapter.setInitialDelayMillis(500);
+			animationAdapter.setInitialDelayMillis(1000);
 			listview.setAdapter(animationAdapter);
 			} else {
+				mAdapter.setLimit(expandLimit);
 				mAdapter.notifyDataSetChanged();
+				animationAdapter.notifyDataSetChanged();
 			}
 
-			mAdapter.setLimit(expandLimit);
 		}
 	}
 
@@ -288,8 +292,15 @@ public class AttendanceListFragment extends SherlockListFragment{
 	}
 
 	@Override
+	public void onPause() {
+		Log.d(myTag, this + " paused");
+	};
+	
+	@Override
 	public void onResume() {
-		//mAdapter.notifyDataSetChanged();
+		Log.d(myTag, this + " resumed");
+		// mAdapter = null;
+		setAttendance();
 		super.onResume();
 	}
 

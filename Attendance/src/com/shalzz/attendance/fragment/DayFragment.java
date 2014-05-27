@@ -41,6 +41,7 @@ public class DayFragment extends SherlockListFragment {
 	private Context mContext;
 	private Date mDate;
 	public static final String ARG_DATE = "date";
+	private DayListAdapter mAdapter;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,8 @@ public class DayFragment extends SherlockListFragment {
 		if(weekday.equals("sun"))
 			return;
 		Day day = db.getDay(weekday);
-		setListAdapter(new DayListAdapter(mContext, day));
+		mAdapter = new DayListAdapter(mContext, day);
+		setListAdapter(mAdapter);
 	}
 
 	public String getWeekDay() {
@@ -89,6 +91,10 @@ public class DayFragment extends SherlockListFragment {
 	
 	public Date getDate() {
 		return mDate;
+	}
+	
+	public void notifyDataSetChanged() {
+		mAdapter.notifyDataSetChanged();
 	}
 	
 	@Override

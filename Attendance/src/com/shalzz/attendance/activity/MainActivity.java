@@ -62,10 +62,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	private FragmentManager mFragmentManager;
 	public static MainActivity mActivity;
 	private static final String BUNDLE_KEY_PREVIOUS_FRAGMENT = "MainActivity.PREVIOUS_FRAGMENT";
-	private static final String BUNDLE_KEY_ACTIVATED_TAB = "Activated_Tab";
 	private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
 	private static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
-	private Boolean DEBUG_FRAGMENTS = false;
+	private Boolean DEBUG_FRAGMENTS = true;
 
 	// Our custom poor-man's back stack which has only one entry at maximum.
 	private Fragment mPreviousFragment;
@@ -215,7 +214,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		}		
 		
 		if (DEBUG_FRAGMENTS) {
-			Log.i(mTag, this + " showFragment: Saving fragment " + installed + " at position " + fragmentPosition);
+			Log.i(mTag, this + " persistCurrentFragment: Saving fragment " + installed + " at position " + fragmentPosition);
 		}
 		
 		editor.putInt(PREFERENCE_ACTIVATED_FRAGMENT, fragmentPosition);
@@ -227,7 +226,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		int fragmentPosition = settings.getInt(PREFERENCE_ACTIVATED_FRAGMENT, 1);
 		
 		if (DEBUG_FRAGMENTS) {
-			Log.i(mTag, this + " showFragment: Restoring fragment positon" + fragmentPosition);
+			Log.i(mTag, this + " reloadCurrentFragment: Restoring fragment positon " + fragmentPosition);
 		}
 		
 		displayView(fragmentPosition);
@@ -247,23 +246,6 @@ public class MainActivity extends SherlockFragmentActivity {
 					BUNDLE_KEY_PREVIOUS_FRAGMENT, mPreviousFragment);
 			if (DEBUG_FRAGMENTS) {
 				Log.i(mTag, this + " showFragment: Saving fragment " + mPreviousFragment);
-			}
-		}
-	}
-
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-
-		int activatedTab = savedInstanceState.getInt(BUNDLE_KEY_ACTIVATED_TAB, 14);
-
-		if(isTimeTablePagerInstalled()) {
-			TimeTablePagerFragment fragment = (TimeTablePagerFragment) getInstalledFragment();
-			fragment.scrollToPosition(activatedTab);
-			
-			if (DEBUG_FRAGMENTS) {
-				Log.i(mTag, this.getClass().getName() + 
-						" onRestoreInstanceState: Restoring TimeTable Tab " + activatedTab);
 			}
 		}
 	}

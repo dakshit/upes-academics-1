@@ -63,7 +63,6 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	private Context mContext;
 	private Miscellaneous misc;
 	private ActionBar actionbar;
-	private static final String BUNDLE_KEY_ACTIVATED_TAB = "Activated_Tab";
 	private MySpinnerAdapter mSpinnerAdapter ;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -128,7 +127,9 @@ public class TimeTablePagerFragment extends SherlockFragment {
 			MySyncManager.addPeriodicSync(mContext,SAPID);
 			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
 			misc.showProgressDialog("Loading your TimeTable...","Loading", true, pdCancelListener());
-		}
+		} 
+		else
+			scrollToToday();
 		super.onStart();
 	}
 
@@ -178,6 +179,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	private void updateFragments() {
 		for (DayFragment fragment : mTimeTablePagerAdapter.getActiveFragments()) {
 			Log.d("TimeTableActivity", "Update Fragment " + fragment.getDate() + " with new data.");
+			//fragment.notifyDataSetChanged();
 			fragment.setTimeTable();
 		}
 	}
@@ -236,17 +238,10 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		int currentTab = mViewPager.getCurrentItem();
-		outState.putInt(BUNDLE_KEY_ACTIVATED_TAB, currentTab);
-
-		Log.d(myTag, "Saving current view " + currentTab);
-		super.onSaveInstanceState(outState);
-	}
-
-	@Override
 	public void onResume() {
 		mTimeTablePagerAdapter.notifyDataSetChanged();
+		updateFragments();
+		updateSpinner();
 		super.onResume();
 	}
 
