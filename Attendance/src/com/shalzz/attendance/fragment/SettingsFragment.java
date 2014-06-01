@@ -20,7 +20,6 @@
 package com.shalzz.attendance.fragment;
 
 import com.shalzz.attendance.DatabaseHandler;
-import com.shalzz.attendance.FeedbackUtils;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.wrapper.MySyncManager;
 
@@ -31,13 +30,10 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceCategory;
 import android.support.v4.preference.PreferenceFragment;
 
-public class SettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, OnSharedPreferenceChangeListener{
+public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener{
 
-	public static final String KEY_PREF_CONTACT = "pref_info_contact";
 	private Context mContext;
 
 	@Override
@@ -60,19 +56,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         ListPreference synclistPref = (ListPreference) findPreference(key);
         synclistPref.setSummary(synclistPref.getEntry());
     }
-	
-	@Override
-	public boolean onPreferenceClick (Preference preference)
-	{
-    	System.out.println("hmm...");
-	    String key = preference.getKey();
-	    if (key.equals(KEY_PREF_CONTACT)) {
-        	FeedbackUtils.askForFeedback(mContext);
-        	System.out.println("hmm...");
-    		return true;
-        }
-		return false;
-	}
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("pref_key_proxy_username")) {
@@ -105,14 +88,5 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 	    // Set up a listener whenever a key changes
 	    getPreferenceScreen().getSharedPreferences()
 	            .registerOnSharedPreferenceChangeListener(this);
-	    PreferenceCategory prefCategory = (PreferenceCategory) getPreferenceScreen().getPreference(3);
-		Preference pref = prefCategory.getPreference(1);
-        pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-            	FeedbackUtils.askForFeedback(mContext);
-         		return true;
-            }
-        });
 	}
 }

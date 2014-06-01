@@ -65,12 +65,7 @@
             android:title="About the app"
             android:summary="Get to know about this app.">
             <intent android:action="com.shalzz.attendance.ABOUT" />
-        </Preference>    
-        <Preference
-            android:key="pref_info_contact"
-            android:title="Contact Us"
-            android:summary="Send feedback or report a bug.">
-        </Preference> 
+        </Preference>
         <Preference
             android:key="pref_info_version"
             android:title="Build Version"
