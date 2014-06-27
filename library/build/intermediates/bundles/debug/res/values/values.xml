@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- From: file:/home/shalzz/workspace-studio/upes-academics/library/src/main/res/values/strings.xml -->
+    <eat-comment />
+
+    <string name="notices_close">Close</string>
+    <!-- From: file:/home/shalzz/workspace-studio/upes-academics/library/src/main/res/values/base_html.xml -->
+    <eat-comment />
+
+    <string name="notices_default_style" translatable="false">        p.license {
+        background:grey;
+        }
+        body {
+        font-family: sans-serif;
+        overflow-wrap: break-word;
+        }
+        pre {
+        background-color: #eeeeee;
+        padding: 1em;
+        white-space: pre-wrap;
+        }</string>
+    <!-- From: file:/home/shalzz/workspace-studio/upes-academics/library/src/main/res/values/strings.xml -->
+    <eat-comment />
+
+    <string name="notices_title">Notices</string>
+
+</resources>

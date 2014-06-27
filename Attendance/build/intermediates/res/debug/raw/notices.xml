@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+     UPES Academics, android attendance application for University of Petroleum and Energy Studies
+     Copyright (C) 2014  Shaleen Jain
+     shaleen.jain95@gmail.com
+ 
+     This program is free software: you can redistribute it and/or modify
+     it under the terms of the GNU General Public License as published by
+     the Free Software Foundation, either version 3 of the License, or
+     (at your option) any later version.
+ 
+     This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+ 
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<notices>
+    <notice>
+        <name>ActionBarSherlock</name>
+        <url>http://actionbarsherlock.com/</url>
+        <copyright>Copyright 2012 Jake Wharton</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Jsoup</name>
+        <url>http://jsoup.org/</url>
+        <copyright>Copyright © 2009 - 2013 Jonathan Hedley &lt;jonathan@hedley.net&gt; </copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>ListViewAnimations</name>
+        <url>https://github.com/nhaarman/ListViewAnimations</url>
+        <copyright>Copyright 2013 Niek Haarman</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Android Volley</name>
+        <url>https://android.googlesource.com/platform/frameworks/volley/</url>
+        <copyright>Copyright (C) 2011 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>okHttp</name>
+        <url>square.github.io/okhttp/</url>
+        <copyright>Copyright 2014 Square, Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>android-support-v4-preferencefragment</name>
+        <url>https://github.com/kolavar/android-support-v4-preferencefragment</url>
+        <copyright>Copyright (C) 2013 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Nine Old Androids</name>
+        <url>http://nineoldandroids.com/</url>
+        <copyright>Copyright (C) 2010 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Crouton</name>
+        <url>https://github.com/keyboardsurfer/Crouton</url>
+        <copyright>Copyright 2012 Benjamin Weiss&lt;br/&gt;Copyright 2012 Neofonie Mobile GmbH</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>DiskLruCache</name>
+        <url>https://github.com/JakeWharton/DiskLruCache</url>
+        <copyright>Copyright (C) 2011 The Android Open Source Project&lt;br/&gt;Copyright 2012 Jake Wharton</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+</notices>
