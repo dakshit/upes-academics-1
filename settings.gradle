@@ -1,5 +1,4 @@
 include ':libraryListViewAnimations'
-include ':licensesDialoglibrary'
 include ':volley'
 include ':androidsupportv4preferencefragment'
 include ':attendance'

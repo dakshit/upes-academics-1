@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-  
-      <solid android:color="@color/list_background_pressed"></solid>
-  
-</shape><!-- From: file:/home/shalzz/workspace-studio/upes-academics/attendance/src/main/res/drawable/list_item_bg_pressed.xml -->
