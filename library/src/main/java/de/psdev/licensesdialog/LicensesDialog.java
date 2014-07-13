@@ -1,11 +1,30 @@
 /*
+ * Copyright (c) 2014 Shaleen Jain <shaleen.jain95@gmail.com>
+ *
+ * This file is part of UPES Academics.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package de.psdev.licensesdialog;/*
  * Copyright 2013 Philip Schiffer
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/de.psdev.licensesdialog.licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,22 +33,21 @@
  *    limitations under the License.
  */
 
-package de.psdev.licensesdialog;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.webkit.WebView;
+
+import java.util.List;
+
 import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20;
 import de.psdev.licensesdialog.model.Notice;
 import de.psdev.licensesdialog.model.Notices;
 
-import java.util.List;
-
 public class LicensesDialog {
-    public static final Notice LICENSES_DIALOG_NOTICE = new Notice("LicensesDialog", "http://psdev.de/LicensesDialog", "Copyright 2013 Philip Schiffer",
+    public static final Notice LICENSES_DIALOG_NOTICE = new Notice("de.psdev.licensesdialog.LicensesDialog", "http://psdev.de/de.psdev.licensesdialog.LicensesDialog", "Copyright 2013 Philip Schiffer",
         new ApacheSoftwareLicense20());
 
     private final Context mContext;

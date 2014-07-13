@@ -1,32 +1,23 @@
-/*  
- *    Copyright (C) 2013 - 2014 Shaleen Jain <shaleen.jain95@gmail.com>
+/*
+ * Copyright (c) 2014 Shaleen Jain <shaleen.jain95@gmail.com>
  *
- *	  This file is part of UPES Academics.
+ * This file is part of UPES Academics.
  *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- **/    
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.shalzz.attendance.activity;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.http.protocol.HTTP;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -56,6 +47,15 @@ import com.shalzz.attendance.wrapper.MyStringRequest;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
+import org.apache.http.protocol.HTTP;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class LoginActivity extends SherlockFragmentActivity implements CaptchaDialogFragment.CaptchaDialogListener{
@@ -65,7 +65,7 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 	private Button bLogin;
 	private String charset = HTTP.ISO_8859_1;
 	private Map<String, String> data = new HashMap<String, String>();
-	private String myTag = getClass().getName();
+	private String myTag = getLocalClassName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +170,7 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 
 	private void getHiddenData()
 	{
-		Log.i(getClass().getName(),"Collecting hidden data...");
+		Log.i(myTag,"Collecting hidden data...");
 		String mURL = getResources().getString(R.string.URL_home);
 		MyStringRequest request = new MyStringRequest(Method.GET,
 				mURL,

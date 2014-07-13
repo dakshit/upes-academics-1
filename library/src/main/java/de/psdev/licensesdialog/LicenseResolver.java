@@ -1,11 +1,30 @@
 /*
+ * Copyright (c) 2014 Shaleen Jain <shaleen.jain95@gmail.com>
+ *
+ * This file is part of UPES Academics.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package de.psdev.licensesdialog;/*
  * Copyright 2013 Philip Schiffer
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/de.psdev.licensesdialog.licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
  *    distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,20 +33,18 @@
  *    limitations under the License.
  */
 
-package de.psdev.licensesdialog;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20;
 import de.psdev.licensesdialog.licenses.BSD3ClauseLicense;
 import de.psdev.licensesdialog.licenses.CreativeCommonsAttributionNoDerivs30Unported;
 import de.psdev.licensesdialog.licenses.GnuGeneralPublicLicense20;
 import de.psdev.licensesdialog.licenses.GnuGeneralPublicLicense30;
+import de.psdev.licensesdialog.licenses.GnuLesserGeneralPublicLicense21;
 import de.psdev.licensesdialog.licenses.ISCLicense;
 import de.psdev.licensesdialog.licenses.License;
 import de.psdev.licensesdialog.licenses.MITLicense;
-import de.psdev.licensesdialog.licenses.GnuLesserGeneralPublicLicense21;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class LicenseResolver {
 

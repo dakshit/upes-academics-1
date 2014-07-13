@@ -12,7 +12,7 @@
 
                             Preamble
 
-  The licenses for most software are designed to take away your
+  The de.psdev.licensesdialog.licenses for most software are designed to take away your
 freedom to share and change it.  By contrast, the GNU General Public
 Licenses are intended to guarantee your freedom to share and change
 free software--to make sure the software is free for all its users.
@@ -351,7 +351,7 @@ the Library except as expressly provided under this License.  Any
 attempt otherwise to copy, modify, sublicense, link with, or
 distribute the Library is void, and will automatically terminate your
 rights under this License.  However, parties who have received copies,
-or rights, from you under this License will not have their licenses
+or rights, from you under this License will not have their de.psdev.licensesdialog.licenses
 terminated so long as such parties remain in full compliance.
 
   9. You are not required to accept this License, since you have not

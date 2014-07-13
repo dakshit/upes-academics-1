@@ -1,32 +1,23 @@
-/*  
- *    Copyright (C) 2013 - 2014 Shaleen Jain <shaleen.jain95@gmail.com>
+/*
+ * Copyright (c) 2014 Shaleen Jain <shaleen.jain95@gmail.com>
  *
- *	  This file is part of UPES Academics.
+ * This file is part of UPES Academics.
  *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/    
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.shalzz.attendance.fragment;
-
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.shalzz.attendance.Miscellaneous;
-import com.shalzz.attendance.R;
-import com.shalzz.attendance.activity.LoginActivity;
-import com.shalzz.attendance.wrapper.MyVolley;
-import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,6 +37,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.shalzz.attendance.Miscellaneous;
+import com.shalzz.attendance.R;
+import com.shalzz.attendance.activity.LoginActivity;
+import com.shalzz.attendance.wrapper.MyVolley;
+import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
 public class CaptchaDialogFragment extends DialogFragment{
 
@@ -185,20 +185,17 @@ public class CaptchaDialogFragment extends DialogFragment{
 				new ImageLoader.ImageListener() {
 
 			final ImageView view = ivCapImg;
-			final int defaultImageResId = 5;
 			final int errorImageResId = R.drawable.ic_menu_report_image;
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				if (errorImageResId != 0) {
-					pbar.setVisibility(View.INVISIBLE);
-					view.setVisibility(View.VISIBLE);
-					view.setScaleType(ImageView.ScaleType.CENTER);
-					view.setImageResource(errorImageResId);
-					String msg = MyVolleyErrorHelper.getMessage(error, mContext);
-					Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-					Log.e(mTag, msg);
-				}
-			}
+                pbar.setVisibility(View.INVISIBLE);
+                view.setVisibility(View.VISIBLE);
+                view.setScaleType(ImageView.ScaleType.CENTER);
+                view.setImageResource(errorImageResId);
+                String msg = MyVolleyErrorHelper.getMessage(error, mContext);
+                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+                Log.e(mTag, msg);
+            }
 
 			@Override
 			public void onResponse(ImageContainer response, boolean isImmediate) {
@@ -208,7 +205,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 					view.setImageBitmap(response.getBitmap());
 					view.setScaleType(ImageView.ScaleType.FIT_XY);
 					Log.i(mTag, "Loaded captcha image.");
-				} else if (defaultImageResId != 0) {
+				} else {
 					pbar.setVisibility(ProgressBar.VISIBLE);
 					view.setVisibility(View.INVISIBLE);
 				}
