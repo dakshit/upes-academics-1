@@ -17,6 +17,7 @@ Open source Libraries used:
 - [Preference Fragment compatibility][7]
 - [Jsoup][8]
 - [Crouton][9] (Jar included in \libs)
+- [licensesDialog][]
 
 Contribute
 ==========
