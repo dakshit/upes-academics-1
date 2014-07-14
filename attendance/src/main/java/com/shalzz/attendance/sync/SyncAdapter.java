@@ -34,6 +34,8 @@ import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
+import static com.shalzz.attendance.DataAssembler.parseAttendance;
+
 /**
  * Handle the transfer of data between a server and an
  * app, using the Android sync adapter framework.
@@ -87,7 +89,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		return new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {				
-				DataAssembler.parseAttendance(response,mContext);
+				parseAttendance(response, mContext);
 			}
 		};
 	}
@@ -96,7 +98,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		return new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {				
-				DataAssembler.parseTimeTable(response,mContext);
+				DataAssembler.parseTimeTable(response, mContext);
 				Log.i(myTag,"Sync complete");
 			}
 		};
@@ -112,5 +114,3 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		};
 	}
 }
-
-

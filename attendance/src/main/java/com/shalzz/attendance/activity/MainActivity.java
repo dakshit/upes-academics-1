@@ -39,12 +39,15 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.fragment.AttendanceListFragment;
 import com.shalzz.attendance.fragment.SettingsFragment;
 import com.shalzz.attendance.fragment.TimeTablePagerFragment;
 import com.shalzz.attendance.model.ListHeader;
+import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyVolley;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -61,10 +64,10 @@ public class MainActivity extends SherlockFragmentActivity {
 	private View Drawerheader;
 	private FragmentManager mFragmentManager;
 	public static MainActivity mActivity;
-	private static final String BUNDLE_KEY_PREVIOUS_FRAGMENT = "MainActivity.PREVIOUS_FRAGMENT";
 	private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
 	private static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
 	private Boolean DEBUG_FRAGMENTS = true;
+    private Fragment fragment = null;
 
 	// Our custom poor-man's back stack which has only one entry at maximum.
 	private Fragment mPreviousFragment;
@@ -119,14 +122,34 @@ public class MainActivity extends SherlockFragmentActivity {
 		reloadCurrentFragment();
 
 		updateDrawerHeader();
-		mActivity =this;
+		mActivity = this;
 
-		//getAttendance(); // TODO: needed?
-		//		
-		//		ViewTarget target = new ViewTarget(R.id.tvSubj,this);
-		//		PointTarget pt = new PointTarget(20, 50);
-		//		ShowcaseView.insertShowcaseView(pt, this, "Details", "Touch a Subject for more details about it");
+        showcaseView();
 	}
+
+    public void showcaseView() {
+        MyPreferencesManager prefs = new MyPreferencesManager(this);
+        if(prefs.isFirstLaunch()) {
+            prefs.setFirstLaunch();
+            final ShowcaseView sv = new ShowcaseView.Builder(this)
+                    .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.HOME))
+                    .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
+                    .setContentTitle("Navigation bar")
+                    .setContentText("Press this button or swipe from the left edge to access the navigation bar")
+                    .build();
+
+            sv.overrideButtonClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sv.hide();
+                    if(fragment instanceof AttendanceListFragment)
+                    {
+                        ((AttendanceListFragment) fragment).showcaseView();
+                    }
+                }
+            });
+        }
+    }
 
 	public static MainActivity getInstance(){
 		return mActivity;
@@ -167,7 +190,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	public void displayView(int position) {
 		// update the main content by replacing fragments
-		Fragment fragment = null;
 		switch (position) {
 		case 0:
 			return;
@@ -181,7 +203,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			fragment = new SettingsFragment();
 			break;
 		case 4:
-			// Helpshift.showFAQs(this);
 			return;
 
 		default:
@@ -196,7 +217,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 			mDrawerTitle = mNavTitles[position-1];
-			//mDrawerList.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.list_background_pressed));
 			setTitle(mDrawerTitle);
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
@@ -240,18 +260,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		mTitle = title;
 		getSupportActionBar().setTitle(mTitle);
 	}
-
-	/*@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		if (mPreviousFragment != null) {
-			mFragmentManager.putFragment(outState,
-					BUNDLE_KEY_PREVIOUS_FRAGMENT, mPreviousFragment);
-			if (DEBUG_FRAGMENTS) {
-				Log.i(mTag, this + " showFragment: Saving fragment " + mPreviousFragment);
-			}
-		}
-	}*/
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -317,7 +325,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	@Override
 	public void onBackPressed() {
 		// Custom back stack
-		if (shouldPopFromBackStack(true)) {
+		if (shouldPopFromBackStack()) {
 			if (DEBUG_FRAGMENTS) {
 				Log.d(mTag, this + " Back: Popping from back stack");
 			}
@@ -328,11 +336,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	/**
-	 * @param isSystemBackKey <code>true</code> if the system back key was pressed.
-	 *        <code>false</code> if it's caused by the "home" icon click on the action bar.
 	 * @return true if we should pop from our custom back stack.
 	 */
-	private boolean shouldPopFromBackStack(boolean isSystemBackKey) {
+	private boolean shouldPopFromBackStack() {
 
 		if (mPreviousFragment == null) {
 			return false; // Nothing in the back stack

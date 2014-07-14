@@ -114,6 +114,10 @@ public class MySSLSocketFactory extends SSLSocketFactory {
     public void fixHttpsURLConnection() {
     	HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
     }
+
+    public javax.net.ssl.SSLSocketFactory getSSLSocketFactory() {
+        return sslContext.getSocketFactory();
+    }
     
     /**
      * Gets a KeyStore containing the Certificate

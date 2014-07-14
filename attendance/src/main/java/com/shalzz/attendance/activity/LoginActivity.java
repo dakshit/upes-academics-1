@@ -65,7 +65,7 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 	private Button bLogin;
 	private String charset = HTTP.ISO_8859_1;
 	private Map<String, String> data = new HashMap<String, String>();
-	private String myTag = getLocalClassName();
+	private String myTag ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,8 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 		etSapid = (EditText) findViewById(R.id.etSapid);
 		etPass = (EditText) findViewById(R.id.etPass);
 		bLogin = (Button) findViewById(R.id.bLogin);
+
+        myTag = getLocalClassName();
 
 		getHiddenData();
 
@@ -221,7 +223,7 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 			public void onErrorResponse(VolleyError error) {
 				String msg = MyVolleyErrorHelper.getMessage(error, LoginActivity.this);
 				Miscellaneous.makeCroutonInfinity(LoginActivity.this, msg);
-				Log.e(getClass().getName(), msg);
+				Log.e(getClass().getName(), msg+error);
 			}
 		};
 	}

@@ -78,9 +78,6 @@ public class MyVolley extends Application {
 		// Initialize the singleton
 		sInstance = this;
 		
-		// Fix the SSLSocket
-		fixSSLSocket();
-		
 		// Set a cookie manager
 		Log.i(MyVolley.class.getName(), "Setting CookieHandler");
 		CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
@@ -177,26 +174,7 @@ public class MyVolley extends Application {
 		}
 		VolleyLog.d("Cancelling requests with tag: "+tag);
 	}
-	
-	/**
-	 * Fixes the SSLHanshakeException
-	 */
-	private void fixSSLSocket() {
 
-		// Tell the HttpsURLConnection to trust our certificate
-		MySSLSocketFactory sslf = null;
-		try {
-			KeyStore ks = MySSLSocketFactory.getKeystoreOfCA(getApplicationContext().getResources().openRawResource(R.raw.gd_bundle));
-			sslf = new MySSLSocketFactory(ks);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-			sslf.fixHttpsURLConnection();
-		}  	
-	}
-	
 	/**
 	 * Fake cache, i.e. no caching is done. 
 	 * This class exist just to implement ImageLoader.ImageCache and be used 

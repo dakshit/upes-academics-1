@@ -44,6 +44,9 @@ import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.PointTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
@@ -119,8 +122,18 @@ public class AttendanceListFragment extends SherlockListFragment{
 		}
 		else
 			setAttendance();
+
 		super.onStart();
 	}
+
+    public void showcaseView() {
+        new ShowcaseView.Builder(getActivity())
+                .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
+                .setTarget(new ViewTarget(mlistview))
+                .setContentTitle("Expandable item")
+                .setContentText("Touch a Subject for more details about it")
+                .build();
+    }
 
 	private void setAttendance() {
 		DatabaseHandler db = new DatabaseHandler(getActivity());
@@ -137,20 +150,6 @@ public class AttendanceListFragment extends SherlockListFragment{
 			else 
 				subjects = db.getAllSubjects();
 			
-//			if(mAdapter==null) {
-//			mAdapter = new ExpandableListAdapter(mContext,subjects);
-//			mAdapter.setLimit(expandLimit);
-//			Log.d(myTag, "AbsListView is "+ mlistview);
-//			animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
-//			animationAdapter.setAbsListView(mlistview);
-//			animationAdapter.setInitialDelayMillis(1000);
-//			mlistview.setAdapter(animationAdapter);
-//			} else {
-//				mAdapter.setLimit(expandLimit);
-//				mAdapter.notifyDataSetChanged();
-//				animationAdapter.notifyDataSetChanged();
-//			}
-			
 
 			mAdapter = new ExpandableListAdapter(mContext,subjects);
 			mAdapter.setLimit(expandLimit);
@@ -159,7 +158,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			animationAdapter.setAbsListView(getListView());
 			animationAdapter.setInitialDelayMillis(1000);
 			mlistview.setAdapter(animationAdapter);
-			
+
 		}
 	}
 

@@ -24,12 +24,14 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.Proxy;
+import java.security.KeyStore;
 
 import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.HurlStack;
 import com.shalzz.attendance.Miscellaneous;
+import com.shalzz.attendance.R;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
 
@@ -63,6 +65,18 @@ public class MyOkHttpStack extends HurlStack {
 			Log.i("MyOkHttpStack","Proxy removed!");
             okUrlFactory.client().setProxy(null);
 		}
+
+        /* fix the SslHandShake exception */
+        MySSLSocketFactory sslf;
+        try {
+            KeyStore ks = MySSLSocketFactory.getKeystoreOfCA(MyVolley.getAppContext().getResources().openRawResource(R.raw.gd_bundle));
+            sslf = new MySSLSocketFactory(ks);
+            okUrlFactory.client().setSslSocketFactory(sslf.getSSLSocketFactory());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
 		return okUrlFactory.open(url);
 	} 
 }

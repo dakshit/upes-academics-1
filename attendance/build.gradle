@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
 apply plugin: 'android'
 
 android {
@@ -25,7 +27,7 @@ android {
 
     defaultConfig {
         applicationId "com.shalzz.attendance"
-        minSdkVersion 10
+        minSdkVersion 11
         targetSdkVersion 19
     }
 
@@ -44,12 +46,13 @@ android {
 
 dependencies {
     compile project(':androidsupportv4preferencefragment')
-    compile project(':library')
+    compile project(':licensesdialog')
 
     // binary library projects
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'com.mcxiaoke.volley:library:1.0.+@aar'
     compile 'com.nhaarman.listviewanimations:library:+@aar'
+    compile 'com.github.amlcurran.showcaseview:library:5.0.0-SNAPSHOT@aar'
 
     // Jars
     compile 'com.nineoldandroids:library:2.4.0'

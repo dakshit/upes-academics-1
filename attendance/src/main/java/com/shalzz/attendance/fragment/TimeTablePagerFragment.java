@@ -123,8 +123,6 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	public void onStart() {
 		DatabaseHandler db = new DatabaseHandler(mContext);
 		if(db.getRowCountofTimeTable()<=0) {
-			String SAPID = getSherlockActivity().getIntent().getExtras().getString("SAPID");
-			MySyncManager.addPeriodicSync(mContext,SAPID);
 			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
 			misc.showProgressDialog("Loading your TimeTable...","Loading", true, pdCancelListener());
 		} 
