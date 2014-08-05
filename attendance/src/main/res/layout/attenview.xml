@@ -27,6 +27,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:id="@+id/last_refreshed"
         android:text="Last refreshed 0 minutes ago"
         android:background="@color/holo_blue_light"
         android:padding="8dp"/>

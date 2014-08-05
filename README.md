@@ -13,11 +13,12 @@ Open source Libraries used:
 - [ActionBar Sherlock][3]
 - [Android Volley with okHttp][4]
 	- [OkHttp][5]
-	- [OkHttp Stack implementation for Volley][6]
+- [Nine Old Androids] [6]
 - [Preference Fragment compatibility][7]
 - [Jsoup][8]
 - [Crouton][9] (Jar included in \libs)
-- [licensesDialog][]
+- [licensesDialog][10]
+- [Showcase View] [11]
 
 Contribute
 ==========
@@ -49,7 +50,9 @@ Please see the file called LICENSE.txt for more details.
 [3]: http://actionbarsherlock.com/download.html
 [4]: https://android.googlesource.com/platform/frameworks/volley/
 [5]: http://square.github.io/okhttp/#download
-[6]: https://gist.github.com/JakeWharton/5616899
+[6]: http://nineoldandroids.com/
 [7]: https://github.com/kolavar/android-support-v4-preferencefragment
 [8]: http://jsoup.org/download
 [9]: https://github.com/keyboardsurfer/Crouton
+[10]: https://github.com/PSDev/LicensesDialog
+[11]: http://amlcurran.github.io/ShowcaseView/

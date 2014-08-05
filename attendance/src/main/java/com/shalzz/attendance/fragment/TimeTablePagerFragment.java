@@ -48,6 +48,7 @@ import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.adapter.MySpinnerAdapter;
 import com.shalzz.attendance.adapter.TimeTablePagerAdapter;
+import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MySyncManager;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
@@ -213,12 +214,20 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	private Response.Listener<String> timeTableSuccessListener() {
 		return new Response.Listener<String>() {
 			@Override
-			public void onResponse(String response) {				
-				DataAssembler.parseTimeTable(response,mContext);
-				misc.dismissProgressDialog();
-				updateFragments();
-				scrollToToday();
-				Log.i(myTag,"Sync complete");
+			public void onResponse(String response) {
+                misc.dismissProgressDialog();
+                try {
+                    if (DataAssembler.parseTimeTable(response, mContext) == 0) {
+                        updateFragments();
+                        scrollToToday();
+                        Log.i(myTag, "Sync complete");
+                        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
+                        prefs.setLastSyncTime();
+                    }
+                }
+                catch(Exception e) {
+                    Crouton.makeText((Activity) mContext, "An unexpected error occurred", Style.ALERT).show();
+                }
 			}
 		};
 	}

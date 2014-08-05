@@ -129,7 +129,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	/**
 	 * Attendance CREATE TABLE SQL query.
 	 */
-	private static final String CREATE_ATTENDENCE_TABLE = "CREATE TABLE " + TABLE_ATTENDENCE + " ( "
+	private static final String CREATE_ATTENDANCE_TABLE = "CREATE TABLE " + TABLE_ATTENDENCE + " ( "
 			+ KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, " 
 			+ KEY_CLASSES_HELD + " REAL, " + KEY_CLASSES_ATTENDED + " REAL, " 
 			+ KEY_DAYS_ABSENT + " TEXT, " + KEY_PERCENTAGE + " REAL, " 
@@ -172,7 +172,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(CREATE_ATTENDENCE_TABLE);
+		db.execSQL(CREATE_ATTENDANCE_TABLE);
 		db.execSQL(CREATE_HEADER_TABLE);
 		db.execSQL(CREATE_FOOTER_TABLE);
 		db.execSQL(CREATE_TIME_TABLE);
@@ -408,7 +408,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(KEY_CLASSES_ATTENDED, subject.getClassesAttended());
 		values.put(KEY_DAYS_ABSENT, subject.getAbsentDates());
 		values.put(KEY_PERCENTAGE, subject.getPercentage());
-		values.put(KEY_PROJECTED_PERCENTAGE, subject.getPercentage());
+		values.put(KEY_PROJECTED_PERCENTAGE, subject.getProjectedPercentage());
 
 		// updating row
 		int rows_affected = db.update(TABLE_ATTENDENCE, values, KEY_ID + " = ?",
@@ -420,7 +420,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	/**
 	 * Deleting a single Subject
-	 * @param contact
+	 * @param subject
 	 */
 	public void deleteSubject(Subject subject) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -660,22 +660,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		Cursor cursor = db.query(TABLE_TIMETABLE, null, KEY_DAY + "=?",
 				new String[] { String.valueOf(dayName) }, null, null, null, null);
 
-		if (cursor != null)
-			cursor.moveToFirst();
+        Day day = null;
+		if (cursor != null) {
+            cursor.moveToFirst();
 
-
-		Day day = new Day();
-		for(int i=0;i<21;i++)
-		{
-			if(!cursor.getColumnName(i).equals(KEY_DAY))
-			{
-				Period period = new Period();
-				period.setDay(dayName);
-				period.setName(cursor.getString(i));
-				period.setTime(cursor.getColumnName(i));
-				day.addPeriod(period);
-			}
-		}
+            day = new Day();
+            for (int i = 0; i < 21; i++) {
+                if (!cursor.getColumnName(i).equals(KEY_DAY) && cursor.getCount()>0) {
+                    Period period = new Period();
+                    period.setDay(dayName);
+                    period.setName(cursor.getString(i));
+                    period.setTime(cursor.getColumnName(i));
+                    day.addPeriod(period);
+                }
+            }
+        }
 		db.close();
 		cursor.close();
 

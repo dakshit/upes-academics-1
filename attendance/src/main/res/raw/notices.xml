@@ -50,6 +50,11 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
+        <name>android-support-v4</name>
+        <copyright>Copyright (C) 2013 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
         <name>android-support-v4-preferencefragment</name>
         <url>https://github.com/kolavar/android-support-v4-preferencefragment</url>
         <copyright>Copyright (C) 2013 The Android Open Source Project</copyright>
@@ -68,9 +73,9 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>DiskLruCache</name>
-        <url>https://github.com/JakeWharton/DiskLruCache</url>
-        <copyright>Copyright (C) 2011 The Android Open Source Project&lt;br/&gt;Copyright 2012 Jake Wharton</copyright>
+        <name>Showcase View</name>
+        <url>http://amlcurran.github.io/ShowcaseView/</url>
+        <copyright>Copyright Alex Curran © 2012. All rights reserved.</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
 </notices>

@@ -29,7 +29,7 @@
         <item >My Attendance</item>
         <item >My TimeTable</item>
         <item >Settings</item>
-        <item >Help</item>
+        <!--<item >Help</item>-->
     </string-array>
     
     <string-array name="pref_subject_limit_entries">

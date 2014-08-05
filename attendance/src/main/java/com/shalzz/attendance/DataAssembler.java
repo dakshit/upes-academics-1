@@ -42,6 +42,44 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 public class DataAssembler {
 
 	private static String mTag = "Data Assembler";
+
+    public static void parseStudentDetails(String response,Context mContext) {
+        Document doc = Jsoup.parse(response);
+
+        Elements tddata = doc.select("td");
+
+        if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
+        {
+            // TODO: relogin
+            String msg ="It seems your session has expired.\nPlease Login again.";
+            if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
+                Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
+            Log.e(mTag,"Login Session Expired");
+        }
+        else if (tddata != null && tddata.size() > 0) {
+            int i = 0;
+            ListHeader header = new ListHeader();
+            for (Element element : tddata) {
+                if (i == 5)
+                    header.setName(element.text());
+                else if (i == 8)
+                    header.setFatherName(element.text());
+                else if (i == 11)
+                    header.setCourse(element.text());
+                else if (i == 14)
+                    header.setSection(element.text());
+                else if (i == 17)
+                    header.setRollNo(element.text());
+                else if (i == 20)
+                    header.setSAPId(Integer.parseInt(element.text()));
+                ++i;
+            }
+
+            DatabaseHandler db = new DatabaseHandler(mContext);
+            db.addOrUpdateListHeader(header);
+            db.close();
+        }
+    }
 	
 	/**
 	 * Extracts Attendance details from the HTML code.
@@ -72,22 +110,9 @@ public class DataAssembler {
 		else if (tddata != null && tddata.size() > 0)
 		{
 			int i=0;
-			ListHeader header = new ListHeader();
 			for(Element element : tddata)
 			{
-				if(i==5)					
-					header.setName(element.text());	
-				else if(i==8)					
-					header.setFatherName(element.text());
-				else if(i==11)
-					header.setCourse(element.text());
-				else if(i==14)					
-					header.setSection(element.text());
-				else if(i==17)					
-					header.setRollNo(element.text());
-				else if(i==20)					
-					header.setSAPId(Integer.parseInt(element.text()));
-				else if(i>29)
+			    if(i>29)
 				{
 					// for subjects
 					if ((i - 30) % 7 == 0) {
@@ -124,7 +149,6 @@ public class DataAssembler {
 			footer.setPercentage(Float.parseFloat(total.get(12).text()));
 			DatabaseHandler db = new DatabaseHandler(mContext);
 			db.addOrUpdateListFooter(footer);
-			db.addOrUpdateListHeader(header);
 
 			Log.i(mTag, "Response parsing complete.");
 
@@ -143,7 +167,7 @@ public class DataAssembler {
 		}
 	}
 
-	public static void parseTimeTable(String response,Context mContext) {
+	public static int parseTimeTable(String response,Context mContext) {
 
 		Document doc = Jsoup.parse(response);
 		Elements thdata = doc.select("th");
@@ -171,7 +195,14 @@ public class DataAssembler {
 			if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
 				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 			Log.e(mTag,"Login Session Expired");
+            return -1;
 		}
+        else if(doc.getElementsByClass("infomessage").text().equals("No reports found for the given criteria.")) {
+            if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
+                Crouton.makeText((Activity) mContext, "No TimeTable available at this time", Style.ALERT).show();
+            Log.e(mTag,"No TimeTable");
+            return -2;
+        }
 		else if (thdata != null && thdata.size() > 0)
 		{
 			int i=0;
@@ -225,5 +256,6 @@ public class DataAssembler {
 				db.addOrUpdateDay(day);
 			}
 		}
+        return 0;
 	}
 }

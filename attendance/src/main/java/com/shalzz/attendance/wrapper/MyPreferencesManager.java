@@ -24,11 +24,15 @@ import android.content.SharedPreferences;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.shalzz.attendance.R;
+import com.shalzz.attendance.activity.MainActivity;
+
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 public class MyPreferencesManager {
@@ -48,41 +52,20 @@ public class MyPreferencesManager {
 	
 	public void setLastSyncTime() {
 		Time now = new Time();
-		//now.setToNow();
-		Log.d("sync time",now.toString());
+		now.setToNow();
 		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putString("REFRESH_TIME", now.toString());
+		editor.putLong("REFRESH_TIME", now.toMillis(false));
 		editor.commit();
 	}
 	
-	public int getLastSyncTime() {
-		int days=0;
-		int hours=0;
-		int minutes=0;
-		Calendar now = Calendar.getInstance();
+	public long getLastSyncTime() {
+        Time now = new Time();
+        now.setToNow();
+        Long now_L = now.toMillis(false);
 		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
-		String syncTime = settings.getString("REFRESH_TIME", now.toString()); 
-		Calendar lastRefreshTime = Calendar.getInstance();
-		Time temp = new Time();
-		temp.parse(syncTime);
-		lastRefreshTime.set(temp.year, temp.month, temp.monthDay, temp.hour, temp.minute);
-		while(now.get(Calendar.DAY_OF_MONTH)!=lastRefreshTime.get(Calendar.DAY_OF_MONTH))
-		{
-			lastRefreshTime.add(Calendar.DAY_OF_MONTH,1);
-			++days;
-		}
-		while(now.get(Calendar.HOUR_OF_DAY)!=lastRefreshTime.get(Calendar.HOUR_OF_DAY))
-		{
-			lastRefreshTime.add(Calendar.HOUR_OF_DAY,1);
-			++hours;
-		}
-		while(now.get(Calendar.MINUTE)!=lastRefreshTime.get(Calendar.MINUTE))
-		{
-			lastRefreshTime.add(Calendar.MINUTE,1);
-			++minutes;
-		}
-		return (days*24+hours)*60+minutes;
+		Long last_sync = settings.getLong("REFRESH_TIME", now_L );
+		return (now_L-last_sync)/(1000*60*60); // convert milliseconds to hours
 	}
 
 	/**
@@ -95,7 +78,7 @@ public class MyPreferencesManager {
 		Iterator<String> keyset = pcookies.getAll().keySet().iterator();
 		if(keyset.hasNext())
 		{
-			Log.i(mContext.getClass().getName(), "Persisten cookies found.");
+			Log.i(mContext.getClass().getName(), "Persistent cookies found.");
 			while(keyset.hasNext())
 			{
 				String cookiename = keyset.next();
@@ -107,14 +90,14 @@ public class MyPreferencesManager {
 						cookie.setDomain("academics.ddn.upes.ac.in");
 						cookie.setPath("/");
 						cookie.setVersion(0);
-						cookieMan.getCookieStore().add(new URI("https://academics.ddn.upes.ac.in/upes/"), cookie);
+						cookieMan.getCookieStore().add(new URI(mContext.getResources().getString(R.string.URL_home)), cookie);
 					} catch (Exception e) {
 						e.printStackTrace();
 					} 
 				}
 				else
 				{
-					Log.i(mContext.getClass().getName(), "Persisten cookies not found.");
+					Log.i(mContext.getClass().getName(), "Persistent cookies not found.");
 				}
 			}
 		}
@@ -186,6 +169,7 @@ public class MyPreferencesManager {
 		Log.i(mContext.getClass().getName(), "Setting LOGGEDIN pref to false");
 		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
 		SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(MainActivity.PREFERENCE_ACTIVATED_FRAGMENT, 1);
 		editor.putBoolean("LOGGEDIN", false);
 		editor.remove("USERNAME");
 		editor.remove("PASSWORD");
@@ -195,10 +179,11 @@ public class MyPreferencesManager {
     /**
      * Checks weather this is the first time the app is launched or not.
      * @return True or False
+     * @param name
      */
     public boolean isFirstLaunch() {
         SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
-        boolean boot = settings.getBoolean("FIRSTLAUNCH", true);
+        boolean boot = settings.getBoolean("FIRSTLAUNCH"+mContext.getClass().getName(), true);
         return boot;
     }
 
@@ -208,7 +193,7 @@ public class MyPreferencesManager {
     public void setFirstLaunch() {
         SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("FIRSTLAUNCH", false);
+        editor.putBoolean("FIRSTLAUNCH"+mContext.getClass().getName(), false);
         editor.commit();
     }
 }

@@ -39,10 +39,14 @@ import com.android.volley.Request.Method;
 import com.android.volley.Request.Priority;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.fragment.CaptchaDialogFragment;
+import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyStringRequest;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
@@ -106,7 +110,22 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 			}
 		});
 
+        showcaseView();
 	}
+
+    public void showcaseView() {
+//        MyPreferencesManager prefs = new MyPreferencesManager(this);
+//        if (prefs.isFirstLaunch()) {
+//            new ShowcaseView.Builder(this)
+//                    .setTarget(new ActionItemTarget(this,R.id.menu_help))
+//                    .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
+//                    .setContentTitle("Help")
+//                    .hideOnTouchOutside()
+//                    .setContentText("Press this button to access FAQ's")
+//                    .build();
+//            prefs.setFirstLaunch();
+//        }
+    }
 
 	/**
 	 * Checks if the form is valid
@@ -237,10 +256,10 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.menu_help)
-		{
-			startActivity(new Intent(this, AboutUsActivity.class));
-		}
+//		if(item.getItemId() == R.id.menu_help)
+//		{
+//			startActivity(new Intent(this, AboutUsActivity.class));
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 

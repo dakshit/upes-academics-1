@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
@@ -63,9 +64,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private View Drawerheader;
 	private FragmentManager mFragmentManager;
-	public static MainActivity mActivity;
+	private static MainActivity mActivity;
 	private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
-	private static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
+	public static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
 	private Boolean DEBUG_FRAGMENTS = true;
     private Fragment fragment = null;
 
@@ -104,15 +105,17 @@ public class MainActivity extends SherlockFragmentActivity {
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
-				actionbar.setTitle(mTitle);
-				supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                actionbar.setTitle(mTitle);
+                if(!(getInstalledFragment() instanceof AttendanceListFragment))
+				    supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
 				actionbar.setTitle(mDrawerTitle);
-				supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                if(!(getInstalledFragment() instanceof AttendanceListFragment))
+				    supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 		};
 
@@ -130,7 +133,6 @@ public class MainActivity extends SherlockFragmentActivity {
     public void showcaseView() {
         MyPreferencesManager prefs = new MyPreferencesManager(this);
         if(prefs.isFirstLaunch()) {
-            prefs.setFirstLaunch();
             final ShowcaseView sv = new ShowcaseView.Builder(this)
                     .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.HOME))
                     .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
@@ -148,6 +150,7 @@ public class MainActivity extends SherlockFragmentActivity {
                     }
                 }
             });
+            prefs.setFirstLaunch();
         }
     }
 
@@ -350,14 +353,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 		// Okay now we have 2 fragments; the one in the back stack and the one that's currently
 		// installed.
-		if (installed instanceof AttendanceListFragment ||
-				installed instanceof TimeTablePagerFragment) {
-			// These are the top level lists - never go back from here.
-			return false;
-		}
+        return !(installed instanceof AttendanceListFragment ||
+                installed instanceof TimeTablePagerFragment);
 
-		return true;
-	}
+    }
 
 	/**
 	 * Pop from our custom back stack.
@@ -389,7 +388,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 		mPreviousFragment = null;
 		ft.commit();
-		return;
 	}
 
 	/**
@@ -402,27 +400,18 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	private boolean isAttendanceListInstalled() {
 		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
-		if (mFragment instanceof AttendanceListFragment) {
-			return true;
-		}
-		return false;   	
-	}
+        return mFragment instanceof AttendanceListFragment;
+    }
 	
 	private boolean isTimeTablePagerInstalled() {
 		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
-		if (mFragment instanceof TimeTablePagerFragment) {
-			return true;
-		}
-		return false;   	
-	}
+        return mFragment instanceof TimeTablePagerFragment;
+    }
 	
 	private boolean isSettingsInstalled() {
 		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
-		if (mFragment instanceof SettingsFragment) {
-			return true;
-		}
-		return false;   	
-	}
+        return mFragment instanceof SettingsFragment;
+    }
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

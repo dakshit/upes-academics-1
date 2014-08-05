@@ -59,6 +59,7 @@ import com.shalzz.attendance.adapter.ExpandableListAdapter;
 import com.shalzz.attendance.model.ListFooter;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Subject;
+import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MySyncManager;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
@@ -123,6 +124,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 		else
 			setAttendance();
 
+        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
+        TextView last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
+        last_refreshed.setText("Last refreshed "+prefs.getLastSyncTime()+" hours ago");
 		super.onStart();
 	}
 
@@ -245,24 +249,24 @@ public class AttendanceListFragment extends SherlockListFragment{
 			public boolean onQueryTextChange(String arg0) {
 				DatabaseHandler db = new DatabaseHandler(mContext);
 				List<Subject> subjects = db.getAllSubjectsLike(arg0);
-				mlistview.setAdapter(new ExpandableListAdapter(mContext,subjects));
+				mlistview.setAdapter(new ExpandableListAdapter(mContext, subjects));
 				return false;
 			}
 		});
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content view
-
-		DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-		ListView mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
-		menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
-		return;
-	}
+//	@Override
+//	public void onPrepareOptionsMenu(Menu menu) {
+//		// If the nav drawer is open, hide action items related to the content view
+//
+//		DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+//		ListView mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
+//		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+//		menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
+//		menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+//		return;
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -283,8 +287,16 @@ public class AttendanceListFragment extends SherlockListFragment{
 			@Override
 			public void onResponse(String response) {				
 				misc.dismissProgressDialog();
-				DataAssembler.parseAttendance(response,mContext);
-				setAttendance();
+                try {
+                    DataAssembler.parseStudentDetails(response, mContext);
+                    DataAssembler.parseAttendance(response, mContext);
+                    setAttendance();
+                    MyPreferencesManager prefs = new MyPreferencesManager(mContext);
+                    prefs.setLastSyncTime();
+                }
+                catch (Exception e) {
+                    Crouton.makeText((Activity) mContext, "An unexpected error occurred", Style.ALERT).show();
+                }
 			}
 		};
 	}

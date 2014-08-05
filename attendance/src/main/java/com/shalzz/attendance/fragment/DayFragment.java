@@ -74,8 +74,10 @@ public class DayFragment extends SherlockListFragment {
 		if(weekday.equals("sun"))
 			return;
 		Day day = db.getDay(weekday);
-		mAdapter = new DayListAdapter(mContext, day);
-		setListAdapter(mAdapter);
+        if(day!=null) {
+            mAdapter = new DayListAdapter(mContext, day);
+            setListAdapter(mAdapter);
+        }
 	}
 
 	public String getWeekDay() {

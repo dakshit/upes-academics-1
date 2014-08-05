@@ -32,6 +32,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
+import com.shalzz.attendance.wrapper.MyPreferencesManager;
+import com.shalzz.attendance.wrapper.MySyncManager;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
 import static com.shalzz.attendance.DataAssembler.parseAttendance;
@@ -90,6 +92,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			@Override
 			public void onResponse(String response) {				
 				parseAttendance(response, mContext);
+                MyPreferencesManager pref = new MyPreferencesManager(mContext);
+                pref.setLastSyncTime();
 			}
 		};
 	}
