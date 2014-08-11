@@ -26,7 +26,6 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,6 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.PointTarget;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 import com.shalzz.attendance.DataAPI;
@@ -226,7 +224,11 @@ public class AttendanceListFragment extends SherlockListFragment{
 			public boolean onMenuItemActionCollapse(MenuItem item) {
 				DatabaseHandler db = new DatabaseHandler(mContext);
 				List<Subject> subjects = db.getAllOrderedSubjects();
-				mlistview.setAdapter(new ExpandableListAdapter(mContext,subjects));
+                mAdapter = new ExpandableListAdapter(mContext,subjects);
+                animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
+                animationAdapter.setAbsListView(getListView());
+                animationAdapter.setInitialDelayMillis(1000);
+				mlistview.setAdapter(animationAdapter);
 				return true;  // Return true to collapse action view
 			}
 
@@ -249,7 +251,11 @@ public class AttendanceListFragment extends SherlockListFragment{
 			public boolean onQueryTextChange(String arg0) {
 				DatabaseHandler db = new DatabaseHandler(mContext);
 				List<Subject> subjects = db.getAllSubjectsLike(arg0);
-				mlistview.setAdapter(new ExpandableListAdapter(mContext, subjects));
+                mAdapter = new ExpandableListAdapter(mContext,subjects);
+                animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
+                animationAdapter.setAbsListView(getListView());
+                animationAdapter.setInitialDelayMillis(1000);
+                mlistview.setAdapter(animationAdapter);
 				return false;
 			}
 		});
