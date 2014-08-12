@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +67,7 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class AttendanceListFragment extends SherlockListFragment{
 
@@ -77,6 +79,8 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private ExpandableListAdapter mAdapter;
 	private SwingRightInAnimationAdapter animationAdapter;
 	private ListView mlistview;
+    private TextView last_refreshed;
+    private SmoothProgressBar smoothProgressBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,20 +117,30 @@ public class AttendanceListFragment extends SherlockListFragment{
 	@Override
 	public void onStart() {
 		DatabaseHandler db = new DatabaseHandler(mContext);
+
+        //smoothProgressBar
+        smoothProgressBar = (SmoothProgressBar) getActivity().findViewById(R.id.smoothProgressBar);
+        last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
+
 		if(db.getRowCount()<=0) {
 			String SAPID = getSherlockActivity().getIntent().getExtras().getString("SAPID");
 			MySyncManager.addPeriodicSync(mContext,SAPID);
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
-			misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
+			//misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
+            smoothProgressBar.setVisibility(View.VISIBLE);
+            last_refreshed.setVisibility(View.GONE);
 		}
 		else
 			setAttendance();
 
-        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
-        TextView last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
-        last_refreshed.setText("Last refreshed "+prefs.getLastSyncTime()+" hours ago");
+        updateLastRefresh();
 		super.onStart();
 	}
+
+    protected void updateLastRefresh() {
+        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
+        last_refreshed.setText("Last refreshed "+prefs.getLastSyncTime()+" hours ago");
+    }
 
     public void showcaseView() {
         new ShowcaseView.Builder(getActivity())
@@ -156,8 +170,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			mAdapter = new ExpandableListAdapter(mContext,subjects);
 			mAdapter.setLimit(expandLimit);
 			animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
-			Log.d(myTag, "AbsListView is "+ getListView());
-			animationAdapter.setAbsListView(getListView());
+			animationAdapter.setAbsListView(mlistview);
 			animationAdapter.setInitialDelayMillis(1000);
 			mlistview.setAdapter(animationAdapter);
 
@@ -226,7 +239,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 				List<Subject> subjects = db.getAllOrderedSubjects();
                 mAdapter = new ExpandableListAdapter(mContext,subjects);
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
-                animationAdapter.setAbsListView(getListView());
+                animationAdapter.setAbsListView(mlistview);
                 animationAdapter.setInitialDelayMillis(1000);
 				mlistview.setAdapter(animationAdapter);
 				return true;  // Return true to collapse action view
@@ -253,7 +266,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 				List<Subject> subjects = db.getAllSubjectsLike(arg0);
                 mAdapter = new ExpandableListAdapter(mContext,subjects);
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
-                animationAdapter.setAbsListView(getListView());
+                animationAdapter.setAbsListView(mlistview);
                 animationAdapter.setInitialDelayMillis(1000);
                 mlistview.setAdapter(animationAdapter);
 				return false;
@@ -262,17 +275,17 @@ public class AttendanceListFragment extends SherlockListFragment{
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
-//	@Override
-//	public void onPrepareOptionsMenu(Menu menu) {
-//		// If the nav drawer is open, hide action items related to the content view
-//
-//		DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-//		ListView mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
-//		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-//		menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
-//		menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
-//		return;
-//	}
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content view
+
+		DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+		ListView mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
+		menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+		return;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -283,7 +296,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 		else if(item.getItemId() == R.id.menu_refresh)
 		{
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
-			misc.showProgressDialog("Refreshing your attendance...","Refreshing",true, pdCancelListener());
+			//misc.showProgressDialog("Refreshing your attendance...","Refreshing",true, pdCancelListener());
+            smoothProgressBar.setVisibility(View.VISIBLE);
+            last_refreshed.setVisibility(View.GONE);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -292,15 +307,19 @@ public class AttendanceListFragment extends SherlockListFragment{
 		return new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {				
-				misc.dismissProgressDialog();
+				//misc.dismissProgressDialog();
+                smoothProgressBar.setVisibility(View.GONE);
+                last_refreshed.setVisibility(View.VISIBLE);
                 try {
                     DataAssembler.parseStudentDetails(response, mContext);
                     DataAssembler.parseAttendance(response, mContext);
                     setAttendance();
                     MyPreferencesManager prefs = new MyPreferencesManager(mContext);
                     prefs.setLastSyncTime();
+                    updateLastRefresh();
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     Crouton.makeText((Activity) mContext, "An unexpected error occurred", Style.ALERT).show();
                 }
 			}
@@ -311,7 +330,10 @@ public class AttendanceListFragment extends SherlockListFragment{
 		return new Response.ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				misc.dismissProgressDialog();
+				//misc.dismissProgressDialog();
+                smoothProgressBar.setVisibility(View.GONE);
+                last_refreshed.setVisibility(View.VISIBLE);
+
 				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
 				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 				Log.e(myTag, msg);
@@ -321,16 +343,11 @@ public class AttendanceListFragment extends SherlockListFragment{
 
 	@Override
 	public void onPause() {
-		Log.d(myTag, this + " paused");
-		Log.d(myTag, "Listview is "+ mlistview);
 		super.onPause();
 	};
 	
 	@Override
 	public void onResume() {
-		Log.d(myTag, this + " resumed");
-		Log.d(myTag, "Listview is "+ mlistview);
-		// mAdapter = null;
 		setAttendance();
 		super.onResume();
 	}
