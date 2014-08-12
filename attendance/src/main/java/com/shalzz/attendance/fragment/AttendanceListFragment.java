@@ -67,6 +67,7 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class AttendanceListFragment extends SherlockListFragment{
 
@@ -79,6 +80,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private SwingRightInAnimationAdapter animationAdapter;
 	private ListView mlistview;
     private TextView last_refreshed;
+    private SmoothProgressBar smoothProgressBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,16 +117,22 @@ public class AttendanceListFragment extends SherlockListFragment{
 	@Override
 	public void onStart() {
 		DatabaseHandler db = new DatabaseHandler(mContext);
+
+        //smoothProgressBar
+        smoothProgressBar = (SmoothProgressBar) getActivity().findViewById(R.id.smoothProgressBar);
+        last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
+
 		if(db.getRowCount()<=0) {
 			String SAPID = getSherlockActivity().getIntent().getExtras().getString("SAPID");
 			MySyncManager.addPeriodicSync(mContext,SAPID);
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
-			misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
+			//misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
+            smoothProgressBar.setVisibility(View.VISIBLE);
+            last_refreshed.setVisibility(View.GONE);
 		}
 		else
 			setAttendance();
 
-        last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
         updateLastRefresh();
 		super.onStart();
 	}
@@ -288,7 +296,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 		else if(item.getItemId() == R.id.menu_refresh)
 		{
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
-			misc.showProgressDialog("Refreshing your attendance...","Refreshing",true, pdCancelListener());
+			//misc.showProgressDialog("Refreshing your attendance...","Refreshing",true, pdCancelListener());
+            smoothProgressBar.setVisibility(View.VISIBLE);
+            last_refreshed.setVisibility(View.GONE);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -297,7 +307,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 		return new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {				
-				misc.dismissProgressDialog();
+				//misc.dismissProgressDialog();
+                smoothProgressBar.setVisibility(View.GONE);
+                last_refreshed.setVisibility(View.VISIBLE);
                 try {
                     DataAssembler.parseStudentDetails(response, mContext);
                     DataAssembler.parseAttendance(response, mContext);
@@ -318,7 +330,10 @@ public class AttendanceListFragment extends SherlockListFragment{
 		return new Response.ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				misc.dismissProgressDialog();
+				//misc.dismissProgressDialog();
+                smoothProgressBar.setVisibility(View.GONE);
+                last_refreshed.setVisibility(View.VISIBLE);
+
 				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
 				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 				Log.e(myTag, msg);

@@ -65,4 +65,5 @@ dependencies {
     compile("de.keyboardsurfer.android.widget:crouton:1.8.4@aar") {
         exclude group: 'com.google.android', module: 'support-v4'
     }
+    compile 'com.github.castorflex.smoothprogressbar:library:0.5.1'
 }
