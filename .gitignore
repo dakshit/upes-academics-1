@@ -1,12 +1,9 @@
-/.settings/
 .gradle
 .idea
-/bin/
-gen/
 build/
-licensesdialog/build/
-androidsupportv4preferencefragment/build/
+*/build/
 
+*/*.iml
+*.iml
 *~
-.classpath
 local.properties
