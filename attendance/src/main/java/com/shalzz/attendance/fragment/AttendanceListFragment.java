@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -157,7 +158,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			mAdapter.setLimit(expandLimit);
 			animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
 			Log.d(myTag, "AbsListView is "+ getListView());
-			animationAdapter.setAbsListView(getListView());
+			animationAdapter.setAbsListView(mlistview);
 			animationAdapter.setInitialDelayMillis(1000);
 			mlistview.setAdapter(animationAdapter);
 
@@ -226,7 +227,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 				List<Subject> subjects = db.getAllOrderedSubjects();
                 mAdapter = new ExpandableListAdapter(mContext,subjects);
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
-                animationAdapter.setAbsListView(getListView());
+                animationAdapter.setAbsListView(mlistview);
                 animationAdapter.setInitialDelayMillis(1000);
 				mlistview.setAdapter(animationAdapter);
 				return true;  // Return true to collapse action view
@@ -253,7 +254,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 				List<Subject> subjects = db.getAllSubjectsLike(arg0);
                 mAdapter = new ExpandableListAdapter(mContext,subjects);
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
-                animationAdapter.setAbsListView(getListView());
+                animationAdapter.setAbsListView(mlistview);
                 animationAdapter.setInitialDelayMillis(1000);
                 mlistview.setAdapter(animationAdapter);
 				return false;
@@ -262,17 +263,17 @@ public class AttendanceListFragment extends SherlockListFragment{
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
-//	@Override
-//	public void onPrepareOptionsMenu(Menu menu) {
-//		// If the nav drawer is open, hide action items related to the content view
-//
-//		DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-//		ListView mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
-//		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-//		menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
-//		menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
-//		return;
-//	}
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content view
+
+		DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+		ListView mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
+		menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+		return;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

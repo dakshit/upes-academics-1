@@ -106,16 +106,14 @@ public class MainActivity extends SherlockFragmentActivity {
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
                 actionbar.setTitle(mTitle);
-                if(!(getInstalledFragment() instanceof AttendanceListFragment))
-				    supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+				supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
 				actionbar.setTitle(mDrawerTitle);
-                if(!(getInstalledFragment() instanceof AttendanceListFragment))
-				    supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+				supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 		};
 
