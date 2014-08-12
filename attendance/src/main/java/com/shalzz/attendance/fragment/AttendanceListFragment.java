@@ -78,6 +78,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private ExpandableListAdapter mAdapter;
 	private SwingRightInAnimationAdapter animationAdapter;
 	private ListView mlistview;
+    private TextView last_refreshed;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -123,11 +124,15 @@ public class AttendanceListFragment extends SherlockListFragment{
 		else
 			setAttendance();
 
-        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
-        TextView last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
-        last_refreshed.setText("Last refreshed "+prefs.getLastSyncTime()+" hours ago");
+        last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
+        updateLastRefresh();
 		super.onStart();
 	}
+
+    protected void updateLastRefresh() {
+        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
+        last_refreshed.setText("Last refreshed "+prefs.getLastSyncTime()+" hours ago");
+    }
 
     public void showcaseView() {
         new ShowcaseView.Builder(getActivity())
@@ -157,7 +162,6 @@ public class AttendanceListFragment extends SherlockListFragment{
 			mAdapter = new ExpandableListAdapter(mContext,subjects);
 			mAdapter.setLimit(expandLimit);
 			animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
-			Log.d(myTag, "AbsListView is "+ getListView());
 			animationAdapter.setAbsListView(mlistview);
 			animationAdapter.setInitialDelayMillis(1000);
 			mlistview.setAdapter(animationAdapter);
@@ -300,8 +304,10 @@ public class AttendanceListFragment extends SherlockListFragment{
                     setAttendance();
                     MyPreferencesManager prefs = new MyPreferencesManager(mContext);
                     prefs.setLastSyncTime();
+                    updateLastRefresh();
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     Crouton.makeText((Activity) mContext, "An unexpected error occurred", Style.ALERT).show();
                 }
 			}
@@ -322,16 +328,11 @@ public class AttendanceListFragment extends SherlockListFragment{
 
 	@Override
 	public void onPause() {
-		Log.d(myTag, this + " paused");
-		Log.d(myTag, "Listview is "+ mlistview);
 		super.onPause();
 	};
 	
 	@Override
 	public void onResume() {
-		Log.d(myTag, this + " resumed");
-		Log.d(myTag, "Listview is "+ mlistview);
-		// mAdapter = null;
 		setAttendance();
 		super.onResume();
 	}

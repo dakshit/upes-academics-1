@@ -221,11 +221,10 @@ public class TimeTablePagerFragment extends SherlockFragment {
                         updateFragments();
                         scrollToToday();
                         Log.i(myTag, "Sync complete");
-                        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
-                        prefs.setLastSyncTime();
                     }
                 }
                 catch(Exception e) {
+                    e.printStackTrace();
                     Crouton.makeText((Activity) mContext, "An unexpected error occurred", Style.ALERT).show();
                 }
 			}
