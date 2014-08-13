@@ -20,8 +20,6 @@
 package com.shalzz.attendance.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
-import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.model.Subject;
 
@@ -43,16 +40,8 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 
 	public ExpandableListAdapter(Context context,List<Subject> subjects) {
 		super(context,subjects);
-		// super(context,R.layout.card, R.id.activity_expandablelistitem_title, R.id.activity_expandablelistitem_content, subjects);
-		mContext = context;
-		DatabaseHandler db = new DatabaseHandler(mContext);
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-		boolean alpha = sharedPref.getBoolean("alpha_subject_order", true);
-		
-		if(alpha) 
-			mSubjects = db.getAllOrderedSubjects();
-		else 
-			mSubjects = db.getAllSubjects();
+        mContext = context;
+        mSubjects = subjects;
 	}
 
 	@Override
@@ -90,12 +79,12 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 		View view ;
 
 		// Check if we can recycle the view
-		if (convertView == null || ((Integer) convertView.getTag()).intValue()!= R.layout.list_child_item+position) 
+		if (convertView == null || (Integer) convertView.getTag() != R.layout.list_child_item+position)
 		{
 			view = inflater.inflate(R.layout.list_child_item, parent, false);
 			// view = parent.findViewById(R.id.activity_expandablelistitem_content);
 			// Set the tag to make sure you can recycle it when you get it as a convert view
-			view.setTag(Integer.valueOf(R.layout.list_child_item+position));
+			view.setTag(R.layout.list_child_item + position);
 		}
 		else {
 			view = convertView;

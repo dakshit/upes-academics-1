@@ -80,7 +80,12 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private SwingRightInAnimationAdapter animationAdapter;
 	private ListView mlistview;
     private TextView last_refreshed;
+<<<<<<< HEAD
     private SmoothProgressBar smoothProgressBar;
+=======
+    private int expandLimit;
+    private final int ADAPTER_DELAY_MILLIS = 750;
+>>>>>>> upstream/master
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -158,7 +163,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			updateHeaderNFooter();
 			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 			boolean alpha = sharedPref.getBoolean("alpha_subject_order", true);
-			int expandLimit = Integer.parseInt(sharedPref.getString("subjects_expanded_limit", "0"));
+			expandLimit = Integer.parseInt(sharedPref.getString("subjects_expanded_limit", "0"));
 
 			List<Subject> subjects;
 			if(alpha) 
@@ -171,7 +176,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			mAdapter.setLimit(expandLimit);
 			animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
 			animationAdapter.setAbsListView(mlistview);
-			animationAdapter.setInitialDelayMillis(1000);
+			animationAdapter.setInitialDelayMillis(ADAPTER_DELAY_MILLIS);
 			mlistview.setAdapter(animationAdapter);
 
 		}
@@ -238,9 +243,10 @@ public class AttendanceListFragment extends SherlockListFragment{
 				DatabaseHandler db = new DatabaseHandler(mContext);
 				List<Subject> subjects = db.getAllOrderedSubjects();
                 mAdapter = new ExpandableListAdapter(mContext,subjects);
+                mAdapter.setLimit(expandLimit);
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
                 animationAdapter.setAbsListView(mlistview);
-                animationAdapter.setInitialDelayMillis(1000);
+                animationAdapter.setInitialDelayMillis(ADAPTER_DELAY_MILLIS);
 				mlistview.setAdapter(animationAdapter);
 				return true;  // Return true to collapse action view
 			}
@@ -265,9 +271,10 @@ public class AttendanceListFragment extends SherlockListFragment{
 				DatabaseHandler db = new DatabaseHandler(mContext);
 				List<Subject> subjects = db.getAllSubjectsLike(arg0);
                 mAdapter = new ExpandableListAdapter(mContext,subjects);
+                mAdapter.setLimit(expandLimit);
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
                 animationAdapter.setAbsListView(mlistview);
-                animationAdapter.setInitialDelayMillis(1000);
+                animationAdapter.setInitialDelayMillis(ADAPTER_DELAY_MILLIS);
                 mlistview.setAdapter(animationAdapter);
 				return false;
 			}
