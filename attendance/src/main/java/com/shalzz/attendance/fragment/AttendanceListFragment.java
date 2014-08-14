@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -72,7 +73,8 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 public class AttendanceListFragment extends SherlockListFragment{
 
 	private View footer;
-	private View header;
+	private LinearLayout header;
+    private View rootView;
 	private Context mContext;
 	private Miscellaneous misc;
 	private String myTag ;
@@ -80,12 +82,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private SwingRightInAnimationAdapter animationAdapter;
 	private ListView mlistview;
     private TextView last_refreshed;
-<<<<<<< HEAD
     private SmoothProgressBar smoothProgressBar;
-=======
     private int expandLimit;
     private final int ADAPTER_DELAY_MILLIS = 750;
->>>>>>> upstream/master
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -101,8 +100,10 @@ public class AttendanceListFragment extends SherlockListFragment{
 		if(container==null)
 			return null;
 
+        rootView = inflater.inflate(R.layout.attenview, container, false);
+        header = (LinearLayout) rootView.findViewById(R.id.list_header);
 		setHasOptionsMenu(true);
-		return inflater.inflate(R.layout.attenview, container, false);
+		return rootView;
 	}
 
 	@Override
@@ -110,8 +111,8 @@ public class AttendanceListFragment extends SherlockListFragment{
 		mlistview = getListView();
 		LayoutInflater inflater = this.getLayoutInflater(savedInstanceState);
 
-		header = inflater.inflate(R.layout.list_header, null);
-		mlistview.addHeaderView(header);
+		//header = inflater.inflate(R.layout.list_header, null);
+		//mlistview.addHeaderView(header);
 
 		footer=inflater.inflate(R.layout.list_footer, null);
 		mlistview.addFooterView(footer);	
@@ -204,9 +205,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 		tvClasses.setText(listfooter.getAttended().intValue()+"/"+listfooter.getHeld().intValue());
 		pbPercent.setProgress(percent.intValue());
 
-		TextView tvName = (TextView) header.findViewById(R.id.tvName);
-		TextView tvSap = (TextView) header.findViewById(R.id.tvSAP);
-		TextView tvcourse = (TextView) header.findViewById(R.id.tvCourse);
+		TextView tvName = (TextView) rootView.findViewById(R.id.tvName);
+		TextView tvSap = (TextView) rootView.findViewById(R.id.tvSAP);
+		TextView tvcourse = (TextView) rootView.findViewById(R.id.tvCourse);
 
 		ListHeader listheader = db.getListHeader();
 		tvName.setText(listheader.getName());
