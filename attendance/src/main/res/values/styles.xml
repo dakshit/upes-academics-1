@@ -39,13 +39,20 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="Theme.Myactionbar" parent="@style/Theme.Sherlock.Light.DarkActionBar">
-        <item name="actionBarStyle">@style/ActionBar.Solid.Myactionbar</item>
+    <style name="Theme.Myactionbar" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/ActionBar_L</item>
+        <item name="android:actionBarStyle">@style/ActionBar_L</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="ActionBar.Solid.Myactionbar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    <style name="ActionBar.Solid.Myactionbar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_myactionbar</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_myactionbar</item>
+    </style>
+
+    <style name="ActionBar_L" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@color/l_actionbar</item>
+        <item name="android:background">@color/l_actionbar</item>
     </style>
     
     <style name="listViewActivatedStyle"/>

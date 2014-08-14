@@ -82,19 +82,19 @@
         <activity
             android:name=".activity.LoginActivity"
             android:label="Login"
-            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
+            android:theme="@style/Theme.Myactionbar" >
         </activity>
         
         <activity
             android:name=".activity.MainActivity"
             android:label="Attendance"
-            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
+            android:theme="@style/Theme.Myactionbar" >
         </activity>
         
         <activity
 			android:name = ".activity.AboutUsActivity"
             android:label="About"
-            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
+            android:theme="@style/Theme.Myactionbar" >
             <intent-filter >
                 <action android:name="com.shalzz.attendance.ABOUT" />
                 <category android:name="android.intent.category.DEFAULT" />
