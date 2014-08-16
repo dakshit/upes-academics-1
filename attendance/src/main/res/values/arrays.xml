@@ -59,11 +59,4 @@
         <item>720</item>
         <item>1440</item>
     </string-array>
-
-    <array name="smooth_progress_bar">
-        <item>#ffee301e</item>
-        <item>#fffff84a</item>
-        <item>#ff5d6aee</item>
-        <item>#ff2cff36</item>
-    </array>
 </resources>

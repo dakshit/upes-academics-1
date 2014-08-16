@@ -23,36 +23,6 @@
     android:orientation="vertical"
     android:background="@color/white" >
 
-    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/smoothProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:spb_sections_count="2"
-        app:spb_colors="@array/smooth_progress_bar"
-        app:spb_speed="1.5"
-        app:spb_stroke_width="3dp"
-        app:spb_stroke_separator_length="4dp"
-        app:spb_reversed="true"
-        app:spb_mirror_mode="true"
-        app:spb_progressiveStart_activated="true"
-        app:spb_progressiveStart_speed="1.5"
-        app:spb_progressiveStop_speed="3.4"
-        app:spb_interpolator="spb_interpolator_decelerate"
-        />
-    
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:id="@+id/last_refreshed"
-        android:text="Last refreshed 0 minutes ago"
-        android:background="@color/holo_blue_light"
-        android:visibility="visible"
-        android:padding="8dp"/>
-
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
