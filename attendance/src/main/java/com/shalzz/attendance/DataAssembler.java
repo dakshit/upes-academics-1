@@ -243,17 +243,25 @@ public class DataAssembler {
 			}
 			for(int j=0;j<days.size();j++)
 			{
-				Day day = new Day();
 				for(i=0;i<time.size();i++)
 				{
 					Period period = new Period();
-					period.setDay(dayNames[j]);
-					period.setTime(time.get(i));
-					period.setName(days.get(j).get(i));
-					day.addPeriod(period);
+                    ArrayList<String> dayofweek = days.get(j);
+                    period.setId(i);
+                    period.setDay(dayNames[j]);
+                    period.setSubjectName(dayofweek.get(i));
+                    int index = time.get(i).indexOf("-");
+                    String start = time.get(i).substring(0,index);
+                    String end = time.get(i).substring(index+1);
+                    while(i+1<time.size() && dayofweek.get(i) == dayofweek.get(i+1)) {
+                        index = time.get(i+1).indexOf("-");
+                        end = time.get(i+1).substring(index+1);
+                        i++;
+                    }
+                    period.setTime(start,end);
+                    DatabaseHandler db = new DatabaseHandler(mContext);
+                    db.addOrUpdatePeriod(period);
 				}
-				DatabaseHandler db = new DatabaseHandler(mContext);
-				db.addOrUpdateDay(day);
 			}
 		}
         return 0;

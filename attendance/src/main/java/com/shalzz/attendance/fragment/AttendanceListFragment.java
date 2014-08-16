@@ -68,7 +68,7 @@ import java.util.List;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class AttendanceListFragment extends SherlockListFragment{
+public class AttendanceListFragment extends SherlockListFragment {
 
 	private View footer;
 	private View header;
@@ -79,6 +79,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private SwingRightInAnimationAdapter animationAdapter;
 	private ListView mlistview;
     private TextView last_refreshed;
+    private int expandLimit;
+    private final int ADAPTER_DELAY_MILLIS = 750;
+    private MenuItem refreshItem;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,16 +118,20 @@ public class AttendanceListFragment extends SherlockListFragment{
 	@Override
 	public void onStart() {
 		DatabaseHandler db = new DatabaseHandler(mContext);
+
+        last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
+
 		if(db.getRowCount()<=0) {
 			String SAPID = getSherlockActivity().getIntent().getExtras().getString("SAPID");
 			MySyncManager.addPeriodicSync(mContext,SAPID);
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
 			misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
+            //misc.animateRefreshActionItem(refreshItem);
+            last_refreshed.setVisibility(View.GONE);
 		}
 		else
 			setAttendance();
 
-        last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
         updateLastRefresh();
 		super.onStart();
 	}
@@ -150,7 +157,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			updateHeaderNFooter();
 			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 			boolean alpha = sharedPref.getBoolean("alpha_subject_order", true);
-			int expandLimit = Integer.parseInt(sharedPref.getString("subjects_expanded_limit", "0"));
+			expandLimit = Integer.parseInt(sharedPref.getString("subjects_expanded_limit", "0"));
 
 			List<Subject> subjects;
 			if(alpha) 
@@ -163,7 +170,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 			mAdapter.setLimit(expandLimit);
 			animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
 			animationAdapter.setAbsListView(mlistview);
-			animationAdapter.setInitialDelayMillis(1000);
+			animationAdapter.setInitialDelayMillis(ADAPTER_DELAY_MILLIS);
 			mlistview.setAdapter(animationAdapter);
 
 		}
@@ -230,10 +237,11 @@ public class AttendanceListFragment extends SherlockListFragment{
 				DatabaseHandler db = new DatabaseHandler(mContext);
 				List<Subject> subjects = db.getAllOrderedSubjects();
                 mAdapter = new ExpandableListAdapter(mContext,subjects);
+                mAdapter.setLimit(expandLimit);
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
                 animationAdapter.setAbsListView(mlistview);
-                animationAdapter.setInitialDelayMillis(1000);
-				mlistview.setAdapter(animationAdapter);
+                animationAdapter.setInitialDelayMillis(ADAPTER_DELAY_MILLIS);
+				//mlistview.setAdapter(animationAdapter);
 				return true;  // Return true to collapse action view
 			}
 
@@ -257,9 +265,10 @@ public class AttendanceListFragment extends SherlockListFragment{
 				DatabaseHandler db = new DatabaseHandler(mContext);
 				List<Subject> subjects = db.getAllSubjectsLike(arg0);
                 mAdapter = new ExpandableListAdapter(mContext,subjects);
+                mAdapter.setLimit(expandLimit);
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
                 animationAdapter.setAbsListView(mlistview);
-                animationAdapter.setInitialDelayMillis(1000);
+                animationAdapter.setInitialDelayMillis(ADAPTER_DELAY_MILLIS);
                 mlistview.setAdapter(animationAdapter);
 				return false;
 			}
@@ -276,7 +285,6 @@ public class AttendanceListFragment extends SherlockListFragment{
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
 		menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
-		return;
 	}
 
 	@Override
@@ -287,8 +295,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 		}
 		else if(item.getItemId() == R.id.menu_refresh)
 		{
+            refreshItem = item;
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
-			misc.showProgressDialog("Refreshing your attendance...","Refreshing",true, pdCancelListener());
+			misc.animateRefreshActionItem(refreshItem);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -296,8 +305,10 @@ public class AttendanceListFragment extends SherlockListFragment{
 	private Response.Listener<String> successListener() {
 		return new Response.Listener<String>() {
 			@Override
-			public void onResponse(String response) {				
-				misc.dismissProgressDialog();
+			public void onResponse(String response) {
+                misc.dismissProgressDialog();
+                misc.completeRefreshActionItem(refreshItem);
+                last_refreshed.setVisibility(View.VISIBLE);
                 try {
                     DataAssembler.parseStudentDetails(response, mContext);
                     DataAssembler.parseAttendance(response, mContext);
@@ -318,7 +329,9 @@ public class AttendanceListFragment extends SherlockListFragment{
 		return new Response.ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				misc.dismissProgressDialog();
+                misc.completeRefreshActionItem(refreshItem);
+                misc.dismissProgressDialog();
+
 				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
 				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 				Log.e(myTag, msg);
@@ -329,7 +342,7 @@ public class AttendanceListFragment extends SherlockListFragment{
 	@Override
 	public void onPause() {
 		super.onPause();
-	};
+	}
 	
 	@Override
 	public void onResume() {

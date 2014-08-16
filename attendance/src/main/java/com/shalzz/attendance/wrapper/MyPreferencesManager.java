@@ -179,7 +179,6 @@ public class MyPreferencesManager {
     /**
      * Checks weather this is the first time the app is launched or not.
      * @return True or False
-     * @param name
      */
     public boolean isFirstLaunch() {
         SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);

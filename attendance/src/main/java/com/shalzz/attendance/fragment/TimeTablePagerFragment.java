@@ -48,8 +48,6 @@ import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.adapter.MySpinnerAdapter;
 import com.shalzz.attendance.adapter.TimeTablePagerAdapter;
-import com.shalzz.attendance.wrapper.MyPreferencesManager;
-import com.shalzz.attendance.wrapper.MySyncManager;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
@@ -65,6 +63,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	private Miscellaneous misc;
 	private ActionBar actionbar;
 	private MySpinnerAdapter mSpinnerAdapter ;
+    private MenuItem refreshItem ;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -157,8 +156,6 @@ public class TimeTablePagerFragment extends SherlockFragment {
 			actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 			actionbar.setDisplayShowTitleEnabled(false);
 		}
-
-		return;
 	}
 
 	@Override
@@ -169,8 +166,9 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		}
 		else if(item.getItemId() == R.id.menu_refresh)
 		{
+            refreshItem = item;
 			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
-			misc.showProgressDialog("Refreshing your TimeTable...","Refreshing", true, pdCancelListener());
+			misc.animateRefreshActionItem(refreshItem);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -216,6 +214,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 			@Override
 			public void onResponse(String response) {
                 misc.dismissProgressDialog();
+                misc.completeRefreshActionItem(refreshItem);
                 try {
                     if (DataAssembler.parseTimeTable(response, mContext) == 0) {
                         updateFragments();
@@ -236,6 +235,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				misc.dismissProgressDialog();
+                misc.completeRefreshActionItem(refreshItem);
 				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
 				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
 				Log.e(myTag, msg);

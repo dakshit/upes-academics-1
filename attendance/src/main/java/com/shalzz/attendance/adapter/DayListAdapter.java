@@ -66,11 +66,10 @@ public class DayListAdapter extends BaseAdapter{
 		TextView tvSubjectName = (TextView) convertView.findViewById(R.id.tvSubjectName);
 		TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
 		Period period = periods.get(position);
-		String subject= period.getName();
+		String subject= period.getSubjectName();
 		String time = period.getTime();
 		tvSubjectName.setText(subject);
-		if(!subject.equals(""))
-			tvTime.setText(time.substring(1, time.length()-1));
+	    tvTime.setText(time);
 		return convertView;
 	}
 }

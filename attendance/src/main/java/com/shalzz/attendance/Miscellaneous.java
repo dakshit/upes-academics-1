@@ -30,14 +30,21 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
+import android.support.v4.app.LoaderManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.shalzz.attendance.fragment.AttendanceListFragment;
 import com.shalzz.attendance.wrapper.MyVolley;
 
 import java.net.Authenticator;
@@ -52,6 +59,9 @@ public class Miscellaneous {
 	private AlertDialog.Builder builder = null;
 	private ProgressDialog pd = null;
 	private Context mContext;
+
+    private Animation rotation;
+    private LayoutInflater inflater;
 	//private String mTag = "Miscellaneous";
 
 	public Miscellaneous(Context context) {
@@ -119,8 +129,8 @@ public class Miscellaneous {
 	
 	/**
 	 * Displays the default Progress Dialog.
-	 * @param mMessage
-	 * @param mTitle
+	 * @param mMessage The message to display
+	 * @param mTitle The title of the progress dialog
 	 */
 	public void showProgressDialog(String mMessage,String mTitle,boolean cancable, DialogInterface.OnCancelListener progressDialogCancelListener) {
 		// lazy initialise
@@ -147,9 +157,40 @@ public class Miscellaneous {
 			pd.dismiss();
 	}
 
+    /**
+     * Rotates the refresh ActionBar item clockwise.
+     * @param item refresh action item
+     */
+    public void animateRefreshActionItem(MenuItem item) {
+        if (mContext != null) {
+             /* Attach a rotating ImageView to the refresh item as an ActionView */
+            if (inflater==null)
+                inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
+
+            if (rotation==null)
+                rotation = AnimationUtils.loadAnimation(mContext, R.anim.clockwise_refresh);
+            rotation.setRepeatCount(Animation.INFINITE);
+            iv.startAnimation(rotation);
+
+            item.setActionView(iv);
+        }
+    }
+
+    /**
+     * Stops the rotating animation and restores the original state to action item.
+     * @param item refresh action item
+     */
+    public void completeRefreshActionItem(MenuItem item) {
+        if(rotation!=null && inflater!=null) {
+            item.getActionView().clearAnimation();
+            item.setActionView(null);
+        }
+    }
+
 	/**
 	 * Displays a basic Alert Dialog.
-	 * @param mMessage
+	 * @param mMessage the message to display
 	 */
 	public void showAlertDialog(String mMessage) {
 		// lazy initialise

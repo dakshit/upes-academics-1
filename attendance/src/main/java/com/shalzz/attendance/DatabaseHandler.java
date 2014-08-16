@@ -85,28 +85,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	/**
 	 *  TimeTable Table Column names
 	 */
+    private static final String KEY_TT_ID = "id";
 	private static final String KEY_DAY = "Day";
-	private static final String KEY_PERIOD_1 = "`8:00 - 8:30`";
-	private static final String KEY_PERIOD_2 = "`8:30 - 9:00`";
-	private static final String KEY_PERIOD_3 = "`9:00 - 9:30`";
-	private static final String KEY_PERIOD_4 = "`9:30 - 10:00`";
-	private static final String KEY_PERIOD_5 = "`10:00 - 10:30`";
-	private static final String KEY_PERIOD_6 = "`10:30 - 11:00`";
-	private static final String KEY_PERIOD_7 = "`11:00 - 11:30`";
-	private static final String KEY_PERIOD_8 = "`11:30 - 12:00`";
-	private static final String KEY_PERIOD_9 = "`12:00 - 12:30`";
-	private static final String KEY_PERIOD_10 = "`12:30 - 13:00`";
-	private static final String KEY_PERIOD_11 = "`13:00 - 13:30`";
-	private static final String KEY_PERIOD_12 = "`13:30 - 14:00`";
-	private static final String KEY_PERIOD_13 = "`14:00 - 14:30`";
-	private static final String KEY_PERIOD_14 = "`14:30 - 15:00`";
-	private static final String KEY_PERIOD_15 = "`15:00 - 15:30`";
-	private static final String KEY_PERIOD_16 = "`15:30 - 16:00`";
-	private static final String KEY_PERIOD_17 = "`16:00 - 16:30`";
-	private static final String KEY_PERIOD_18 = "`16:30 - 17:00`";
-	private static final String KEY_PERIOD_19 = "`17:00 - 17:30`";
-	private static final String KEY_PERIOD_20 = "`17:30 - 18:00`";
-	private static final String KEY_PERIOD_21 = "`18:00 - 18:30`";
+    private static final String KEY_SUBJECT_NAME = "Subject";
+    private static final String KEY_TEACHER = "Teacher";
+    private static final String KEY_ROOM = "Room";
+    private static final String KEY_START = "Start";
+    private static final String KEY_END = "End";
 
 	/**
 	 * ListHeader Table Columns names
@@ -135,15 +120,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			+ KEY_DAYS_ABSENT + " TEXT, " + KEY_PERCENTAGE + " REAL, " 
 			+ KEY_PROJECTED_PERCENTAGE + "  TEXT " + ");";
 
+    /**
+     * Timetable CREATE TABLE SQL query.
+     */
 	private static final String CREATE_TIME_TABLE = "CREATE TABLE " + TABLE_TIMETABLE + " ( "
-			+ KEY_DAY + " TEXT PRIMARY KEY, " + KEY_PERIOD_1 + " TEXT, " + KEY_PERIOD_2 + " TEXT, "
-			+ KEY_PERIOD_3 + " TEXT, " + KEY_PERIOD_4 + " TEXT, " + KEY_PERIOD_5 + " TEXT, " 
-			+ KEY_PERIOD_6 + " TEXT, " + KEY_PERIOD_7 + " TEXT, " + KEY_PERIOD_8 + " TEXT, "
-			+ KEY_PERIOD_9 + " TEXT, " + KEY_PERIOD_10 + " TEXT, " + KEY_PERIOD_11 + " TEXT, "
-			+ KEY_PERIOD_12 + " TEXT, " + KEY_PERIOD_13 + " TEXT, " + KEY_PERIOD_14 + " TEXT, "
-			+ KEY_PERIOD_15 + " TEXT, " + KEY_PERIOD_16 + " TEXT, " + KEY_PERIOD_17 + " TEXT, "
-			+ KEY_PERIOD_18 + " TEXT, " + KEY_PERIOD_19 + " TEXT, " + KEY_PERIOD_20 + " TEXT, "
-			+ KEY_PERIOD_21 + " TEXT " + ");";
+			+ KEY_TT_ID + " INTEGER PRIMARY KEY, " + KEY_DAY + " TEXT, " + KEY_SUBJECT_NAME + " TEXT, " + KEY_TEACHER + " TEXT, "
+			+ KEY_ROOM + " TEXT, " + KEY_START + " TEXT, " + KEY_END + " TEXT "  + ");";
 
 	/**
 	 * ListHeader CREATE TABLE SQL query.
@@ -603,52 +585,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return rows_affected;
 	}
 
-	public void addOrUpdateDay(Day day) {
+	public void addOrUpdatePeriod(Period period) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		Cursor cursor = db.query(TABLE_TIMETABLE, new String[] { KEY_DAY}, KEY_DAY + "=?",
-				new String[] { String.valueOf(day.getPeriod(0).getDay()) }, null, null, null, null);
+		Cursor cursor = db.query(TABLE_TIMETABLE, new String[] { KEY_TT_ID}, KEY_TT_ID + "=?",
+				new String[] { String.valueOf(period.getId()) }, null, null, null, null);
 		if (cursor.getCount() == 0) {
-			addDay(day);
+            addPeriod(period);
 		}
 		else {
-			updateDay(day);
+			updatePeriod(period);
 		}
 		db.close(); // Closing database connection
 	}
 
-	public void addDay(Day day) {
+    public void addPeriod(Period period) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DAY, period.getDay());
+        values.put(KEY_SUBJECT_NAME, period.getSubjectName());
+        values.put(KEY_START, period.getStartTime());
+        values.put(KEY_END, period.getEndTime());
+
+        // Inserting Row
+        db.insert(TABLE_TIMETABLE, null, values);
+        db.close(); // Closing database connection
+    }
+
+	public int updatePeriod(Period period) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		ContentValues values = new ContentValues();
-		values.put(KEY_DAY, day.getPeriod(0).getDay());
-		List<Period> periods = day.getAllPeriods();
-
-		for(Period period : periods)
-		{
-			values.put(period.getTime(), period.getName());
-		}
-
-		// Inserting Row
-		db.insert(TABLE_TIMETABLE, null, values);
-		db.close(); // Closing database connection
-	}
-
-	public int updateDay(Day day) {
-		SQLiteDatabase db = this.getWritableDatabase();
-
-		ContentValues values = new ContentValues();
-		values.put(KEY_DAY, day.getPeriod(0).getDay());
-		List<Period> periods = day.getAllPeriods();
-
-		for(Period period : periods)
-		{
-			values.put(period.getTime(), period.getName());
-		}
+        ContentValues values = new ContentValues();
+        values.put(KEY_DAY, period.getDay());
+        values.put(KEY_SUBJECT_NAME, period.getSubjectName());
+        values.put(KEY_START, period.getStartTime());
+        values.put(KEY_END, period.getEndTime());
 
 		// updating row
-		int rows_affected = db.update(TABLE_TIMETABLE, values, KEY_DAY + " = ?",
-				new String[] { String.valueOf(day.getPeriod(0).getDay())} );
+		int rows_affected = db.update(TABLE_TIMETABLE, values, KEY_TT_ID + " = ?",
+				new String[] { String.valueOf(period.getId())} );
 		db.close(); // Closing database connection
 
 		return rows_affected;
@@ -665,14 +641,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
             day = new Day();
-            for (int i = 0; i < 21; i++) {
-                if (!cursor.getColumnName(i).equals(KEY_DAY) && cursor.getCount()>0) {
+            for (int i = 0; i < cursor.getCount(); i++) {
                     Period period = new Period();
                     period.setDay(dayName);
-                    period.setName(cursor.getString(i));
-                    period.setTime(cursor.getColumnName(i));
+                    period.setSubjectName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_SUBJECT_NAME)));
+                    String start = cursor.getString(cursor.getColumnIndexOrThrow(KEY_START));
+                    String end = cursor.getString(cursor.getColumnIndexOrThrow(KEY_END));
+                    period.setTime(start,end);
                     day.addPeriod(period);
-                }
             }
         }
 		db.close();
