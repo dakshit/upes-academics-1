@@ -241,28 +241,31 @@ public class DataAssembler {
 				}
 				++i;
 			}
+            DatabaseHandler db = new DatabaseHandler(mContext);
 			for(int j=0;j<days.size();j++)
 			{
+                ArrayList<String> dayofweek = days.get(j);
 				for(i=0;i<time.size();i++)
 				{
 					Period period = new Period();
-                    ArrayList<String> dayofweek = days.get(j);
-                    period.setId(i);
+                    int id = (j*100)+i;
+                    period.setId(id);
                     period.setDay(dayNames[j]);
                     period.setSubjectName(dayofweek.get(i));
                     int index = time.get(i).indexOf("-");
                     String start = time.get(i).substring(0,index);
                     String end = time.get(i).substring(index+1);
-                    while(i+1<time.size() && dayofweek.get(i) == dayofweek.get(i+1)) {
+                    while(i+1<time.size() && dayofweek.get(i).equals(dayofweek.get(i+1))) {
                         index = time.get(i+1).indexOf("-");
                         end = time.get(i+1).substring(index+1);
                         i++;
                     }
+                    System.out.println(id+": "+start+"-"+end);
                     period.setTime(start,end);
-                    DatabaseHandler db = new DatabaseHandler(mContext);
                     db.addOrUpdatePeriod(period);
 				}
 			}
+            db.close();
 		}
         return 0;
 	}

@@ -589,7 +589,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		Cursor cursor = db.query(TABLE_TIMETABLE, new String[] { KEY_TT_ID}, KEY_TT_ID + "=?",
-				new String[] { String.valueOf(period.getId()) }, null, null, null, null);
+				new String[] { String.valueOf(period.getId()) }, null, null, KEY_TT_ID, null);
 		if (cursor.getCount() == 0) {
             addPeriod(period);
 		}
@@ -603,6 +603,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(KEY_TT_ID,period.getId());
         values.put(KEY_DAY, period.getDay());
         values.put(KEY_SUBJECT_NAME, period.getSubjectName());
         values.put(KEY_START, period.getStartTime());
@@ -617,6 +618,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(KEY_TT_ID,period.getId());
         values.put(KEY_DAY, period.getDay());
         values.put(KEY_SUBJECT_NAME, period.getSubjectName());
         values.put(KEY_START, period.getStartTime());
@@ -637,19 +639,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				new String[] { String.valueOf(dayName) }, null, null, null, null);
 
         Day day = null;
-		if (cursor != null) {
-            cursor.moveToFirst();
-
+        if (cursor.moveToFirst()) {
             day = new Day();
-            for (int i = 0; i < cursor.getCount(); i++) {
-                    Period period = new Period();
-                    period.setDay(dayName);
-                    period.setSubjectName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_SUBJECT_NAME)));
-                    String start = cursor.getString(cursor.getColumnIndexOrThrow(KEY_START));
-                    String end = cursor.getString(cursor.getColumnIndexOrThrow(KEY_END));
-                    period.setTime(start,end);
-                    day.addPeriod(period);
-            }
+            do {
+                Period period = new Period();
+                period.setId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_TT_ID)));
+                period.setDay(cursor.getString(cursor.getColumnIndexOrThrow(KEY_DAY)));
+                period.setSubjectName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_SUBJECT_NAME)));
+                String start = cursor.getString(cursor.getColumnIndexOrThrow(KEY_START));
+                String end = cursor.getString(cursor.getColumnIndexOrThrow(KEY_END));
+                period.setTime(start,end);
+                day.addPeriod(period);
+            } while (cursor.moveToNext());
         }
 		db.close();
 		cursor.close();

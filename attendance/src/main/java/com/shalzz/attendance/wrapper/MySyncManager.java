@@ -71,7 +71,9 @@ public class MySyncManager {
 
 	public static void removeSyncAccount(Context mContext) {
 		AccountManager accountManager = AccountManager.get(mContext);
-		accountManager.removeAccount(getSyncAccount(mContext),null, null);
+        Account account = getSyncAccount(mContext);
+        if(account!=null)
+		    accountManager.removeAccount(account,null, null);
 
 	}	
 	

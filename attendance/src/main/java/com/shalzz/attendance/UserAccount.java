@@ -180,7 +180,7 @@ public class UserAccount {
 				new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {
-				Log.i(mContext.getClass().getName(), "Succesfully Logged out...");				
+				Log.i(mContext.getClass().getName(), "Successfully Logged out...");
 			}
 		},
 		myErrorListener()) {
@@ -189,7 +189,7 @@ public class UserAccount {
 				Map<String, String> headers = new HashMap<String, String>();
 				headers.put("User-Agent", mContext.getString(R.string.UserAgent));
 				return headers;
-			};
+			}
 
 			protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
 				Map<String, String> params = new HashMap<String, String>();
@@ -200,7 +200,7 @@ public class UserAccount {
 				params.put("return", mContext.getResources().getString(R.string.URL_home));
 				params.put("message", "0");
 				return params;
-			};
+			}
 		};
 		request.setShouldCache(false);
 		request.setPriority(Priority.IMMEDIATE);
