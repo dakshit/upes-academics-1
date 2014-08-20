@@ -84,6 +84,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 				}
 				else if (position == 1) {
 					scrollToToday();
+                    actionbar.setSelectedNavigationItem(0);
 					return true;
 				}
 				return false;
@@ -219,7 +220,6 @@ public class TimeTablePagerFragment extends SherlockFragment {
                     if (DataAssembler.parseTimeTable(response, mContext) == 0) {
                         updateFragments();
                         scrollToToday();
-                        Log.i(myTag, "Sync complete");
                     }
                 }
                 catch(Exception e) {

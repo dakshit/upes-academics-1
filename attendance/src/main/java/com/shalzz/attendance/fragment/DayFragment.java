@@ -55,8 +55,7 @@ public class DayFragment extends SherlockListFragment {
 			Bundle savedInstanceState) {
 		if(container==null)
 			return null;
-		
-		setHasOptionsMenu(true);
+
 		return inflater.inflate(R.layout.timetable_view, container, false);
 	}
 

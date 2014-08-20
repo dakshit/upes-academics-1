@@ -260,7 +260,6 @@ public class DataAssembler {
                         end = time.get(i+1).substring(index+1);
                         i++;
                     }
-                    System.out.println(id+": "+start+"-"+end);
                     period.setTime(start,end);
                     db.addOrUpdatePeriod(period);
 				}

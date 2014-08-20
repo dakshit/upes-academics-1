@@ -126,8 +126,6 @@ public class AttendanceListFragment extends SherlockListFragment {
 			MySyncManager.addPeriodicSync(mContext,SAPID);
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
 			misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
-            //misc.animateRefreshActionItem(refreshItem);
-            last_refreshed.setVisibility(View.GONE);
 		}
 		else
 			setAttendance();
@@ -241,7 +239,7 @@ public class AttendanceListFragment extends SherlockListFragment {
                 animationAdapter = new SwingRightInAnimationAdapter(mAdapter);
                 animationAdapter.setAbsListView(mlistview);
                 animationAdapter.setInitialDelayMillis(ADAPTER_DELAY_MILLIS);
-				//mlistview.setAdapter(animationAdapter);
+				mlistview.setAdapter(animationAdapter);
 				return true;  // Return true to collapse action view
 			}
 
@@ -299,7 +297,7 @@ public class AttendanceListFragment extends SherlockListFragment {
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
 			misc.animateRefreshActionItem(refreshItem);
 		}
-		return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
 	}
 
 	private Response.Listener<String> successListener() {
@@ -308,7 +306,6 @@ public class AttendanceListFragment extends SherlockListFragment {
 			public void onResponse(String response) {
                 misc.dismissProgressDialog();
                 misc.completeRefreshActionItem(refreshItem);
-                last_refreshed.setVisibility(View.VISIBLE);
                 try {
                     DataAssembler.parseStudentDetails(response, mContext);
                     DataAssembler.parseAttendance(response, mContext);
