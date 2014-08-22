@@ -206,10 +206,12 @@ public class UserAccount {
 		request.setPriority(Priority.IMMEDIATE);
 		request.setRetryPolicy(new DefaultRetryPolicy(1500, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		MyVolley.getInstance().addToRequestQueue(request,"LOGOUT");
-		
-		// Remove User Details from Shared Preferences.
-		MyPreferencesManager settings = new MyPreferencesManager(mContext);
-		settings.removeUser();
+
+        MainActivity.getInstance().LOGGIN_OUT = true;
+
+        // Remove User Details from Shared Preferences.
+        MyPreferencesManager settings = new MyPreferencesManager(mContext);
+        settings.removeUser();
 
 		// Remove user Attendance data from database.
 		DatabaseHandler db = new DatabaseHandler(mContext);
@@ -217,7 +219,8 @@ public class UserAccount {
 		
 		// Remove Sync Account
 		MySyncManager.removeSyncAccount(mContext);
-		
+
+        // Destroy current activity and start Login Activity
 		misc.dismissProgressDialog();
 		Intent ourIntent = new Intent(mContext, LoginActivity.class);
 		mContext.startActivity(ourIntent);

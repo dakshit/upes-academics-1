@@ -53,17 +53,26 @@ public class MyPreferencesManager {
 	public void setLastSyncTime() {
 		Time now = new Time();
 		now.setToNow();
-		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
+		SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong("REFRESH_TIME", now.toMillis(false));
 		editor.commit();
 	}
+
+    public void setLastSyncTime(int mode) {
+        Time now = new Time();
+        now.setToNow();
+        SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", mode);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong("REFRESH_TIME", now.toMillis(false));
+        editor.commit();
+    }
 	
 	public long getLastSyncTime() {
         Time now = new Time();
         now.setToNow();
         Long now_L = now.toMillis(false);
-		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
+		SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", 0);
 		Long last_sync = settings.getLong("REFRESH_TIME", now_L );
 		return (now_L-last_sync)/(1000*60*60); // convert milliseconds to hours
 	}
@@ -169,7 +178,7 @@ public class MyPreferencesManager {
 		Log.i(mContext.getClass().getName(), "Setting LOGGEDIN pref to false");
 		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
 		SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(MainActivity.PREFERENCE_ACTIVATED_FRAGMENT, 1);
+        editor.remove(MainActivity.PREFERENCE_ACTIVATED_FRAGMENT);
 		editor.putBoolean("LOGGEDIN", false);
 		editor.remove("USERNAME");
 		editor.remove("PASSWORD");
@@ -180,19 +189,19 @@ public class MyPreferencesManager {
      * Checks weather this is the first time the app is launched or not.
      * @return True or False
      */
-    public boolean isFirstLaunch() {
+    public boolean isFirstLaunch(String tag) {
         SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
-        boolean boot = settings.getBoolean("FIRSTLAUNCH"+mContext.getClass().getName(), true);
+        boolean boot = settings.getBoolean("FIRSTLAUNCH"+tag, true);
         return boot;
     }
 
     /**
      * Sets the first launch to false.
      */
-    public void setFirstLaunch() {
+    public void setFirstLaunch(String tag) {
         SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("FIRSTLAUNCH"+mContext.getClass().getName(), false);
+        editor.putBoolean("FIRSTLAUNCH"+tag, false);
         editor.commit();
     }
 }

@@ -55,7 +55,13 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class MainActivity extends SherlockFragmentActivity {
 
-	private String mTag = "Main Activity";
+    public static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
+    public boolean LOGGIN_OUT = false;
+
+    private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
+	private static final String mTag = "Main Activity";
+
+    private static MainActivity mActivity;
 	private String[] mNavTitles;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -64,9 +70,6 @@ public class MainActivity extends SherlockFragmentActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private View Drawerheader;
 	private FragmentManager mFragmentManager;
-	private static MainActivity mActivity;
-	private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
-	public static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
 	private Boolean DEBUG_FRAGMENTS = true;
     private Fragment fragment = null;
 
@@ -130,7 +133,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
     public void showcaseView() {
         MyPreferencesManager prefs = new MyPreferencesManager(this);
-        if(prefs.isFirstLaunch()) {
+        if(prefs.isFirstLaunch(mTag)) {
             final ShowcaseView sv = new ShowcaseView.Builder(this)
                     .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.HOME))
                     .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
@@ -148,7 +151,7 @@ public class MainActivity extends SherlockFragmentActivity {
                     }
                 }
             });
-            prefs.setFirstLaunch();
+            prefs.setFirstLaunch(mTag);
         }
     }
 
@@ -226,27 +229,29 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 	
 	private void persistCurrentFragment() {
-		SharedPreferences settings = this.getSharedPreferences("SETTINGS", 0);
-		SharedPreferences.Editor editor = settings.edit();
-		int fragmentPosition = 1;
-		Fragment installed = getInstalledFragment();
-		
-		if(installed instanceof AttendanceListFragment) {
-			fragmentPosition = 1;
-		} else if(installed instanceof TimeTablePagerFragment) {
-			fragmentPosition = 2;
-		}		
-		
-		if (DEBUG_FRAGMENTS) {
-			Log.i(mTag, this + " persistCurrentFragment: Saving fragment " + installed + " at position " + fragmentPosition);
-		}
-		
-		editor.putInt(PREFERENCE_ACTIVATED_FRAGMENT, fragmentPosition);
-		editor.commit();
+        if(!LOGGIN_OUT) {
+            SharedPreferences settings = getSharedPreferences("SETTINGS", 0);
+            SharedPreferences.Editor editor = settings.edit();
+            int fragmentPosition = 1;
+            Fragment installed = getInstalledFragment();
+
+            if (installed instanceof AttendanceListFragment) {
+                fragmentPosition = 1;
+            } else if (installed instanceof TimeTablePagerFragment) {
+                fragmentPosition = 2;
+            }
+
+            if (DEBUG_FRAGMENTS) {
+                Log.i(mTag, this + " persistCurrentFragment: Saving fragment " + installed + " at position " + fragmentPosition);
+            }
+
+            editor.putInt(PREFERENCE_ACTIVATED_FRAGMENT, fragmentPosition);
+            editor.commit();
+        }
 	}
 
 	private void reloadCurrentFragment() {
-		SharedPreferences settings = this.getSharedPreferences("SETTINGS", 0);
+		SharedPreferences settings = getSharedPreferences("SETTINGS", 0);
 		int fragmentPosition = settings.getInt(PREFERENCE_ACTIVATED_FRAGMENT, 1);
 		
 		if (DEBUG_FRAGMENTS) {
@@ -417,11 +422,16 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
+    @Override
+    public void onPause() {
+        persistCurrentFragment();
+        super.onPause();
+    }
+
 	@Override
 	public void onDestroy() {
 		MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.AttendanceListFragment");
 		Crouton.cancelAllCroutons();
-		persistCurrentFragment();
 		super.onDestroy();
 	}
 

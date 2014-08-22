@@ -49,7 +49,7 @@
     <dimen name="navigation_drawer_margin">5dp</dimen>
     
     <!-- Text size for action bar titles -->
-    <dimen name="action_bar_title_text_size">18dp</dimen>
+    <dimen name="action_bar_title_text_size">18sp</dimen>
     <!-- Text size for action bar subtitles -->
     <dimen name="action_bar_subtitle_text_size">14dp</dimen>
     <!-- Top margin for action bar subtitles -->

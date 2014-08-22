@@ -26,7 +26,7 @@
     <dimen name="activity_horizontal_margin">128dp</dimen>
     
         <!-- Text size for action bar titles -->
-    <dimen name="action_bar_title_text_size">14dp</dimen>
+    <dimen name="action_bar_title_text_size">14sp</dimen>
     <!-- Text size for action bar subtitles -->
     <dimen name="action_bar_subtitle_text_size">10dp</dimen>
     <!-- Top margin for action bar subtitles -->

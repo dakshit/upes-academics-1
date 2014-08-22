@@ -45,11 +45,6 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="ActionBar.Solid.Myactionbar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-        <item name="background">@drawable/ab_solid_myactionbar</item>
-        <item name="backgroundStacked">@drawable/ab_stacked_solid_myactionbar</item>
-    </style>
-
     <style name="ActionBar_L" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="background">@color/l_actionbar</item>
         <item name="android:background">@color/l_actionbar</item>

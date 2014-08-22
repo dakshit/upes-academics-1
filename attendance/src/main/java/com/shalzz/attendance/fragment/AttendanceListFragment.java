@@ -82,13 +82,15 @@ public class AttendanceListFragment extends SherlockListFragment {
     private int expandLimit;
     private final int ADAPTER_DELAY_MILLIS = 750;
     private MenuItem refreshItem;
+    MyPreferencesManager prefs;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext = getActivity();
+		mContext = getSherlockActivity();
 		misc = new Miscellaneous(mContext);
 		myTag = getActivity().getLocalClassName();
+        prefs = new MyPreferencesManager(mContext.getApplicationContext());
 	}
 
 	@Override
@@ -135,7 +137,6 @@ public class AttendanceListFragment extends SherlockListFragment {
 	}
 
     protected void updateLastRefresh() {
-        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
         last_refreshed.setText("Last refreshed "+prefs.getLastSyncTime()+" hours ago");
     }
 
@@ -310,7 +311,6 @@ public class AttendanceListFragment extends SherlockListFragment {
                     DataAssembler.parseStudentDetails(response, mContext);
                     DataAssembler.parseAttendance(response, mContext);
                     setAttendance();
-                    MyPreferencesManager prefs = new MyPreferencesManager(mContext);
                     prefs.setLastSyncTime();
                     updateLastRefresh();
                 }

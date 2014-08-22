@@ -20,6 +20,7 @@
 package com.shalzz.attendance.fragment;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -40,6 +42,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
 import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.DatabaseHandler;
@@ -48,8 +52,12 @@ import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.adapter.MySpinnerAdapter;
 import com.shalzz.attendance.adapter.TimeTablePagerAdapter;
+import com.shalzz.attendance.wrapper.DateHelper;
+import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
+
+import java.util.Calendar;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -64,10 +72,11 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	private ActionBar actionbar;
 	private MySpinnerAdapter mSpinnerAdapter ;
     private MenuItem refreshItem ;
+    private boolean initialize = true;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext = getActivity();
+		mContext = getSherlockActivity();
 		misc  = new Miscellaneous(mContext);
 		actionbar= getSherlockActivity().getSupportActionBar();
 		actionbar.setDisplayShowTitleEnabled(false);
@@ -78,14 +87,27 @@ public class TimeTablePagerFragment extends SherlockFragment {
 
 			@Override
 			public boolean onNavigationItemSelected(int position, long itemId) {
-				Log.d(myTag,""+itemId);
-				if(position == 0) {
-					return true;
+				Log.d(myTag,"selected "+position+": "+itemId);
+                if(initialize)
+                    initialize=false;
+                else if(position == 0) {
+                    Calendar today = Calendar.getInstance();
+                    today.setTime(DateHelper.getToDay());
+                    DatePickerDialog mDatePickerDialog = new DatePickerDialog(mContext,onDateSetListner()
+                            ,today.get(Calendar.YEAR)
+                            ,today.get(Calendar.MONTH)
+                            ,today.get(Calendar.DAY_OF_MONTH));
+                    mDatePickerDialog.show();
+                    return true;
+
 				}
 				else if (position == 1) {
-					scrollToToday();
-                    actionbar.setSelectedNavigationItem(0);
-					return true;
+                    mTimeTablePagerAdapter = new TimeTablePagerAdapter(getSherlockActivity().getSupportFragmentManager(), DateHelper.getToDay());
+                    mViewPager.setAdapter(mTimeTablePagerAdapter);
+                    updateFragments();
+                    scrollToToday();
+                    updateSpinner();
+                    return true;
 				}
 				return false;
 			}
@@ -103,7 +125,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.swipe_layout, container, false);
 
-		mTimeTablePagerAdapter = new TimeTablePagerAdapter(getSherlockActivity().getSupportFragmentManager());
+		mTimeTablePagerAdapter = new TimeTablePagerAdapter(getSherlockActivity().getSupportFragmentManager(), DateHelper.getToDay());
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);
 		mViewPager.setAdapter(mTimeTablePagerAdapter);
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -129,8 +151,24 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		} 
 		else
 			scrollToToday();
+
+        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
+        if(prefs.isFirstLaunch(myTag))
+            showcaseView();
 		super.onStart();
 	}
+
+    public void showcaseView() {
+        MyPreferencesManager prefs = new MyPreferencesManager(mContext);
+        new ShowcaseView.Builder(getActivity())
+                .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
+                .setTarget(Target.NONE)
+                .doNotBlockTouches()
+                .setContentTitle("Previous or next Day")
+                .setContentText("Swipe left or right to switch between days")
+                .build();
+        prefs.setFirstLaunch(myTag);
+    }
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
@@ -180,6 +218,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 			//fragment.notifyDataSetChanged();
 			fragment.setTimeTable();
 		}
+        updateSpinner();
 	}
 
 	private void updateSpinner() {
@@ -209,6 +248,21 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		};
 
 	}
+
+    DatePickerDialog.OnDateSetListener onDateSetListner() {
+        return new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar date = Calendar.getInstance();
+                date.set(year, monthOfYear, dayOfMonth);
+                mTimeTablePagerAdapter = new TimeTablePagerAdapter(getSherlockActivity().getSupportFragmentManager(), date.getTime());
+                mViewPager.setAdapter(mTimeTablePagerAdapter);
+                updateSpinner();
+                updateFragments();
+                scrollToToday();
+            }
+        };
+    }
 
 	private Response.Listener<String> timeTableSuccessListener() {
 		return new Response.Listener<String>() {
@@ -253,7 +307,8 @@ public class TimeTablePagerFragment extends SherlockFragment {
 
 	@Override
 	public void onDestroy() {
-		Crouton.cancelAllCroutons();
-		super.onDestroy();
-	}
+        Crouton.cancelAllCroutons();
+        super.onDestroy();
+    }
+
 }

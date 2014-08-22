@@ -37,17 +37,18 @@ public class TimeTablePagerAdapter extends FragmentStatePagerAdapter {
 
 	@SuppressLint("UseSparseArrays")
 	private final HashMap<Integer, DayFragment> activeFragments = new HashMap<Integer, DayFragment>();
+    private Date date;
 	
-	public TimeTablePagerAdapter(FragmentManager fm) {
+	public TimeTablePagerAdapter(FragmentManager fm, Date date) {
 		super(fm);
+        this.date = date;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		DayFragment fragment = new DayFragment();
 		Bundle args = new Bundle();
-		Date today = DateHelper.getToDay();
-		args.putSerializable(DayFragment.ARG_DATE, DateHelper.addDays(today, -15+position));
+		args.putSerializable(DayFragment.ARG_DATE, DateHelper.addDays(date, -15+position));
 		fragment.setArguments(args);
 		
 		activeFragments.put(position, fragment);
@@ -55,6 +56,10 @@ public class TimeTablePagerAdapter extends FragmentStatePagerAdapter {
 		return fragment;
 	}
 
+    public void setDate(Date date) {
+        this.date = date;
+        notifyDataSetChanged();
+    }
 	@Override
 	public int getCount() {
 		return 31;

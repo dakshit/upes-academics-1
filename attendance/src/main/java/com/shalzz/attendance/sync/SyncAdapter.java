@@ -33,7 +33,6 @@ import com.android.volley.VolleyError;
 import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
-import com.shalzz.attendance.wrapper.MySyncManager;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
 import static com.shalzz.attendance.DataAssembler.parseAttendance;
@@ -90,10 +89,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private Response.Listener<String> attendanceSuccessListener() {
 		return new Response.Listener<String>() {
 			@Override
-			public void onResponse(String response) {				
-				parseAttendance(response, mContext);
-                MyPreferencesManager pref = new MyPreferencesManager(mContext);
-                pref.setLastSyncTime();
+			public void onResponse(String response) {
+                try
+                {
+                    parseAttendance(response, mContext);
+                    MyPreferencesManager pref = new MyPreferencesManager(mContext);
+                    pref.setLastSyncTime(Context.MODE_MULTI_PROCESS);
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
 			}
 		};
 	}
@@ -101,9 +106,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private Response.Listener<String> timeTableSuccessListener() {
 		return new Response.Listener<String>() {
 			@Override
-			public void onResponse(String response) {				
-				DataAssembler.parseTimeTable(response, mContext);
-				Log.i(myTag,"Sync complete");
+			public void onResponse(String response) {
+                try
+                {
+                    DataAssembler.parseTimeTable(response, mContext);
+                    Log.i(myTag,"Sync complete");
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
 			}
 		};
 	}
