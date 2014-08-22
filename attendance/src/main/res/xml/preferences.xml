@@ -94,7 +94,7 @@
             
             <Preference
                 android:key="pref_info_version"
-                android:summary="v2.0-pre"
+                android:summary="v2.0"
                 android:title="Build Version" />
         </PreferenceScreen>
     </PreferenceCategory>
