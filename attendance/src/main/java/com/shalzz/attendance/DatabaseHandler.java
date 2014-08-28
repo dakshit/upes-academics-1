@@ -30,6 +30,7 @@ import com.shalzz.attendance.model.ListFooter;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Period;
 import com.shalzz.attendance.model.Subject;
+import com.shalzz.attendance.wrapper.MyPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +42,15 @@ import java.util.List;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
+    /**
+     * Context
+     */
+    private static Context mContext;
+
 	/**
 	 * Database Version
 	 */
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 
 	/**
 	 * Database Name
@@ -146,8 +152,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	 * Constructor.
 	 */
 	public DatabaseHandler(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
 	}
+
 
 	/**
 	 * Create Table.
@@ -173,6 +181,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		// Create tables again
 		onCreate(db);
+
+        // remove conflicting shared preferences b/w versions
+        MyPreferencesManager pref = new MyPreferencesManager(mContext);
+        pref.removeSettings();
 	}
 
 	/**

@@ -44,4 +44,5 @@
     <string name="pref_subjectLimit">Limit Expanded Subjects</string>
     <string name="drawer_open">Navigation drawer opened</string>
     <string name="drawer_close">Navigation drawer closed</string>
+    <string name="version">2.1</string>
 </resources>

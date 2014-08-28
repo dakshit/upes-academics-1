@@ -29,11 +29,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 19
     }
-    signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-        }
-    }
+
     buildTypes {
         debug {
             applicationIdSuffix '.debug'

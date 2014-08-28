@@ -21,6 +21,7 @@ package com.shalzz.attendance.wrapper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -151,7 +152,7 @@ public class MyPreferencesManager {
 
 		Log.i(mContext.getClass().getName(), "Getting Logged in state.");
 		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
-		boolean loggedin = settings.getBoolean("LOGGEDIN", false);
+		boolean loggedin = settings.getBoolean("LOGGEDIN"+mContext.getResources().getString(R.string.version), false);
 		Log.d(mContext.getClass().getName(), "Logged in state: "+loggedin+ "");
 		return loggedin;
 	}
@@ -165,7 +166,7 @@ public class MyPreferencesManager {
 		Log.i(mContext.getClass().getName(), "Setting LOGGEDIN pref to true");
 		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putBoolean("LOGGEDIN", true);
+		editor.putBoolean("LOGGEDIN"+mContext.getResources().getString(R.string.version), true);
 		//editor.putString("USERNAME", username);
 		//editor.putString("PASSWORD", password);
 		editor.commit();
@@ -179,7 +180,7 @@ public class MyPreferencesManager {
 		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
 		SharedPreferences.Editor editor = settings.edit();
         editor.remove(MainActivity.PREFERENCE_ACTIVATED_FRAGMENT);
-		editor.putBoolean("LOGGEDIN", false);
+		editor.putBoolean("LOGGEDIN"+mContext.getResources().getString(R.string.version), false);
 		editor.remove("USERNAME");
 		editor.remove("PASSWORD");
 		editor.commit();
@@ -191,8 +192,7 @@ public class MyPreferencesManager {
      */
     public boolean isFirstLaunch(String tag) {
         SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
-        boolean boot = settings.getBoolean("FIRSTLAUNCH"+tag, true);
-        return boot;
+        return settings.getBoolean("FIRSTLAUNCH"+tag, true);
     }
 
     /**
@@ -202,6 +202,18 @@ public class MyPreferencesManager {
         SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("FIRSTLAUNCH"+tag, false);
+        editor.apply();
+    }
+
+    public void removeSettings() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.clear();
+        editor.commit();
+
+        settings = mContext.getSharedPreferences("SETTINGS", 0);
+        editor = settings.edit();
+        editor.clear();
         editor.commit();
     }
 }
