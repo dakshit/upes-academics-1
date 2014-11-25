@@ -12,6 +12,9 @@ import com.google.android.gms.ads.AdView;
 import com.shalzz.attendance.R;
 
 public class AdFragment extends Fragment {
+
+    //AdRequest.Builder.addTestDevice("FF6EDBEB25A680CE17574F685EEB37EC");
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

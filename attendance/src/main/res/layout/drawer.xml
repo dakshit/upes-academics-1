@@ -19,17 +19,38 @@
 
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
     <!-- The main content view -->
-    <FrameLayout
-        android:id="@+id/frame_container"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/drawer_content_padding"
+            android:layout_marginStart="@dimen/drawer_content_padding"
+            android:layout_above="@+id/adFragment" />
+
+        <fragment
+            android:id="@+id/adFragment"
+            android:name="com.shalzz.attendance.fragment.AdFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            tools:layout="@layout/fragment_ad" />
+
+    </RelativeLayout>
+
     <!-- The navigation drawer -->
     <ListView android:id="@+id/list_slidermenu"
-        android:layout_width="260dp"
+        android:layout_width="@dimen/drawer_size"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
