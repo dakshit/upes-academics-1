@@ -20,6 +20,7 @@
 package com.shalzz.attendance.fragment;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -29,19 +30,16 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
-import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.amlcurran.showcaseview.ShowcaseView;
@@ -68,7 +66,7 @@ import java.util.List;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class AttendanceListFragment extends SherlockListFragment {
+public class AttendanceListFragment extends ListFragment {
 
 	private View footer;
 	private View header;
@@ -87,7 +85,7 @@ public class AttendanceListFragment extends SherlockListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext = getSherlockActivity();
+		mContext = getActivity();
 		misc = new Miscellaneous(mContext);
 		myTag = getActivity().getLocalClassName();
         prefs = new MyPreferencesManager(mContext.getApplicationContext());
@@ -106,7 +104,7 @@ public class AttendanceListFragment extends SherlockListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		mlistview = getListView();
-		LayoutInflater inflater = this.getLayoutInflater(savedInstanceState);
+		LayoutInflater inflater = getActivity().getLayoutInflater();
 
 		header = inflater.inflate(R.layout.list_header, null);
 		mlistview.addHeaderView(header);
@@ -124,7 +122,7 @@ public class AttendanceListFragment extends SherlockListFragment {
         last_refreshed = (TextView) getActivity().findViewById(R.id.last_refreshed);
 
 		if(db.getRowCount()<=0) {
-			String SAPID = getSherlockActivity().getIntent().getExtras().getString("SAPID");
+			String SAPID = getActivity().getIntent().getExtras().getString("SAPID");
 			MySyncManager.addPeriodicSync(mContext,SAPID);
 			DataAPI.getAttendance(mContext, successListener(), errorListener());
 			misc.showProgressDialog("Loading your attendance...","Loading" ,true, pdCancelListener());
@@ -141,9 +139,13 @@ public class AttendanceListFragment extends SherlockListFragment {
     }
 
     public void showcaseView() {
+        int firstElementPosition = 0;
+        firstElementPosition += mlistview.getHeaderViewsCount();
+        View firstElementView = mlistview.getChildAt(firstElementPosition);
+
         new ShowcaseView.Builder(getActivity())
-                .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
-                .setTarget(new ViewTarget(mlistview))
+                .setStyle(R.style.AppBaseTheme)
+                .setTarget(new ViewTarget(firstElementView))
                 .setContentTitle("Expandable item")
                 .setContentText("Touch a Subject for more details about it")
                 .build();
@@ -228,9 +230,10 @@ public class AttendanceListFragment extends SherlockListFragment {
 		menuInflater.inflate(R.menu.main, menu);
 		MenuItem searchItem = menu.findItem(R.id.menu_search);
 		final SearchView searchView = (SearchView) searchItem.getActionView();
-		searchView.setQueryHint("Search subjects");
 
-		searchItem.setOnActionExpandListener(new OnActionExpandListener() {
+        searchView.setQueryHint("Search subjects");
+
+		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item) {
 				DatabaseHandler db = new DatabaseHandler(mContext);
@@ -251,7 +254,7 @@ public class AttendanceListFragment extends SherlockListFragment {
 			}
 		});
 
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
 			@Override
 			public boolean onQueryTextSubmit(String arg0) {

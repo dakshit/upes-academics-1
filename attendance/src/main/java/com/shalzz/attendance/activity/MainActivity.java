@@ -19,27 +19,29 @@
 
 package com.shalzz.attendance.activity;
 
+import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.shalzz.attendance.DatabaseHandler;
@@ -53,8 +55,9 @@ import com.shalzz.attendance.wrapper.MyVolley;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends FragmentActivity {
 
+    private boolean isDrawerLocked = false;
     public static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
     public boolean LOGGIN_OUT = false;
 
@@ -84,7 +87,16 @@ public class MainActivity extends SherlockFragmentActivity {
 		mNavTitles = getResources().getStringArray(R.array.drawer_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-		mFragmentManager = getSupportFragmentManager();
+		mFragmentManager = getFragmentManager();
+
+        // Check for tablet layout
+        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.frame_container);
+        if(((ViewGroup.MarginLayoutParams)frameLayout.getLayoutParams()).leftMargin == (int)getResources().getDimension(R.dimen.drawer_size)) {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN, mDrawerList);
+            mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+            isDrawerLocked = true;
+            Log.i(mTag,"Tablet layout applied");
+        }
 
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Drawerheader = inflater.inflate(R.layout.drawer_header, null);
@@ -98,9 +110,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		mTitle  = getTitle();
-		final ActionBar actionbar = getSupportActionBar();
-		actionbar.setDisplayHomeAsUpEnabled(true);
-		actionbar.setHomeButtonEnabled(true);
+		final ActionBar actionbar = getActionBar();
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
@@ -121,7 +131,11 @@ public class MainActivity extends SherlockFragmentActivity {
 		};
 
 		// Set the drawer toggle as the DrawerListener
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+        if(!isDrawerLocked) {
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeButtonEnabled(true);
+        }
 
 		reloadCurrentFragment();
 
@@ -136,7 +150,7 @@ public class MainActivity extends SherlockFragmentActivity {
         if(prefs.isFirstLaunch(mTag)) {
             final ShowcaseView sv = new ShowcaseView.Builder(this)
                     .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.HOME))
-                    .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
+                    .setStyle(R.style.AppBaseTheme)
                     .setContentTitle("Navigation bar")
                     .setContentText("Press this button or swipe from the left edge to access the navigation bar")
                     .build();
@@ -222,7 +236,8 @@ public class MainActivity extends SherlockFragmentActivity {
 			mDrawerList.setSelection(position);
 			mDrawerTitle = mNavTitles[position-1];
 			setTitle(mDrawerTitle);
-			mDrawerLayout.closeDrawer(mDrawerList);
+            if(!isDrawerLocked)
+			    mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
 			Log.e(mTag, "Error in creating fragment");
 		}
@@ -264,7 +279,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	@Override
 	public void setTitle(CharSequence title) {
 		mTitle = title;
-		getSupportActionBar().setTitle(mTitle);
+		getActionBar().setTitle(mTitle);
 	}
 
 	@Override
@@ -330,8 +345,13 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
+        // close drawer if it is open
+        if (mDrawerLayout.isDrawerOpen(mDrawerList) && !isDrawerLocked)
+        {
+            mDrawerLayout.closeDrawer(mDrawerList);
+        }
 		// Custom back stack
-		if (shouldPopFromBackStack()) {
+		else if (shouldPopFromBackStack()) {
 			if (DEBUG_FRAGMENTS) {
 				Log.d(mTag, this + " Back: Popping from back stack");
 			}
@@ -420,6 +440,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		mDrawerToggle.onConfigurationChanged(newConfig);
+        getActionBar().setTitle(mTitle);
 	}
 
     @Override

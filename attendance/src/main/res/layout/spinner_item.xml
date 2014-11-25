@@ -33,7 +33,6 @@
         android:ellipsize="end"
         android:singleLine="true"
     	android:padding="10dp"
-        android:text="item 1"
         android:textColor="@color/white"
         android:textSize="@dimen/action_bar_title_text_size" />
 

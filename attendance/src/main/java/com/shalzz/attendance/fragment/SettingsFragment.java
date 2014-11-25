@@ -26,16 +26,15 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.v4.preference.PreferenceFragment;
 
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.wrapper.MySyncManager;
 
 import de.psdev.licensesdialog.LicensesDialog;
-import de.psdev.licensesdialog.SingleLicenseDialog;
 import de.psdev.licensesdialog.licenses.GnuGeneralPublicLicense30;
 import de.psdev.licensesdialog.licenses.License;
 import de.psdev.licensesdialog.model.Notice;
@@ -108,7 +107,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		        final String copyright = "Copyright (C) 2013 - 2014 Shaleen Jain <shaleen.jain95@gmail.com>";
 		        final License license = new GnuGeneralPublicLicense30();
 		        final Notice notice = new Notice(name, url, copyright, license);
-		        new SingleLicenseDialog(mContext, notice, true).show();
+                new LicensesDialog.Builder(mContext).setNotices(notice).build().show();
 				return true;
 			}
 		});
@@ -116,7 +115,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		noticePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				new LicensesDialog(mContext, R.raw.notices, false, true).show();
+                new LicensesDialog.Builder(mContext).setNotices(R.raw.notices).build().show();
 				return true;
 			}
 		});

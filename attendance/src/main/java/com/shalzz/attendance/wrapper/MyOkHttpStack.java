@@ -19,13 +19,6 @@
 
 package com.shalzz.attendance.wrapper;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.URL;
-import java.net.Proxy;
-import java.security.KeyStore;
-
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,6 +27,13 @@ import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
+import java.security.KeyStore;
 
 public class MyOkHttpStack extends HurlStack {
     private final OkUrlFactory okUrlFactory;

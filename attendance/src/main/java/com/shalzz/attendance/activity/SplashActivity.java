@@ -19,14 +19,14 @@
 
 package com.shalzz.attendance.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 
-public class SplashActivity extends SherlockActivity {
+public class SplashActivity extends Activity {
 	
 	MyPreferencesManager settings = new MyPreferencesManager(this);
 

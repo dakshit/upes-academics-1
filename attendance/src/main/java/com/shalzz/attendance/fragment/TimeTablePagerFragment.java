@@ -19,8 +19,10 @@
 
 package com.shalzz.attendance.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -29,17 +31,14 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.amlcurran.showcaseview.ShowcaseView;
@@ -62,7 +61,7 @@ import java.util.Calendar;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class TimeTablePagerFragment extends SherlockFragment {
+public class TimeTablePagerFragment extends Fragment {
 
 	private TimeTablePagerAdapter mTimeTablePagerAdapter;
 	private ViewPager mViewPager;
@@ -76,14 +75,14 @@ public class TimeTablePagerFragment extends SherlockFragment {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext = getSherlockActivity();
+		mContext = getActivity();
 		misc  = new Miscellaneous(mContext);
-		actionbar= getSherlockActivity().getSupportActionBar();
+		actionbar= getActivity().getActionBar();
 		actionbar.setDisplayShowTitleEnabled(false);
 
 		mSpinnerAdapter = new MySpinnerAdapter(mContext);
 
-		OnNavigationListener mOnNavigationListener = new OnNavigationListener() {
+		ActionBar.OnNavigationListener mOnNavigationListener = new ActionBar.OnNavigationListener() {
 
 			@Override
 			public boolean onNavigationItemSelected(int position, long itemId) {
@@ -102,7 +101,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 
 				}
 				else if (position == 1) {
-                    mTimeTablePagerAdapter = new TimeTablePagerAdapter(getSherlockActivity().getSupportFragmentManager(), DateHelper.getToDay());
+                    mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), DateHelper.getToDay());
                     mViewPager.setAdapter(mTimeTablePagerAdapter);
                     updateFragments();
                     scrollToToday();
@@ -125,7 +124,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.swipe_layout, container, false);
 
-		mTimeTablePagerAdapter = new TimeTablePagerAdapter(getSherlockActivity().getSupportFragmentManager(), DateHelper.getToDay());
+		mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), DateHelper.getToDay());
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);
 		mViewPager.setAdapter(mTimeTablePagerAdapter);
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -148,7 +147,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		if(db.getRowCountofTimeTable()<=0) {
 			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
 			misc.showProgressDialog("Loading your TimeTable...","Loading", true, pdCancelListener());
-		} 
+		}
 		else
 			scrollToToday();
 
@@ -160,14 +159,21 @@ public class TimeTablePagerFragment extends SherlockFragment {
 
     public void showcaseView() {
         MyPreferencesManager prefs = new MyPreferencesManager(mContext);
-        new ShowcaseView.Builder(getActivity())
-                .setStyle(R.style.Theme_Sherlock_Light_DarkActionBar)
+        final ShowcaseView sv = new ShowcaseView.Builder(getActivity())
+                .setStyle(R.style.AppBaseTheme)
                 .setTarget(Target.NONE)
                 .doNotBlockTouches()
                 .setContentTitle("Previous or next Day")
                 .setContentText("Swipe left or right to switch between days")
                 .build();
         prefs.setFirstLaunch(myTag);
+
+        sv.overrideButtonClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sv.hide();
+            }
+        });
     }
 
 	@Override
@@ -200,7 +206,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.menu_logout)
-		{			
+		{
 			new UserAccount(mContext).Logout();
 		}
 		else if(item.getItemId() == R.id.menu_refresh)
@@ -232,7 +238,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
 		mViewPager.setCurrentItem(15, true);
 		Log.d(myTag,"Scrolling to Today");
 	}
-	
+
 	public void scrollToPosition(int position) {
 		mViewPager.setCurrentItem(position);
 	}
@@ -255,7 +261,7 @@ public class TimeTablePagerFragment extends SherlockFragment {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar date = Calendar.getInstance();
                 date.set(year, monthOfYear, dayOfMonth);
-                mTimeTablePagerAdapter = new TimeTablePagerAdapter(getSherlockActivity().getSupportFragmentManager(), date.getTime());
+                mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), date.getTime());
                 mViewPager.setAdapter(mTimeTablePagerAdapter);
                 updateSpinner();
                 updateFragments();

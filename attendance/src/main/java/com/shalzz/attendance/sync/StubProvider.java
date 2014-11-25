@@ -44,7 +44,7 @@ public class StubProvider extends ContentProvider {
      */
     @Override
     public String getType(Uri uri) {
-        return new String();
+        return "";
     }
     /*
      * query() always returns no results

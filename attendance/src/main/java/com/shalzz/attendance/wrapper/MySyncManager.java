@@ -34,7 +34,8 @@ public class MySyncManager {
 	public static final long SECONDS_PER_MINUTE = 60L;
 	public static final String AUTHORITY = "com.shalzz.attendance.provider";
 	public static final String ACCOUNT_TYPE = "com.shalzz";
-	private static String mTag = "Sync Manager";
+	@SuppressWarnings("FieldCanBeLocal")
+    private static String mTag = "Sync Manager";
 	
 	
 	/**

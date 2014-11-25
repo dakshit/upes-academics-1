@@ -19,13 +19,14 @@
 
 package com.shalzz.attendance.fragment;
 
+import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.adapter.DayListAdapter;
@@ -36,7 +37,7 @@ import java.util.Date;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
-public class DayFragment extends SherlockListFragment {
+public class DayFragment extends ListFragment {
 	
 	private Context mContext;
 	private Date mDate;
@@ -51,7 +52,7 @@ public class DayFragment extends SherlockListFragment {
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if(container==null)
 			return null;
@@ -75,6 +76,8 @@ public class DayFragment extends SherlockListFragment {
 		Day day = db.getDay(weekday);
         if(day!=null) {
             mAdapter = new DayListAdapter(mContext, day);
+            if(mAdapter.getCount()==1 && mAdapter.getItem(0).getSubjectName().equals("")) // no classes
+                return;
             setListAdapter(mAdapter);
         }
 	}

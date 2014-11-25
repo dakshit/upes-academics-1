@@ -34,4 +34,6 @@
     <!-- Bottom margin for action bar subtitles -->
     <dimen name="action_bar_subtitle_bottom_margin">2dip</dimen>
 
+    <dimen name="drawer_content_padding">260dp</dimen>
+
 </resources>

@@ -20,33 +20,28 @@
 package com.shalzz.attendance.activity;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request.Method;
 import com.android.volley.Request.Priority;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.fragment.CaptchaDialogFragment;
-import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyStringRequest;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
@@ -62,11 +57,12 @@ import java.util.Map;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
-public class LoginActivity extends SherlockFragmentActivity implements CaptchaDialogFragment.CaptchaDialogListener{
+public class LoginActivity extends FragmentActivity implements CaptchaDialogFragment.CaptchaDialogListener{
 
 	private EditText etSapid;
 	private EditText etPass;
-	private Button bLogin;
+	@SuppressWarnings("FieldCanBeLocal")
+    private Button bLogin;
 	private String charset = HTTP.ISO_8859_1;
 	private Map<String, String> data = new HashMap<String, String>();
 	private String myTag ;
@@ -139,9 +135,7 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 			// workaround for enrollment number.
 			if(sapid.length()==10)
 			{
-				if(sapid.charAt(0)=='#')
-					sapid.replaceFirst("#","R");
-				else {
+				if(sapid.charAt(0)!='#') {
 					etSapid.requestFocus();
 					etSapid.setError("SAP ID should be of 9 digits");
 					Miscellaneous.showKeyboard(this,etSapid);
@@ -180,8 +174,14 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 
 		if(data.isEmpty())
 			getHiddenData();
+
+        // workaround for enrollment number.
+        String sapid = etSapid.getText().toString();
+        if(sapid.length()==10 && sapid.charAt(0)=='#')
+            sapid = sapid.replaceFirst("#","R");
+
 		new UserAccount(LoginActivity.this)
-		.Login(etSapid.getText().toString(), 
+		.Login(sapid,
 				etPass.getText().toString(),
 				Captxt.getText().toString(),
 				data);		
@@ -203,7 +203,7 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 				headers.put("Accept-Charset", charset);
 				headers.put("User-Agent", getString(R.string.UserAgent));
 				return headers;
-			};
+			}
 		};
 		request.setShouldCache(false);
 		request.setPriority(Priority.HIGH);
@@ -250,7 +250,7 @@ public class LoginActivity extends SherlockFragmentActivity implements CaptchaDi
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getSupportMenuInflater().inflate(R.menu.login, menu);
+		getMenuInflater().inflate(R.menu.login, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

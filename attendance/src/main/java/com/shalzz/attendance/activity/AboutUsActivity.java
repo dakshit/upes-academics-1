@@ -19,26 +19,28 @@
 
 package com.shalzz.attendance.activity;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.fragment.SettingsFragment;
 
-public class AboutUsActivity extends SherlockActivity{
+public class AboutUsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
 		
-		ActionBar actionBar = getSupportActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
-	}
+		ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	   switch (item.getItemId()) {

@@ -71,11 +71,11 @@ public class MySpinnerAdapter extends BaseAdapter {
 		View v;
 
 		// Check if can recycle the view
-		if (convertView == null || ((Integer) convertView.getTag()).intValue()!= R.layout.spinner_header) 
+		if (convertView == null || (Integer) convertView.getTag() != R.layout.spinner_header)
 		{
 			v = mInflater.inflate(R.layout.spinner_header, parent, false);
 			// Set the tag to make sure you can recycle it when you get it as a convert view
-			v.setTag(Integer.valueOf(R.layout.spinner_header));
+			v.setTag(R.layout.spinner_header);
 		}
 		else {
 			v = convertView;

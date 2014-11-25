@@ -96,17 +96,16 @@ public class UserAccount {
 				Map<String, String> headers = new HashMap<String, String>();
 				headers.put("User-Agent", mContext.getString(R.string.UserAgent));
 				return headers;
-			};
+			}
 
 			protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
-				Map<String, String> params = data;
-				params.put("username", username);
-				params.put("passwd", password);
-				params.put("txtCaptcha", captcha);
-				params.put("submit", "Login");
-				params.put("remember","yes");
-				return params;
-			};
+                data.put("username", username);
+				data.put("passwd", password);
+				data.put("txtCaptcha", captcha);
+				data.put("submit", "Login");
+				data.put("remember", "yes");
+				return data;
+			}
 		};
 		request.setShouldCache(false);
 		request.setPriority(Priority.HIGH);
@@ -122,11 +121,11 @@ public class UserAccount {
 				Document document = Jsoup.parse(response);
 				System.out.println(document.text());
 
-				if(document.data().toString().equals(mContext.getString(R.string.incorrect_captcha)))
+				if(document.equals(mContext.getString(R.string.incorrect_captcha)))
 				{
 					misc.showAlertDialog("Incorrect Captcha!\nPlease try again.");
 				}
-				else if(document.data().toString().equals(mContext.getString(R.string.incorrect_user_or_pass)))
+				else if(document.equals(mContext.getString(R.string.incorrect_user_or_pass)))
 				{
 					misc.showAlertDialog("Incorrect username or password. Please try again");
 

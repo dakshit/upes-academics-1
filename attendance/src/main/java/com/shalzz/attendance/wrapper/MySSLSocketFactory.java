@@ -133,7 +133,7 @@ public class MySSLSocketFactory extends SSLSocketFactory {
 		try {
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
 			caInput = new BufferedInputStream(cert);
-			ca = (Certificate) cf.generateCertificate(caInput);
+			ca = cf.generateCertificate(caInput);
 		} catch (CertificateException e1) {
 			e1.printStackTrace();
 		} finally {
@@ -151,7 +151,7 @@ public class MySSLSocketFactory extends SSLSocketFactory {
 			keyStore = KeyStore.getInstance(keyStoreType);
 			keyStore.load(null, null);
 			keyStore.setCertificateEntry("ca",
-					(java.security.cert.Certificate) ca);
+                    ca);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

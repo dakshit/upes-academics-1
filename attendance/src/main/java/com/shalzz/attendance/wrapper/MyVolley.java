@@ -31,12 +31,10 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.Volley;
-import com.shalzz.attendance.R;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.security.KeyStore;
 
 /**
  * Wrapper class for Volley which provides a singleton instance.

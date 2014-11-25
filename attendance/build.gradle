@@ -19,15 +19,15 @@
 
 
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 22
     buildToolsVersion '20.0.0'
     defaultConfig {
         applicationId 'com.shalzz.attendance'
-        minSdkVersion 11
-        targetSdkVersion 19
+        minSdkVersion 14
+        targetSdkVersion 22
     }
 
     buildTypes {
@@ -46,14 +46,14 @@ android {
 
 dependencies {
     // aar binary library projects
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'com.mcxiaoke.volley:library:1.0.+@aar'
     compile 'com.nhaarman.listviewanimations:library:+@aar'
-    compile 'com.github.amlcurran.showcaseview:library:5.1.0@aar'
+    compile 'com.github.amlcurran.showcaseview:library:5.1.0-SNAPSHOT@aar'
     // Jars
     compile 'com.google.android.gms:play-services:5.+'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.android.support:support-v4:21.+'
+    compile 'com.android.support:support-v13:21.+'
     compile 'org.jsoup:jsoup:1.7.3'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'de.keyboardsurfer.android.widget:crouton:1.8.4@aar'

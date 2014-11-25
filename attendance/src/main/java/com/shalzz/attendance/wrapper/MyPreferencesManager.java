@@ -32,8 +32,6 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.URI;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
 public class MyPreferencesManager {
@@ -132,12 +130,9 @@ public class MyPreferencesManager {
 	public void removePersistenCookies() {
 		SharedPreferences pcookies = mContext.getSharedPreferences("PERSISTCOOKIES", 0);
 		SharedPreferences.Editor editor = pcookies.edit();
-		Iterator<String> keyset = pcookies.getAll().keySet().iterator();
-		while(keyset.hasNext())
-		{
-			String cookiename = keyset.next();
-			editor.remove(cookiename);
-		}
+        for (String cookiename : pcookies.getAll().keySet()) {
+            editor.remove(cookiename);
+        }
 		editor.commit();
 		
 		CookieManager cookieMan = (CookieManager) CookieHandler.getDefault();
