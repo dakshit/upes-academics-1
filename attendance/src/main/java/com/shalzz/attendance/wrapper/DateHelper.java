@@ -20,6 +20,7 @@
 package com.shalzz.attendance.wrapper;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,4 +73,17 @@ public class DateHelper {
 			date = addDays(date,1);
 		return technicalDateFormat.format(date);
 	}
+
+    public static String to12HrFormat(String time) throws ParseException {
+        DateFormat hr24Format = new SimpleDateFormat("HH:mm");
+        DateFormat hr12Format = new SimpleDateFormat("hh:mm aa");
+        Date d = hr24Format.parse(time);
+        return hr12Format.format(d);
+    }
+
+    public static String to24HrFormat(String time) throws ParseException {
+        DateFormat hr24Format = new SimpleDateFormat("HH:mm");
+        Date d = hr24Format.parse(time);
+        return hr24Format.format(d);
+    }
 }

@@ -19,14 +19,16 @@
 
 package com.shalzz.attendance.model;
 
+import com.shalzz.attendance.wrapper.DateHelper;
+
+import java.text.ParseException;
+
 public class Period {
 
 	// private variables;
-	private int id;
-	private String name;
-	private String teacher;
-	private String room;
-	private String time;
+	private String name = "";
+	private String teacher = "";
+	private String room = "";
 	private String start;
 	private String end;
 	private String day;
@@ -35,17 +37,17 @@ public class Period {
 
 	}
 
-	Period (int _id, String name, String room, String teacher, String start, String end, String day) {
+    public Period(String day) {
+        this.day = day;
+    }
+
+	Period (String name, String room, String teacher, String start, String end, String day) {
 		this.name = name;
 		this.room = room;
 		this.teacher = teacher;
 		this.start = start;
 		this.end = end;
 		this.day = day;
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	public String getSubjectName() {
@@ -69,15 +71,15 @@ public class Period {
 	}
 
 	public String getTime() {
-		return time;
+		return start + "-" + end ;
 	}
+
+    public String getTimein12hr() throws ParseException {
+        return DateHelper.to12HrFormat(start) + " - " + DateHelper.to12HrFormat(end) ;
+    }
 
 	public String getDay() {
 		return day;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public void setSubjectName(String name) {
@@ -95,12 +97,22 @@ public class Period {
 	}
 
 	public void setTime(String start, String end) {
-		this.start = start;
-		this.end = end;
-        this.time = start + "-" + end ;
+        try {
+            this.start = DateHelper.to24HrFormat(start);
+            this.end = DateHelper.to24HrFormat(end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 	}
 
 	public void setDay(String day ) {
 		this.day = day;
 	}
+
+    public boolean isEqual(Period period) {
+        return this.name.equals(period.getSubjectName()) &&
+                this.room.equals(period.getRoom()) &&
+                this.teacher.equals(period.getTeacher()) &&
+                this.day.equals(period.getDay());
+    }
 }

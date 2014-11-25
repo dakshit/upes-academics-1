@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.shalzz.attendance.model.Day;
 import com.shalzz.attendance.model.ListFooter;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Period;
@@ -181,7 +180,6 @@ public class DataAssembler {
 		ArrayList<String> sat = new ArrayList<String>();
 		String dayNames[] = {"mon","tue","wed","thur","fri","sat"};
 		ArrayList<ArrayList<String>> days = new ArrayList<ArrayList<String>>();
-		//List<ArrayList<String>> days = Arrays.asList(mon,tue,wed,thur,fri,sat);
 		days.add(mon);
 		days.add(tue);
 		days.add(wed);
@@ -212,31 +210,31 @@ public class DataAssembler {
 				{
 					// get time
 					if ((i - 9) % 7 == 0) {
-						time.add(element.text());
+						time.add(element.html());
 					}
 					// periods on mon
 					if ((i - 10) % 7 == 0) {
-						mon.add(element.text());
+						mon.add(element.html());
 					}
 					// periods on tue
 					if ((i - 11) % 7 == 0) {
-						tue.add(element.text());
+						tue.add(element.html());
 					}
 					// periods on wed
 					if ((i - 12) % 7 == 0) {
-						wed.add(element.text());
+						wed.add(element.html());
 					}
 					// periods on thur
 					if ((i - 13) % 7 == 0) {
-						thur.add(element.text());
+						thur.add(element.html());
 					}
 					// periods on fri
 					if ((i - 14) % 7 == 0) {
-						fri.add(element.text());
+						fri.add(element.html());
 					}
 					// periods on sat
 					if ((i - 15) % 7 == 0) {
-						sat.add(element.text());
+						sat.add(element.html());
 					}
 				}
 				++i;
@@ -247,21 +245,50 @@ public class DataAssembler {
                 ArrayList<String> dayofweek = days.get(j);
 				for(i=0;i<time.size();i++)
 				{
-					Period period = new Period();
-                    int id = (j*100)+i;
-                    period.setId(id);
-                    period.setDay(dayNames[j]);
-                    period.setSubjectName(dayofweek.get(i));
+                    String[] parts = dayofweek.get(i).split("<br />");
                     int index = time.get(i).indexOf("-");
                     String start = time.get(i).substring(0,index);
                     String end = time.get(i).substring(index+1);
-                    while(i+1<time.size() && dayofweek.get(i).equals(dayofweek.get(i+1))) {
+                    while(i+1<time.size() && dayofweek.get(i).equals(dayofweek.get(i + 1))) {
                         index = time.get(i+1).indexOf("-");
                         end = time.get(i+1).substring(index+1);
                         i++;
                     }
+                    Period period = new Period();
+                    Period period1 = new Period();
+                    if(!dayofweek.get(i).equals("***")) {
+                        if(parts.length==7) {
+                            String batch = parts[0].substring(parts[0].indexOf('-'));
+                            period.setTeacher(parts[1]);
+                            period.setSubjectName(parts[2].replaceAll("&amp;", "&")+" "+batch);
+                            period.setRoom(parts[3].split("<hr")[0]);
+                            batch = parts[3].split("<hr")[1].substring(parts[3].split("<hr")[1].indexOf('-'));
+                            period1.setTeacher(parts[4]);
+                            period1.setSubjectName(parts[5].replaceAll("&amp;", "&")+" "+batch);
+                            period1.setRoom(parts[6]);
+                        }
+                        else if (!parts[0].isEmpty()) {
+                            System.out.println(parts[0]);
+                            String batch = parts[0].substring(parts[0].indexOf('-'));
+                            period.setTeacher(parts[1]);
+                            period.setSubjectName(parts[2].replaceAll("&amp;", "&")+" "+batch);
+                            period.setRoom(parts[3]);
+                        }
+                        else {
+                            period.setTeacher(parts[1]);
+                            period.setSubjectName(parts[2].replaceAll("&amp;", "&"));
+                            period.setRoom(parts[3]);
+                        }
+                    }
+                    period.setDay(dayNames[j]);
                     period.setTime(start,end);
-                    db.addOrUpdatePeriod(period);
+                    if(!period.getSubjectName().isEmpty())
+                        db.addOrUpdatePeriod(period);
+                    if(parts.length==7) {
+                        period1.setDay(dayNames[j]);
+                        period1.setTime(start,end);
+                        db.addOrUpdatePeriod(period1);
+                    }
 				}
 			}
             db.close();

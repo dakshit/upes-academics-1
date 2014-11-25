@@ -45,8 +45,8 @@ public class DataAPI {
 				Map<String, String> headers = new HashMap<String, String>();
 				headers.put("User-Agent", mContext.getString(R.string.UserAgent));
 				return headers;
-			};
-		};
+			}
+        };
 		requestAttendance.setShouldCache(true);
 		requestAttendance.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		MyVolley.getInstance().addToRequestQueue(requestAttendance ,mContext.getClass().getName());
@@ -66,14 +66,14 @@ public class DataAPI {
 				params.put("fromdate", date);
 				params.put("submit","Show Result");
 				return params;
-			};
+			}
 
-			public Map<String, String> getHeaders() throws com.android.volley.AuthFailureError {
+            public Map<String, String> getHeaders() throws com.android.volley.AuthFailureError {
 				Map<String, String> headers = new HashMap<String, String>();
 				headers.put("User-Agent", mContext.getString(R.string.UserAgent));
 				return headers;
-			};
-		};
+			}
+        };
 		requestTimeTable.setShouldCache(true);
 		requestTimeTable.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		MyVolley.getInstance().addToRequestQueue(requestTimeTable ,mContext.getClass().getName());

@@ -44,5 +44,10 @@
     <string name="pref_subjectLimit">Limit Expanded Subjects</string>
     <string name="drawer_open">Navigation drawer opened</string>
     <string name="drawer_close">Navigation drawer closed</string>
-    <string name="version">2.1</string>
+    <string name="version">2.2</string>
+    <!--<string name="banner_ad_unit_id">ca-app-pub-4430276599804177/4801693846</string>-->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="search_hint">Search subjects</string>
+    <string name="no_classes">You don\'t have any classes on this day :)</string>
+    <string name="swipe_info">To switch to any other day, either swipe across the screen or click the date in the top left corner.</string>
 </resources>

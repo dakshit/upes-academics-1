@@ -25,11 +25,18 @@ import java.util.List;
 public class Day {
 
 	List<Period> PeriodsList = new ArrayList<Period>();
+    private String day = "";
 	
 	public Day() {
 	}
+
+    public Day(String day) {
+        this.day = day;
+    }
 	
 	public void addPeriod(Period newPeriod){
+        if(!day.isEmpty())
+            newPeriod.setDay(day);
 		PeriodsList.add(newPeriod);
 	}
 	
@@ -40,4 +47,8 @@ public class Day {
 	public Period getPeriod(int x){
 		return PeriodsList.get(x);
 	}
+
+    public int getCount() {
+        return PeriodsList.size();
+    }
 }

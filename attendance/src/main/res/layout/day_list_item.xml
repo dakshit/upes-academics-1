@@ -27,20 +27,54 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/tvTime"
-        android:padding="5dp"
+        android:layout_toStartOf="@+id/tvTime"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="TextView" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="13sp"
+        android:text="Mr X"
+        android:id="@+id/tvTeacher"
+        android:layout_below="@+id/tvSubjectName"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="2dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginEnd="6dp"
+        android:text="10:00 -12:00"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="8201"
+        android:id="@+id/tvRoom"
+        android:gravity="end"
+        android:layout_marginRight="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tvTime"
+        android:layout_alignRight="@+id/tvTime"
+        android:layout_alignEnd="@+id/tvTime" />
 
 </RelativeLayout>

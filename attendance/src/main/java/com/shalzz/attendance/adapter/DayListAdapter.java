@@ -31,6 +31,7 @@ import com.shalzz.attendance.R;
 import com.shalzz.attendance.model.Day;
 import com.shalzz.attendance.model.Period;
 
+import java.text.ParseException;
 import java.util.List;
 
 public class DayListAdapter extends BaseAdapter{
@@ -48,8 +49,8 @@ public class DayListAdapter extends BaseAdapter{
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return null;
+	public Period getItem(int position) {
+		return periods.get(position);
 	}
 
 	@Override
@@ -65,11 +66,19 @@ public class DayListAdapter extends BaseAdapter{
 		convertView = mInflater.inflate(R.layout.day_list_item, null);
 		TextView tvSubjectName = (TextView) convertView.findViewById(R.id.tvSubjectName);
 		TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
+        TextView tvTeacher = (TextView) convertView.findViewById(R.id.tvTeacher);
+        TextView tvRoom = (TextView) convertView.findViewById(R.id.tvRoom);
 		Period period = periods.get(position);
-		String subject= period.getSubjectName();
-		String time = period.getTime();
-		tvSubjectName.setText(subject);
-	    tvTime.setText(time);
+
+		tvSubjectName.setText(period.getSubjectName());
+        tvRoom.setText(period.getRoom());
+        tvTeacher.setText(period.getTeacher());
+        try {
+            tvTime.setText(period.getTimein12hr());
+        } catch (ParseException e) {
+            tvTime.setText(period.getTime());
+            e.printStackTrace();
+        }
 		return convertView;
 	}
 }
