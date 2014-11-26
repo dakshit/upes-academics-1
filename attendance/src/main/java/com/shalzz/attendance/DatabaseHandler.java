@@ -131,8 +131,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
 	private static final String CREATE_TIME_TABLE = "CREATE TABLE " + TABLE_TIMETABLE + " ( "
 			+ KEY_DAY + " TEXT, " + KEY_SUBJECT_NAME + " TEXT , " + KEY_TEACHER + " TEXT , "
-			+ KEY_ROOM + " TEXT, " + KEY_START + " TEXT, " + KEY_END + " TEXT, "
-            + " PRIMARY KEY ( " + KEY_SUBJECT_NAME + " , " + KEY_TEACHER + " , " + KEY_DAY + " ) " + ");";
+			+ KEY_ROOM + " TEXT, " + KEY_START + " TEXT, " + KEY_END + " TEXT " + ");";
 
 	/**
 	 * ListHeader CREATE TABLE SQL query.
@@ -251,7 +250,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		subject.setAbsentDates(cursor.getString(cursor.getColumnIndexOrThrow(KEY_DAYS_ABSENT)));
 		subject.setPercentage(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_PERCENTAGE)));
 		subject.setProjectedPercentage(cursor.getString(cursor.getColumnIndexOrThrow(KEY_PROJECTED_PERCENTAGE)));
-
 
 		db.close();
 		cursor.close();
@@ -646,6 +644,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		return rows_affected;
 	}
+
+    public void deleteAllSubjects() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete All Rows
+        db.delete(TABLE_ATTENDENCE, "1", null);
+        db.close();
+    }
+
+    public void deleteAllPeriods() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete All Rows
+        db.delete(TABLE_TIMETABLE, "1", null);
+        db.close();
+    }
 
 	public Day getDay(String dayName) {
 		SQLiteDatabase db = this.getReadableDatabase();

@@ -74,6 +74,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/tvTime"
+        android:layout_toRightOf="@+id/tvTeacher"
+        android:layout_toEndOf="@+id/tvTeacher"
         android:layout_alignRight="@+id/tvTime"
         android:layout_alignEnd="@+id/tvTime" />
 

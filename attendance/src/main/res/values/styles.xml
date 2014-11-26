@@ -36,18 +36,22 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
     <style name="Theme.Myactionbar" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBar_L</item>
-        <item name="android:windowContentOverlay">@null</item>s
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="ActionBar_L" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/l_actionbar</item>
     </style>
-    
-    <style name="listViewActivatedStyle"/>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
 
 </resources>

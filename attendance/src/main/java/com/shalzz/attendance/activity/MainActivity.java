@@ -20,6 +20,7 @@
 package com.shalzz.attendance.activity;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -28,9 +29,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -55,10 +55,10 @@ import com.shalzz.attendance.wrapper.MyVolley;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 
     private boolean isDrawerLocked = false;
-    public static final String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
+    public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
     public boolean LOGGIN_OUT = false;
 
     private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
@@ -84,6 +84,7 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.drawer);
 
+        PREFERENCE_ACTIVATED_FRAGMENT += getResources().getString(R.string.version);
 		mNavTitles = getResources().getStringArray(R.array.drawer_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -110,25 +111,30 @@ public class MainActivity extends FragmentActivity {
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		mTitle  = getTitle();
+
 		final ActionBar actionbar = getActionBar();
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+                 R.drawable.ic_drawer,R.string.drawer_open, R.string.drawer_close) {
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
                 actionbar.setTitle(mTitle);
-				supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
 				actionbar.setTitle(mDrawerTitle);
-				supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 		};
+
+//        actionbar.setDisplayUseLogoEnabled(false);
+//        actionbar.setDisplayShowHomeEnabled(false);
+//        mDrawerToggle.setDrawerIndicatorEnabled(true);
 
 		// Set the drawer toggle as the DrawerListener
         if(!isDrawerLocked) {
@@ -445,6 +451,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onPause() {
+        mPreviousFragment = null;
         persistCurrentFragment();
         super.onPause();
     }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Myactionbar" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/ActionBar_L</item>
+        <item name="android:windowContentOverlay">@null</item>s
+    </style>
+
+    <style name="ActionBar_L" parent="android:Widget.Material.Light.ActionBar.Solid">
+        <item name="android:background">@color/l_actionbar</item>
+    </style>
+
+</resources>

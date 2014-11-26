@@ -86,6 +86,9 @@ public class DataAssembler {
 	 */
 	public static void  parseAttendance(String response,Context mContext) {
 
+        DatabaseHandler db = new DatabaseHandler(mContext);
+        db.deleteAllSubjects();
+
 		ArrayList<Float> claHeld = new ArrayList<Float>();
 		ArrayList<Float> claAttended = new ArrayList<Float>();
 		ArrayList<String> abDates = new ArrayList<String>();
@@ -146,7 +149,6 @@ public class DataAssembler {
 			footer.setAttended(Float.parseFloat(total.get(10).text()));
 			footer.setHeld(Float.parseFloat(total.get(9).text()));
 			footer.setPercentage(Float.parseFloat(total.get(12).text()));
-			DatabaseHandler db = new DatabaseHandler(mContext);
 			db.addOrUpdateListFooter(footer);
 
 			Log.i(mTag, "Response parsing complete.");
@@ -160,13 +162,16 @@ public class DataAssembler {
 						abDates.get(i),
 						percentage.get(i),
 						projPer.get(i));
-				db.addOrUpdateSubject(subject);
+				db.addSubject(subject);
 			}
 			db.close();
 		}
 	}
 
 	public static int parseTimeTable(String response,Context mContext) {
+
+        DatabaseHandler db = new DatabaseHandler(mContext);
+        db.deleteAllPeriods();
 
 		Document doc = Jsoup.parse(response);
 		Elements thdata = doc.select("th");
@@ -239,7 +244,7 @@ public class DataAssembler {
 				}
 				++i;
 			}
-            DatabaseHandler db = new DatabaseHandler(mContext);
+
 			for(int j=0;j<days.size();j++)
 			{
                 ArrayList<String> dayofweek = days.get(j);
@@ -283,11 +288,11 @@ public class DataAssembler {
                     period.setDay(dayNames[j]);
                     period.setTime(start,end);
                     if(!period.getSubjectName().isEmpty())
-                        db.addOrUpdatePeriod(period);
+                        db.addPeriod(period);
                     if(parts.length==7) {
                         period1.setDay(dayNames[j]);
                         period1.setTime(start,end);
-                        db.addOrUpdatePeriod(period1);
+                        db.addPeriod(period1);
                     }
 				}
 			}

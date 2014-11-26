@@ -41,7 +41,7 @@
         <fragment
             android:id="@+id/adFragment"
             android:name="com.shalzz.attendance.fragment.AdFragment"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             tools:layout="@layout/fragment_ad" />

@@ -13,8 +13,6 @@ import com.shalzz.attendance.R;
 
 public class AdFragment extends Fragment {
 
-    //AdRequest.Builder.addTestDevice("FF6EDBEB25A680CE17574F685EEB37EC");
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,7 +23,9 @@ public class AdFragment extends Fragment {
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         AdView mAdView = (AdView) getView().findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("FF6EDBEB25A680CE17574F685EEB37EC")
+                .build();
         mAdView.loadAd(adRequest);
     }
 
