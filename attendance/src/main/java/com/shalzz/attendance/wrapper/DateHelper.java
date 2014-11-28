@@ -29,7 +29,7 @@ import java.util.Locale;
 public class DateHelper {
 	
 	private static String tWeekdays[] = {"sun","mon","tue","wed","thur","fri","sat"};
-	private static String pWeekdays[] = {"Sunday","Monday","Tuesday","Wednesday","Thusday","Friday","Saturday"};
+	private static String pWeekdays[] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
 	private static DateFormat technicalDateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.US);
 	private static DateFormat properDateFormat = new SimpleDateFormat("dd/MM/yyyy",Locale.US);
 	
