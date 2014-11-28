@@ -49,7 +49,6 @@ public class DataAssembler {
 
         if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
         {
-            // TODO: relogin
             String msg ="It seems your session has expired.\nPlease Login again.";
             if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
                 Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
@@ -103,7 +102,6 @@ public class DataAssembler {
 
 		if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
 		{
-			// TODO: relogin
 			String msg ="It seems your session has expired.\nPlease Login again.";
 			if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
 				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();

@@ -110,7 +110,7 @@ public class MyVolley extends Application {
      * that no memory caching is used. This is useful for images that you know that will be show
      * only once.
      * 
-     * @return
+     * @return {@link ImageLoader}
      */
     public ImageLoader getImageLoader() {
     	// lazy initialize the image loader
@@ -123,8 +123,8 @@ public class MyVolley extends Application {
 	 * Adds the specified request to the global queue, if tag is specified
 	 * then it is used else Default TAG is used.
 	 * 
-	 * @param req
-	 * @param tag
+	 * @param req {@link com.android.volley.Request}
+	 * @param tag TAG
 	 */
 	public <T> void addToRequestQueue(Request<T> req, String tag) {
 		// set the default tag if tag is empty
@@ -138,7 +138,7 @@ public class MyVolley extends Application {
 	/**
 	 * Adds the specified request to the global queue using the Default TAG.
 	 * 
-	 * @param req
+	 * @param req {@link com.android.volley.Request}
 	 */
 	public <T> void addToRequestQueue(Request<T> req) {
 		// set the default tag
@@ -164,7 +164,7 @@ public class MyVolley extends Application {
 	 * Cancels all pending requests by the specified TAG, it is important
 	 * to specify a TAG so that the pending/ongoing requests can be cancelled.
 	 * 
-	 * @param tag
+	 * @param tag TAG
 	 */
 	public void cancelPendingRequests(Object tag) {
 		if (mRequestQueue != null) {

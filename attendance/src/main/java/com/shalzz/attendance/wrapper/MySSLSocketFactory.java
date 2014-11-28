@@ -89,14 +89,14 @@ public class MySSLSocketFactory extends SSLSocketFactory {
     /**
      * Creates a new socket with following parameters.
      * 
-     * @param socket
-     * @param port
-     * @param autoClose
+     * @param socket Socket
+     * @param port Port
+     * @param autoClose AutoClose
      * @throws IOException
      * @throws UnknownHostException
      * @return Socket
      */
-    public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
+    public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException  {
         return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
     }
 
@@ -150,8 +150,7 @@ public class MySSLSocketFactory extends SSLSocketFactory {
 		try {
 			keyStore = KeyStore.getInstance(keyStoreType);
 			keyStore.load(null, null);
-			keyStore.setCertificateEntry("ca",
-                    ca);
+			keyStore.setCertificateEntry("ca", ca);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -177,7 +176,7 @@ public class MySSLSocketFactory extends SSLSocketFactory {
 	/**
 	 * Returns a SSlSocketFactory which trusts all certificates
 	 * 
-	 * @return
+	 * @return {@link SSLSocketFactory}
 	 */
     public static SSLSocketFactory getFixedSocketFactory() {
         SSLSocketFactory socketFactory;
@@ -194,8 +193,8 @@ public class MySSLSocketFactory extends SSLSocketFactory {
     /**
      * Gets a DefaultHttpClient which trusts a set of certificates specified by the KeyStore
      * 
-     * @param keyStore
-     * @return
+     * @param keyStore {@link java.security.KeyStore}
+     * @return {@link org.apache.http.impl.client.DefaultHttpClient}
      */
 	public static DefaultHttpClient getNewHttpClient(KeyStore keyStore) {
 		

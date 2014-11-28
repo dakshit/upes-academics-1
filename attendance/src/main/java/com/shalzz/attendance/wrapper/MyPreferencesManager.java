@@ -43,7 +43,7 @@ public class MyPreferencesManager {
 
 	/**
 	 * Constructor to set the Activity context.
-	 * @param context
+	 * @param context Context
 	 */
 	public MyPreferencesManager(Context context) {
 		mContext = context;
@@ -55,7 +55,7 @@ public class MyPreferencesManager {
 		SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong("REFRESH_TIME", now.toMillis(false));
-		editor.commit();
+		editor.apply();
 	}
 
     public void setLastSyncTime(int mode) {
@@ -64,7 +64,7 @@ public class MyPreferencesManager {
         SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", mode);
         SharedPreferences.Editor editor = settings.edit();
         editor.putLong("REFRESH_TIME", now.toMillis(false));
-        editor.commit();
+        editor.apply();
     }
 	
 	public long getLastSyncTime() {
@@ -133,7 +133,7 @@ public class MyPreferencesManager {
         for (String cookiename : pcookies.getAll().keySet()) {
             editor.remove(cookiename);
         }
-		editor.commit();
+		editor.apply();
 		
 		CookieManager cookieMan = (CookieManager) CookieHandler.getDefault();
 		cookieMan.getCookieStore().removeAll();
@@ -154,8 +154,8 @@ public class MyPreferencesManager {
 
 	/**
 	 * Saves the user details in shared preferences and sets login status to true.
-	 * @param username
-	 * @param password
+	 * @param username Username
+	 * @param password Password
 	 */
 	public void saveUser(String username, String password) {
 		Log.i(mContext.getClass().getName(), "Setting LOGGEDIN pref to true");
@@ -164,7 +164,7 @@ public class MyPreferencesManager {
 		editor.putBoolean("LOGGEDIN"+mContext.getResources().getString(R.string.version), true);
 		//editor.putString("USERNAME", username);
 		//editor.putString("PASSWORD", password);
-		editor.commit();
+		editor.apply();
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class MyPreferencesManager {
 		editor.putBoolean("LOGGEDIN"+mContext.getResources().getString(R.string.version), false);
 		editor.remove("USERNAME");
 		editor.remove("PASSWORD");
-		editor.commit();
+		editor.apply();
 	}
 
     /**
@@ -204,11 +204,11 @@ public class MyPreferencesManager {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = settings.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
 
         settings = mContext.getSharedPreferences("SETTINGS", 0);
         editor = settings.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 }

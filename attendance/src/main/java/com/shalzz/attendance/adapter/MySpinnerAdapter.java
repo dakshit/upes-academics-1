@@ -71,11 +71,11 @@ public class MySpinnerAdapter extends BaseAdapter {
 		View v;
 
 		// Check if can recycle the view
-		if (convertView == null || (Integer) convertView.getTag() != R.layout.spinner_header)
+		if (convertView == null || (Integer) convertView.getTag() != R.layout.spinner_header+position)
 		{
 			v = mInflater.inflate(R.layout.spinner_header, parent, false);
 			// Set the tag to make sure you can recycle it when you get it as a convert view
-			v.setTag(R.layout.spinner_header);
+			v.setTag(R.layout.spinner_header+position);
 		}
 		else {
 			v = convertView;
@@ -95,7 +95,15 @@ public class MySpinnerAdapter extends BaseAdapter {
 		LayoutInflater mInflater = (LayoutInflater)
 				mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-		convertView = mInflater.inflate(R.layout.spinner_item, null);
+        // Check if can recycle the view
+        if (convertView == null || (Integer) convertView.getTag() != R.layout.spinner_item+position)
+        {
+            convertView = mInflater.inflate(R.layout.spinner_item, parent, false);
+            // Set the tag to make sure you can recycle it when you get it as a convert view
+            convertView.setTag(R.layout.spinner_item+position);
+        }
+
+		convertView = mInflater.inflate(R.layout.spinner_item, parent);
 		TextView textview = (TextView) convertView.findViewById(R.id.spinner_item);
 		textview.setText(dropDownList[position]);
 		return convertView;

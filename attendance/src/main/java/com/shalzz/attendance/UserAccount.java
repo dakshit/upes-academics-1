@@ -55,7 +55,7 @@ public class UserAccount {
 	private String mUsername;
 	private String mPassword;
 	private String mCaptcha;
-	private int retryCount=0;
+	private int retryCount = 0;
 	private Miscellaneous misc;
 
 	/**
@@ -65,7 +65,7 @@ public class UserAccount {
 
 	/**
 	 * Constructor to set the Activity context.
-	 * @param context
+	 * @param context Context
 	 */
 	public UserAccount(Context context) {
 		mContext = context;
@@ -74,10 +74,10 @@ public class UserAccount {
 
 	/**
 	 * Sends the login request and saves the user details.
-	 * @param username
-	 * @param password
-	 * @param captcha
-	 * @param data
+	 * @param username Username
+	 * @param password Password
+	 * @param captcha Captcha
+	 * @param data Additional hidden data
 	 */
 	public void Login(final String username, final String password, final String captcha, final Map<String, String> data) {
 
@@ -206,7 +206,7 @@ public class UserAccount {
 		request.setRetryPolicy(new DefaultRetryPolicy(1500, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 		MyVolley.getInstance().addToRequestQueue(request,"LOGOUT");
 
-        MainActivity.getInstance().LOGGIN_OUT = true;
+        MainActivity.LOGGED_OUT = true;
 
         // Remove User Details from Shared Preferences.
         MyPreferencesManager settings = new MyPreferencesManager(mContext);
@@ -228,7 +228,7 @@ public class UserAccount {
 
 	/**
 	 * Progress Dialog cancel Listener.
-	 * @return
+	 * @return OnCancelListener
 	 */
 	DialogInterface.OnCancelListener pdCancelListener() {
 		return new DialogInterface.OnCancelListener() {
@@ -258,7 +258,7 @@ public class UserAccount {
 				Map<String, String> headers = new HashMap<String, String>();
 				headers.put("User-Agent", mContext.getString(R.string.UserAgent));
 				return headers;
-			};
+			}
 		};
 		request.setShouldCache(false);
 		request.setPriority(Priority.HIGH);

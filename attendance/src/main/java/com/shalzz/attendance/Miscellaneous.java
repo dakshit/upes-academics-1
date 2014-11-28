@@ -68,7 +68,7 @@ public class Miscellaneous {
 
 	/**
 	 * Shows the default user soft keyboard.
-	 * @param mTextView
+	 * @param mTextView The view to focus the cursor on.
 	 */
 	public static void showKeyboard(Context context, EditText mTextView) {
 		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -80,8 +80,8 @@ public class Miscellaneous {
 
 	/**
 	 * Closes the default user soft keyboard.
-	 * @param context
-	 * @param searchView
+	 * @param context Activity context
+	 * @param searchView the view supposedly having the cursor focus.
 	 */
 	public static void closeKeyboard(Context context, SearchView searchView) {
 		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -94,8 +94,8 @@ public class Miscellaneous {
 
 	/**
 	 * Closes the default user soft keyboard.
-	 * @param context
-	 * @param editText
+	 * @param context Activity context
+	 * @param editText the view supposedly having the cursor focus.
 	 */
 	public static void closeKeyboard(Context context, EditText editText) {
 		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -107,9 +107,9 @@ public class Miscellaneous {
 
 	/**
 	 * Displays the default Progress Dialog.
-	 * @param mMessage
+	 * @param mMessage The message to display
 	 */
-	public void showProgressDialog(String mMessage,boolean cancable, DialogInterface.OnCancelListener progressDialogCancelListener) {
+	public void showProgressDialog(String mMessage , boolean cancable, DialogInterface.OnCancelListener progressDialogCancelListener) {
 		// lazy initialise
 		if(pd==null)
 		{

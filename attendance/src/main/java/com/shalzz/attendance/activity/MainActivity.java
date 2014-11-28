@@ -57,9 +57,17 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class MainActivity extends Activity {
 
+    /**
+     * Used to lock drawer on tablets.
+     */
     private boolean isDrawerLocked = false;
+
+    /**
+     *  To prevent onDestroy functions when logging out.
+     */
+    public static boolean LOGGED_OUT = false;
+
     public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
-    public boolean LOGGIN_OUT = false;
 
     private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
 	private static final String mTag = "Main Activity";
@@ -73,8 +81,9 @@ public class MainActivity extends Activity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private View Drawerheader;
 	private FragmentManager mFragmentManager;
-	private Boolean DEBUG_FRAGMENTS = true;
+	private final Boolean DEBUG_FRAGMENTS = true;
     private Fragment fragment = null;
+    private ActionBar actionbar;
 
 	// Our custom poor-man's back stack which has only one entry at maximum.
 	private Fragment mPreviousFragment;
@@ -112,7 +121,7 @@ public class MainActivity extends Activity {
 
 		mTitle  = getTitle();
 
-		final ActionBar actionbar = getActionBar();
+		actionbar = getActionBar();
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                  R.drawable.ic_drawer,R.string.drawer_open, R.string.drawer_close) {
@@ -151,7 +160,7 @@ public class MainActivity extends Activity {
         showcaseView();
 	}
 
-    public void showcaseView() {
+    void showcaseView() {
         MyPreferencesManager prefs = new MyPreferencesManager(this);
         if(prefs.isFirstLaunch(mTag)) {
             final ShowcaseView sv = new ShowcaseView.Builder(this)
@@ -212,7 +221,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void displayView(int position) {
+	void displayView(int position) {
 		// update the main content by replacing fragments
 		switch (position) {
 		case 0:
@@ -250,7 +259,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void persistCurrentFragment() {
-        if(!LOGGIN_OUT) {
+        if(!LOGGED_OUT) {
             SharedPreferences settings = getSharedPreferences("SETTINGS", 0);
             SharedPreferences.Editor editor = settings.edit();
             int fragmentPosition = 1;
@@ -285,7 +294,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void setTitle(CharSequence title) {
 		mTitle = title;
-		getActionBar().setTitle(mTitle);
+		actionbar.setTitle(mTitle);
 	}
 
 	@Override
@@ -446,7 +455,7 @@ public class MainActivity extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		mDrawerToggle.onConfigurationChanged(newConfig);
-        getActionBar().setTitle(mTitle);
+        actionbar.setTitle(mTitle);
 	}
 
     @Override

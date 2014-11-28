@@ -189,7 +189,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	/**
 	 * Add new Subject
-	 * @param subject
+	 * @param subject the {@link Subject} to add
 	 */
 	public void addSubject(Subject subject) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -210,7 +210,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	/**
 	 * Adds a new Subject if it doesn't exists otherwise updates it.
-	 * @param subject
+	 * @param subject the {@link Subject} to add
 	 */
 	public void addOrUpdateSubject(Subject subject) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -389,8 +389,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	/**
 	 * Update a single Subject
-	 * @param subject
-	 * @return
+	 * @param subject the {@link Subject} to update
+	 * @return no. of rows affected
 	 */
 	public int updateSubject(Subject subject) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -413,7 +413,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	/**
 	 * Deleting a single Subject
-	 * @param subject
+	 * @param subject the {@link Subject} to delete
 	 */
 	public void deleteSubject(Subject subject) {
 		SQLiteDatabase db = this.getWritableDatabase();

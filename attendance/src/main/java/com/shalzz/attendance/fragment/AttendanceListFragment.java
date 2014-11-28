@@ -27,6 +27,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,7 +93,7 @@ public class AttendanceListFragment extends ListFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if(container==null)
 			return null;
@@ -110,7 +111,7 @@ public class AttendanceListFragment extends ListFragment {
 		mlistview.addHeaderView(header);
 
 		footer=inflater.inflate(R.layout.list_footer, null);
-		mlistview.addFooterView(footer);	
+		mlistview.addFooterView(footer);
 
 		super.onActivityCreated(savedInstanceState);
 	}

@@ -36,8 +36,8 @@ public class MyVolleyErrorHelper {
 	 * Returns appropriate message which is to be displayed to the user 
 	 * against the specified error object.
 	 * 
-	 * @param error
-	 * @param context
+	 * @param error {@link Object}
+	 * @param context {@link android.content.Context}
 	 * @return Error Message
 	 */
 	public static String getMessage(Object error, Context context) {
@@ -55,8 +55,8 @@ public class MyVolleyErrorHelper {
 
 	/**
 	 * Determines whether the error is related to network
-	 * @param error
-	 * @return
+	 * @param error {@link Object}
+	 * @return True or False
 	 */
 	private static boolean isNetworkProblem(Object error) {
 		return (error instanceof NetworkError) || (error instanceof NoConnectionError);
@@ -64,8 +64,8 @@ public class MyVolleyErrorHelper {
 	
 	/**
 	 * Determines whether the error is related to server
-	 * @param error
-	 * @return
+	 * @param error {@link Object}
+	 * @return True or False
 	 */
 	private static boolean isServerProblem(Object error) {
 		return (error instanceof ServerError) || (error instanceof AuthFailureError);
@@ -75,9 +75,9 @@ public class MyVolleyErrorHelper {
 	 * Handles the server error, tries to determine whether to show a stock message or to 
 	 * show a message retrieved from the server.
 	 * 
-	 * @param err
-	 * @param context
-	 * @return
+	 * @param err {@link Object}
+	 * @param context {@link android.content.Context}
+	 * @return Error Message
 	 */
 	private static String handleServerError(Object err, Context context) {
 		VolleyError error = (VolleyError) err;

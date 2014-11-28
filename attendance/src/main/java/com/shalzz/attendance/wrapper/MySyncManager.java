@@ -36,8 +36,8 @@ public class MySyncManager {
 	public static final String ACCOUNT_TYPE = "com.shalzz";
 	@SuppressWarnings("FieldCanBeLocal")
     private static String mTag = "Sync Manager";
-	
-	
+
+
 	/**
 	 * Create a new dummy account for the sync adapter
 	 *
@@ -58,6 +58,7 @@ public class MySyncManager {
 			 * The account exists or some other error occurred. Log this, report it,
 			 * or handle it internally.
 			 */
+            Log.e(mTag,"Account already exits!");
 		}
 		return newAccount;
 	}

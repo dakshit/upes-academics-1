@@ -62,8 +62,16 @@ public class DayListAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater mInflater = (LayoutInflater)
 				mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-		
-		convertView = mInflater.inflate(R.layout.day_list_item, null);
+
+        // Check if we can recycle the view
+        if (convertView == null || (Integer) convertView.getTag() != R.layout.day_list_item+position)
+        {
+            convertView = mInflater.inflate(R.layout.day_list_item, parent, false);
+            // view = parent.findViewById(R.id.activity_expandablelistitem_content);
+            // Set the tag to make sure you can recycle it when you get it as a convert view
+            convertView.setTag(R.layout.day_list_item + position);
+        }
+
 		TextView tvSubjectName = (TextView) convertView.findViewById(R.id.tvSubjectName);
 		TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
         TextView tvTeacher = (TextView) convertView.findViewById(R.id.tvTeacher);

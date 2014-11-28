@@ -20,6 +20,7 @@
 package com.shalzz.attendance.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,20 +45,21 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
         mSubjects = subjects;
 	}
 
-	@Override
-	public View getTitleView(int position, View convertView, ViewGroup parent) {
+	@NonNull
+    @Override
+	public View getTitleView(int position, View convertView, @NonNull ViewGroup parent) {
 
 		Float percent = mSubjects.get(position).getPercentage();
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if(percent<67.0) {
-			convertView = inflater.inflate(R.layout.list_group_item_amber,null);
+			convertView = inflater.inflate(R.layout.list_group_item_amber,parent);
 		}
 		else if(percent<75.0) {
-			convertView = inflater.inflate(R.layout.list_group_item_yellow,null);
+			convertView = inflater.inflate(R.layout.list_group_item_yellow,parent);
 		}
 		else {
-			convertView = inflater.inflate(R.layout.list_group_item_green,null);
+			convertView = inflater.inflate(R.layout.list_group_item_green,parent);
 		}
 
 		TextView tvSubject = (TextView) convertView.findViewById(R.id.tvSubj);
@@ -73,8 +75,9 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 		return convertView;
 	}
 
-	@Override
-	public View getContentView(int position, View convertView, ViewGroup parent) {
+	@NonNull
+    @Override
+	public View getContentView(int position, View convertView, @NonNull ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view ;
 
