@@ -63,11 +63,14 @@ public class MainActivity extends Activity {
     private boolean isDrawerLocked = false;
 
     /**
-     *  To prevent onDestroy functions when logging out.
+     * To prevent onDestroy functions when logging out.
      */
     public static boolean LOGGED_OUT = false;
 
-    public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT";
+    /**
+     * Persistent fragment identifier + current app version.
+     */
+    public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT2.2";
 
     private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
 	private static final String mTag = "Main Activity";
@@ -93,7 +96,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.drawer);
 
-        PREFERENCE_ACTIVATED_FRAGMENT += getResources().getString(R.string.version);
 		mNavTitles = getResources().getStringArray(R.array.drawer_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);

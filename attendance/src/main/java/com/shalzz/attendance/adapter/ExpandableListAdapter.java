@@ -53,13 +53,13 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if(percent<67.0) {
-			convertView = inflater.inflate(R.layout.list_group_item_amber,parent);
+			convertView = inflater.inflate(R.layout.list_group_item_amber,parent,false);
 		}
 		else if(percent<75.0) {
-			convertView = inflater.inflate(R.layout.list_group_item_yellow,parent);
+			convertView = inflater.inflate(R.layout.list_group_item_yellow,parent,false);
 		}
 		else {
-			convertView = inflater.inflate(R.layout.list_group_item_green,parent);
+			convertView = inflater.inflate(R.layout.list_group_item_green,parent,false);
 		}
 
 		TextView tvSubject = (TextView) convertView.findViewById(R.id.tvSubj);
@@ -85,7 +85,6 @@ public class ExpandableListAdapter extends ExpandableListItemAdapter<Subject> {
 		if (convertView == null || (Integer) convertView.getTag() != R.layout.list_child_item+position)
 		{
 			view = inflater.inflate(R.layout.list_child_item, parent, false);
-			// view = parent.findViewById(R.id.activity_expandablelistitem_content);
 			// Set the tag to make sure you can recycle it when you get it as a convert view
 			view.setTag(R.layout.list_child_item + position);
 		}
