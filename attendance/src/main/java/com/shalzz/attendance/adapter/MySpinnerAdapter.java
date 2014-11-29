@@ -103,7 +103,6 @@ public class MySpinnerAdapter extends BaseAdapter {
             convertView.setTag(R.layout.spinner_item+position);
         }
 
-		convertView = mInflater.inflate(R.layout.spinner_item, parent);
 		TextView textview = (TextView) convertView.findViewById(R.id.spinner_item);
 		textview.setText(dropDownList[position]);
 		return convertView;

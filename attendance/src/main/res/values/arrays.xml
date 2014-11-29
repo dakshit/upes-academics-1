@@ -21,6 +21,7 @@
 
 <resources>
     <string-array name="action_list">
+        <item>Day View</item>
         <item>Jump to date</item>
         <item>Jump to today</item>
     </string-array>

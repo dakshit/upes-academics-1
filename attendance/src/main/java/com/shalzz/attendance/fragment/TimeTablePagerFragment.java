@@ -89,7 +89,7 @@ public class TimeTablePagerFragment extends Fragment {
 				Log.d(myTag,"selected "+position+": "+itemId);
                 if(initialize)
                     initialize=false;
-                else if(position == 0) {
+                else if(position == 1) {
                     Calendar today = Calendar.getInstance();
                     today.setTime(DateHelper.getToDay());
                     DatePickerDialog mDatePickerDialog = new DatePickerDialog(mContext,onDateSetListner()
@@ -97,15 +97,17 @@ public class TimeTablePagerFragment extends Fragment {
                             ,today.get(Calendar.MONTH)
                             ,today.get(Calendar.DAY_OF_MONTH));
                     mDatePickerDialog.show();
+                    actionbar.setSelectedNavigationItem(0);
                     return true;
 
 				}
-				else if (position == 1) {
+				else if (position == 2) {
                     mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), DateHelper.getToDay());
                     mViewPager.setAdapter(mTimeTablePagerAdapter);
                     updateFragments();
                     scrollToToday();
                     updateSpinner();
+                    actionbar.setSelectedNavigationItem(0);
                     return true;
 				}
 				return false;
