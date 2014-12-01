@@ -65,23 +65,28 @@
             android:entryValues="@array/pref_data_sync_interval_values"
             android:key="data_sync_interval"
             android:title="Refresh Interval" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="Proxy Authentication" >
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_key_use_proxy"
-            android:summary="Automatically set proxy when connected to UPESNET"
-            android:title="Enable Proxy" />
 
-        <EditTextPreference
-            android:dependency="pref_key_use_proxy"
-            android:key="pref_key_proxy_username"
-            android:title="Username" />
-        <EditTextPreference
-            android:dependency="pref_key_use_proxy"
-            android:inputType="textPassword"
-            android:key="pref_key_proxy_password"
-            android:title="Password" />
+        <!-- opens another nested subscreen -->
+        <PreferenceScreen
+            android:persistent="false"
+            android:title="Proxy Authentication"
+            android:summary="Configure proxy server settings" >
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="pref_key_use_proxy"
+                android:summary="Automatically set proxy when connected to UPESNET"
+                android:title="Enable Proxy" />
+
+            <EditTextPreference
+                android:dependency="pref_key_use_proxy"
+                android:key="pref_key_proxy_username"
+                android:title="Username" />
+            <EditTextPreference
+                android:dependency="pref_key_use_proxy"
+                android:inputType="textPassword"
+                android:key="pref_key_proxy_password"
+                android:title="Password" />
+        </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_key_storage_about"
@@ -99,7 +104,7 @@
                 android:title="License" />
             <Preference
                 android:key="pref_info_notices"
-                android:summary="License details for 3rd party open source softwares"
+                android:summary="License details for 3rd party open source software's"
                 android:title="Open source license" />
             
             <Preference
