@@ -32,6 +32,7 @@ public class Period {
 	private String start;
 	private String end;
 	private String day;
+    private String batch = "NULL";
 
 	public Period() {
 
@@ -82,6 +83,10 @@ public class Period {
 		return day;
 	}
 
+    public String getBatch() {
+        return batch;
+    }
+
 	public void setSubjectName(String name) {
 		if(name.equals("***"))
 			name = "";
@@ -114,5 +119,9 @@ public class Period {
                 this.room.equals(period.getRoom()) &&
                 this.teacher.equals(period.getTeacher()) &&
                 this.day.equals(period.getDay());
+    }
+
+    public void setBatch(String batch) {
+        this.batch =  batch;
     }
 }

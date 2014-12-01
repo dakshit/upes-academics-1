@@ -20,6 +20,36 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <PreferenceCategory android:title="Attendance" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="alpha_subject_order"
+            android:summaryOff="Display subjects chronologically"
+            android:summaryOn="Display subjects alphabetically"
+            android:title="Subject Order" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="Limit expanded subjects to"
+            android:entries="@array/pref_subject_limit_entries"
+            android:entryValues="@array/pref_subject_limit_values"
+            android:key="subjects_expanded_limit"
+            android:title="@string/pref_subjectLimit" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="timetable" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_mute"
+            android:summary="Automatically mutes the phone during lessons"
+            android:title="Mute during lessons" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="Select your batch"
+            android:entries="@array/pref_batch_entries"
+            android:entryValues="@array/pref_batch_values"
+            android:key="pref_batch"
+            android:title="Batch" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="NETWORK" >
         <CheckBoxPreference
             android:defaultValue="true"
@@ -53,22 +83,6 @@
             android:key="pref_key_proxy_password"
             android:title="Password" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="List" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="alpha_subject_order"
-            android:summaryOff="Display subjects chronologically"
-            android:summaryOn="Display subjects alphabetically"
-            android:title="Subject Order" />
-
-        <ListPreference
-            android:defaultValue="0"
-            android:dialogTitle="Limit expanded subjects to"
-            android:entries="@array/pref_subject_limit_entries"
-            android:entryValues="@array/pref_subject_limit_values"
-            android:key="subjects_expanded_limit"
-            android:title="@string/pref_subjectLimit" />
-    </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_key_storage_about"
         android:title="About" >
@@ -79,10 +93,6 @@
             android:persistent="false"
             android:summary="UPES Academics \nCopyright  ©   2013-2014  Shaleen Jain"
             android:title="About" >
-<!--             <Preference -->
-<!--                 android:key="pref_info_author" -->
-<!--                 android:summary="Shaleen Jain" -->
-<!--                 android:title="Author" /> -->
             <Preference
                 android:key="pref_info_this_license"
                 android:summary="License details for this application"
@@ -94,7 +104,7 @@
             
             <Preference
                 android:key="pref_info_version"
-                android:summary="v2.1"
+                android:summary="@string/pref_version"
                 android:title="Build Version" />
         </PreferenceScreen>
     </PreferenceCategory>

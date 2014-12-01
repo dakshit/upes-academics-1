@@ -261,21 +261,24 @@ public class DataAssembler {
                     Period period1 = new Period();
                     if(!dayofweek.get(i).equals("***")) {
                         if(parts.length==7) {
-                            String batch = parts[0].substring(parts[0].indexOf('-'));
+                            String batch = parts[0].substring(parts[0].indexOf('-')+1);
                             period.setTeacher(parts[1]);
-                            period.setSubjectName(parts[2].replaceAll("&amp;", "&")+" "+batch);
+                            period.setSubjectName(parts[2].replaceAll("&amp;", "&"));
                             period.setRoom(parts[3].split("<hr")[0]);
-                            batch = parts[3].split("<hr")[1].substring(parts[3].split("<hr")[1].indexOf('-'));
+                            period.setBatch(batch);
+                            batch = parts[3].split("<hr")[1].substring(parts[3].split("<hr")[1].indexOf('-')+1);
                             period1.setTeacher(parts[4]);
-                            period1.setSubjectName(parts[5].replaceAll("&amp;", "&")+" "+batch);
+                            period1.setSubjectName(parts[5].replaceAll("&amp;", "&"));
                             period1.setRoom(parts[6]);
+                            period1.setBatch(batch);
                         }
                         else if (!parts[0].isEmpty()) {
                             System.out.println(parts[0]);
-                            String batch = parts[0].substring(parts[0].indexOf('-'));
+                            String batch = parts[0].substring(parts[0].indexOf('-')+1);
                             period.setTeacher(parts[1]);
-                            period.setSubjectName(parts[2].replaceAll("&amp;", "&")+" "+batch);
+                            period.setSubjectName(parts[2].replaceAll("&amp;", "&"));
                             period.setRoom(parts[3]);
+                            period.setBatch(batch);
                         }
                         else {
                             period.setTeacher(parts[1]);

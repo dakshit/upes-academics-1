@@ -59,6 +59,10 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		ListPreference listPref = (ListPreference) findPreference(key);
 		listPref.setSummary(listPref.getEntry());
 
+        key = "pref_batch";
+        ListPreference listPref_batch = (ListPreference) findPreference(key);
+        listPref_batch.setSummary(listPref_batch.getEntry());
+
 		key = "data_sync_interval";
 		ListPreference synclistPref = (ListPreference) findPreference(key);
 		synclistPref.setSummary(synclistPref.getEntry());
@@ -73,6 +77,10 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 			ListPreference connectionPref = (ListPreference) findPreference(key);
 			connectionPref.setSummary(connectionPref.getEntry());
 		}
+        else if(key.equals("pref_batch")) {
+            ListPreference connectionPref = (ListPreference) findPreference(key);
+            connectionPref.setSummary(connectionPref.getEntry());
+        }
 		else if(key.equals("data_sync_interval")) {
 			DatabaseHandler db = new DatabaseHandler(mContext);
 			ListPreference connectionPref = (ListPreference) findPreference(key);
@@ -96,7 +104,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		getPreferenceScreen().getSharedPreferences()
 		.registerOnSharedPreferenceChangeListener(this);
 
-		PreferenceCategory prefCategory = (PreferenceCategory) getPreferenceScreen().getPreference(3);
+		PreferenceCategory prefCategory = (PreferenceCategory) getPreferenceScreen().getPreference(4);
 		PreferenceScreen prefScreen =  (PreferenceScreen) prefCategory.getPreference(0);
 		Preference pref = prefScreen.getPreference(0);
 		pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){

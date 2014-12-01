@@ -21,7 +21,9 @@ package com.shalzz.attendance.fragment;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,9 +73,19 @@ public class DayFragment extends ListFragment {
 	public void setTimeTable() {
 		DatabaseHandler db = new DatabaseHandler(getActivity());
 		String weekday = getWeekDay();
-		if(weekday.equals("sun"))
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String pref_batch = sharedPref.getString("pref_batch", "");
+
+        if(weekday.equals("sun"))
 			return;
-		Day day = db.getDay(weekday);
+
+        Day day;
+        if(pref_batch.equals("NULL"))
+            day = db.getDay(weekday);
+        else
+		    day = db.getDay(weekday,pref_batch);
+
         if(day!=null) {
             mAdapter = new DayListAdapter(mContext, day);
             if(mAdapter.getCount()==1 && mAdapter.getItem(0).getSubjectName().equals("")) // no classes

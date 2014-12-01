@@ -78,7 +78,10 @@ public class DayListAdapter extends BaseAdapter{
         TextView tvRoom = (TextView) convertView.findViewById(R.id.tvRoom);
 		Period period = periods.get(position);
 
-		tvSubjectName.setText(period.getSubjectName());
+        if(!period.getBatch().equals("NULL"))
+		    tvSubjectName.setText(period.getSubjectName()+" - "+period.getBatch());
+        else
+            tvSubjectName.setText(period.getSubjectName());
         tvRoom.setText(period.getRoom());
         tvTeacher.setText(period.getTeacher());
         try {

@@ -98,6 +98,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ROOM = "Room";
     private static final String KEY_START = "Start";
     private static final String KEY_END = "End";
+    private static final String KEY_BATCH = "batch";
 
 	/**
 	 * ListHeader Table Columns names
@@ -131,7 +132,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
 	private static final String CREATE_TIME_TABLE = "CREATE TABLE " + TABLE_TIMETABLE + " ( "
 			+ KEY_DAY + " TEXT, " + KEY_SUBJECT_NAME + " TEXT , " + KEY_TEACHER + " TEXT , "
-			+ KEY_ROOM + " TEXT, " + KEY_START + " TEXT, " + KEY_END + " TEXT " + ");";
+			+ KEY_ROOM + " TEXT, " + KEY_BATCH + " TEXT, " + KEY_START + " TEXT, "
+            + KEY_END + " TEXT " + ");";
 
 	/**
 	 * ListHeader CREATE TABLE SQL query.
@@ -620,6 +622,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_ROOM, period.getRoom());
         values.put(KEY_START, period.getStartTime());
         values.put(KEY_END, period.getEndTime());
+        values.put(KEY_BATCH, period.getBatch());
 
         // Inserting Row
         db.insert(TABLE_TIMETABLE, null, values);
@@ -636,6 +639,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_ROOM, period.getRoom());
         values.put(KEY_START, period.getStartTime());
         values.put(KEY_END, period.getEndTime());
+        values.put(KEY_BATCH, period.getBatch());
 
 		// updating row
 		int rows_affected = db.update(TABLE_TIMETABLE, values, KEY_SUBJECT_NAME + " = ?",
@@ -674,6 +678,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 period.setSubjectName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_SUBJECT_NAME)));
                 period.setTeacher(cursor.getString(cursor.getColumnIndexOrThrow(KEY_TEACHER)));
                 period.setRoom(cursor.getString(cursor.getColumnIndexOrThrow(KEY_ROOM)));
+                period.setBatch(cursor.getString(cursor.getColumnIndexOrThrow(KEY_BATCH)));
                 String start = cursor.getString(cursor.getColumnIndexOrThrow(KEY_START));
                 String end = cursor.getString(cursor.getColumnIndexOrThrow(KEY_END));
                 period.setTime(start,end);
@@ -685,4 +690,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		return day;
 	}
+
+    public Day getDay(String dayName, String pref_batch) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_TIMETABLE, null, KEY_DAY + "=? AND  (" + KEY_BATCH + "=? OR " + KEY_BATCH + " =? )",
+                new String[] { String.valueOf(dayName),String.valueOf(pref_batch),"NULL" }, null, null, KEY_START, null);
+
+        Day day = new Day();
+        if (cursor.moveToFirst()) {
+            do {
+                Period period = new Period();
+                period.setDay(cursor.getString(cursor.getColumnIndexOrThrow(KEY_DAY)));
+                period.setSubjectName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_SUBJECT_NAME)));
+                period.setTeacher(cursor.getString(cursor.getColumnIndexOrThrow(KEY_TEACHER)));
+                period.setRoom(cursor.getString(cursor.getColumnIndexOrThrow(KEY_ROOM)));
+                period.setBatch(cursor.getString(cursor.getColumnIndexOrThrow(KEY_BATCH)));
+                String start = cursor.getString(cursor.getColumnIndexOrThrow(KEY_START));
+                String end = cursor.getString(cursor.getColumnIndexOrThrow(KEY_END));
+                period.setTime(start,end);
+                day.addPeriod(period);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        return day;
+    }
 }
