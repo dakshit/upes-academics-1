@@ -43,7 +43,7 @@
             android:summary="Automatically mutes the phone during lessons"
             android:title="Mute during lessons" />
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="NULL"
             android:dialogTitle="Select your batch"
             android:entries="@array/pref_batch_entries"
             android:entryValues="@array/pref_batch_values"

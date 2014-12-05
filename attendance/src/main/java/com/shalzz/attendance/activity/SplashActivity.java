@@ -22,6 +22,7 @@ package com.shalzz.attendance.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
@@ -34,6 +35,9 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
+
+        // Set all default values once for this application
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		boolean loggedin = settings.getLoginStatus();
 		
