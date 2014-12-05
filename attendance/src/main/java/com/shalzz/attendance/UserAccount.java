@@ -119,13 +119,13 @@ public class UserAccount {
 			public void onResponse(String response) {
 
 				Document document = Jsoup.parse(response);
-				System.out.println(document.text());
+                String script = document.getElementsByTag("script").get(0).html();
 
-				if(document.equals(mContext.getString(R.string.incorrect_captcha)))
+				if(script.equals(mContext.getString(R.string.incorrect_captcha)))
 				{
 					misc.showAlertDialog("Incorrect Captcha!\nPlease try again.");
 				}
-				else if(document.equals(mContext.getString(R.string.incorrect_user_or_pass)))
+				else if(script.equals(mContext.getString(R.string.incorrect_user_or_pass)))
 				{
 					misc.showAlertDialog("Incorrect username or password. Please try again");
 
