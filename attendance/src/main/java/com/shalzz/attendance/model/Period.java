@@ -23,6 +23,8 @@ import com.shalzz.attendance.wrapper.DateHelper;
 
 import java.text.ParseException;
 
+import javax.annotation.meta.When;
+
 public class Period {
 
 	// private variables;
@@ -76,7 +78,22 @@ public class Period {
 	}
 
     public String getTimein12hr() throws ParseException {
-        return DateHelper.to12HrFormat(start) + " - " + DateHelper.to12HrFormat(end) ;
+        String timeRange , mStart, mEnd;
+        mStart = DateHelper.to12HrFormat(start);
+        mEnd = DateHelper.to12HrFormat(end);
+
+        // Remove leading zero's
+        mStart = mStart.startsWith("0") ? mStart.substring(1) : mStart;
+        mEnd = mEnd.startsWith("0") ? mEnd.substring(1) : mEnd;
+
+        // If a range shares a common AM/PM, append only on the end of the range. (Material Guideline)
+        int sl = mStart.length(), el = mEnd.length();
+        if(mStart.substring(sl-2).equals(mEnd.substring(el-2)))
+            timeRange =mStart.substring(0,sl-3) + "-" + mEnd ;
+        else
+            timeRange =  mStart + "-" + mEnd ;
+
+        return timeRange;
     }
 
 	public String getDay() {

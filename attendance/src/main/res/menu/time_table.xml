@@ -17,20 +17,37 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_refresh"
         android:orderInCategory="70"
-        android:icon="@drawable/ic_menu_refresh"
+        android:icon="@drawable/refresh"
         android:title="@string/menu_refresh"
-        android:showAsAction="ifRoom">
+        app:showAsAction="ifRoom">
     </item>
+
+    <item
+        android:id="@+id/menu_date"
+        android:orderInCategory="80"
+        android:title="@string/menu_date"
+        app:showAsAction="never">
+    </item>
+
+    <item
+        android:id="@+id/menu_today"
+        android:orderInCategory="90"
+        android:title="@string/menu_today"
+        app:showAsAction="never">
+    </item>
+
     <item
         android:id="@+id/menu_logout"
         android:orderInCategory="100"
+        android:icon="@drawable/logout"
         android:title="@string/menu_logout"
-        android:showAsAction="never">
+        app:showAsAction="never">
     </item>
 
 </menu>

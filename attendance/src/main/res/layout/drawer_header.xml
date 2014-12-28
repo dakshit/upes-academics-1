@@ -20,16 +20,19 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:orientation="vertical" >
+    android:layout_height="56dp"
+    android:orientation="vertical"
+    android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/drawer_header_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="7dp"
         android:paddingTop="5dp"
-    	android:layout_marginLeft="@dimen/navigation_drawer_margin"
+        android:layout_marginLeft= "@dimen/navigation_drawer_margin"
+        android:layout_marginStart= "@dimen/navigation_drawer_margin"
+        android:layout_marginRight= "@dimen/navigation_drawer_margin"
+        android:layout_marginEnd= "@dimen/navigation_drawer_margin"
         android:text="New Text"
         android:textColor="@color/list_item_title"
         android:textSize="18sp" />
@@ -38,8 +41,10 @@
         android:id="@+id/drawer_header_course"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="7dp"
         android:layout_marginLeft= "@dimen/navigation_drawer_margin"
+        android:layout_marginStart= "@dimen/navigation_drawer_margin"
+        android:layout_marginRight= "@dimen/navigation_drawer_margin"
+        android:layout_marginEnd= "@dimen/navigation_drawer_margin"
         android:text="New Text"
         android:textColor="@android:color/darker_gray"
         android:textSize="13sp" />

@@ -25,6 +25,7 @@
 
     -->
 
+    <dimen name="navigation_drawer_margin">24dp</dimen>
 
     <!-- Text size for action bar titles -->
     <dimen name="action_bar_title_text_size">16sp</dimen>

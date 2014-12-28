@@ -22,7 +22,8 @@ package com.shalzz.attendance.activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -38,6 +39,8 @@ import com.android.volley.Request.Method;
 import com.android.volley.Request.Priority;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
@@ -55,9 +58,7 @@ import org.jsoup.select.Elements;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-
-public class LoginActivity extends FragmentActivity implements CaptchaDialogFragment.CaptchaDialogListener{
+public class LoginActivity extends ActionBarActivity implements CaptchaDialogFragment.CaptchaDialogListener{
 
 	private EditText etSapid;
 	private EditText etPass;
@@ -71,6 +72,10 @@ public class LoginActivity extends FragmentActivity implements CaptchaDialogFrag
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.activity_main);
+
+        // set toolbar as actionbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 		// Reference to the layout components
 		etSapid = (EditText) findViewById(R.id.etSapid);
@@ -241,7 +246,7 @@ public class LoginActivity extends FragmentActivity implements CaptchaDialogFrag
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				String msg = MyVolleyErrorHelper.getMessage(error, LoginActivity.this);
-				Miscellaneous.makeCroutonInfinity(LoginActivity.this, msg);
+                Miscellaneous.showSnackBar(LoginActivity.this, msg);
 				Log.e(getClass().getName(), msg+error);
 			}
 		};
@@ -266,7 +271,6 @@ public class LoginActivity extends FragmentActivity implements CaptchaDialogFrag
 	@Override
 	protected void onDestroy() {
 		MyVolley.getInstance().cancelPendingRequests(myTag);
-		Crouton.cancelAllCroutons();
 		super.onDestroy();
 	}
 }

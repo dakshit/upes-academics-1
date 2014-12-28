@@ -21,13 +21,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="Attendance" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="alpha_subject_order"
-            android:summaryOff="Display subjects chronologically"
-            android:summaryOn="Display subjects alphabetically"
-            android:title="Subject Order" />
-
         <ListPreference
             android:defaultValue="0"
             android:dialogTitle="Limit expanded subjects to"

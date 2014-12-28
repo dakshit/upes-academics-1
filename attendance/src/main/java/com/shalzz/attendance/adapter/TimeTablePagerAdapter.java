@@ -37,18 +37,18 @@ public class TimeTablePagerAdapter extends FragmentStatePagerAdapter {
 
 	@SuppressLint("UseSparseArrays")
 	private final HashMap<Integer, DayFragment> activeFragments = new HashMap<Integer, DayFragment>();
-    private Date date;
+    private Date mDate;
 	
 	public TimeTablePagerAdapter(FragmentManager fm, Date date) {
 		super(fm);
-        this.date = date;
+        mDate = date;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		DayFragment fragment = new DayFragment();
 		Bundle args = new Bundle();
-		args.putSerializable(DayFragment.ARG_DATE, DateHelper.addDays(date, -15+position));
+		args.putSerializable(DayFragment.ARG_DATE, DateHelper.addDays(mDate, -15+position));
 		fragment.setArguments(args);
 		
 		activeFragments.put(position, fragment);
@@ -56,26 +56,31 @@ public class TimeTablePagerAdapter extends FragmentStatePagerAdapter {
 		return fragment;
 	}
 
+    public Collection<DayFragment> getActiveFragments() {
+        return activeFragments.values();
+    }
+
+    public DayFragment getFragment(int position) {
+        return activeFragments.get(position);
+    }
+
+    @Override
+    public int getCount() {
+        return 31;
+    }
+
+    public Date getDate() {
+        return mDate;
+    }
+
     public void setDate(Date date) {
-        this.date = date;
+        mDate = date;
         notifyDataSetChanged();
     }
-	@Override
-	public int getCount() {
-		return 31;
-	}
-	
+
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
 		activeFragments.remove(position);
 		super.destroyItem(container, position, object);
-	}
-
-	public Collection<DayFragment> getActiveFragments() {
-		return activeFragments.values();
-	}
-	
-	public DayFragment getFragment(int position) {
-		return activeFragments.get(position);
 	}
 }

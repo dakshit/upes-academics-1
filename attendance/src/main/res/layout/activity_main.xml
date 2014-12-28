@@ -21,10 +21,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:layout_gravity="clip_vertical"
-    android:background="@drawable/background"
-    android:orientation="vertical"
     tools:ignore="HardcodedText" >
+
+    <include layout="@layout/toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="clip_vertical"
+        android:background="@drawable/background"
+        android:layout_below="@+id/toolbar">
 
     <EditText
         android:id="@+id/etSapid"
@@ -86,6 +92,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:contentDescription="Upes Academics"
-        android:src="@drawable/background_text" />
+        android:src="@drawable/background_text"
+        />
+    </RelativeLayout>
 
 </RelativeLayout>

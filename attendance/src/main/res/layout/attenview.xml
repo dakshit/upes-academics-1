@@ -17,23 +17,36 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_atten"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
     tools:context=".fragment.AttendanceListFragment">
 
-    <ListView
-        android:id="@android:id/list"
+    <FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/darker_gray"
-        android:childDivider="#00000000"
-        android:dividerHeight="2dp"
-        android:fadingEdge="vertical"
-        android:fadingEdgeLength="10dp"
-        android:groupIndicator="@null" />
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/atten_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".fragment.AttendanceListFragment"
+            tools:listitem="@layout/card"/>
+
+        <com.shalzz.attendance.CircularIndeterminate
+            android:id="@+id/circular_indet_atten"
+            android:visibility="gone"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

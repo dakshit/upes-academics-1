@@ -32,20 +32,25 @@
         android:layout_toLeftOf="@+id/tvTime"
         android:layout_toStartOf="@+id/tvTime"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="TextView" />
 
 
     <TextView
+        android:id="@+id/tvTeacher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="13sp"
         android:text="Mr X"
-        android:id="@+id/tvTeacher"
         android:layout_below="@+id/tvSubjectName"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingEnd="3dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -63,20 +68,18 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
+        android:id="@+id/tvRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="8201"
-        android:id="@+id/tvRoom"
         android:gravity="end"
         android:layout_marginRight="6dp"
         android:layout_marginEnd="6dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/tvTime"
         android:layout_toRightOf="@+id/tvTeacher"
         android:layout_toEndOf="@+id/tvTeacher"
-        android:layout_alignRight="@+id/tvTime"
-        android:layout_alignEnd="@+id/tvTime" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tvTime" />
 
 </RelativeLayout>

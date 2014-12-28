@@ -20,15 +20,9 @@
 
 
 <resources>
-    <string-array name="action_list">
-        <item>Day View</item>
-        <item>Jump to date</item>
-        <item>Jump to today</item>
-    </string-array>
-    
     <string-array name="drawer_array">
-        <item >My Attendance</item>
-        <item >My TimeTable</item>
+        <item >Attendance</item>
+        <item >Timetable</item>
         <item >Settings</item>
         <!--<item >Help</item>-->
     </string-array>

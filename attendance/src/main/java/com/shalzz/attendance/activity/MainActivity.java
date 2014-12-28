@@ -19,8 +19,6 @@
 
 package com.shalzz.attendance.activity;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -30,7 +28,10 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -53,28 +54,52 @@ import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyVolley;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
     /**
-     * Used to lock drawer on tablets.
+     * Reference to fragment positions
+     */
+    public static enum Fragments {
+        ATTENDANCE(1),
+        TIMETABLE(2),
+        SETTINGS(3);
+
+        private final int value;
+
+        private Fragments(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    /**
+     * Drawer lock state. True for tablets, false otherwise .
      */
     private boolean isDrawerLocked = false;
 
     /**
-     * To prevent onDestroy functions when logging out.
+     * To prevent saving the drawer position when logging out.
      */
     public static boolean LOGGED_OUT = false;
 
     /**
-     * Persistent fragment identifier + current app version.
+     * Remember the position of the selected item.
      */
     public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT2.2";
 
     private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
+
 	private static final String mTag = "Main Activity";
 
+    /**
+     * Debug flag
+     */
+    private final Boolean DEBUG_FRAGMENTS = true;
+
+    private int mCurrentSelectedPosition = 0;
     private static MainActivity mActivity;
 	private String[] mNavTitles;
 	private DrawerLayout mDrawerLayout;
@@ -84,10 +109,9 @@ public class MainActivity extends Activity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private View Drawerheader;
 	private FragmentManager mFragmentManager;
-	private final Boolean DEBUG_FRAGMENTS = true;
     private Fragment fragment = null;
     private ActionBar actionbar;
-
+    public View dropShadow;
 	// Our custom poor-man's back stack which has only one entry at maximum.
 	private Fragment mPreviousFragment;
 
@@ -96,10 +120,18 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.drawer);
 
+        // set toolbar as actionbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
 		mNavTitles = getResources().getStringArray(R.array.drawer_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        dropShadow = findViewById(R.id.drop_shadow);
 		mFragmentManager = getFragmentManager();
+        mTitle  = getTitle();
+        actionbar = getSupportActionBar();
+        mActivity = this;
 
         // Check for tablet layout
         FrameLayout frameLayout = (FrameLayout)findViewById(R.id.frame_container);
@@ -110,23 +142,18 @@ public class MainActivity extends Activity {
             Log.i(mTag,"Tablet layout applied");
         }
 
+        // set Drawer header
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Drawerheader = inflater.inflate(R.layout.drawer_header, null);
 		if(mDrawerList.getHeaderViewsCount()==0)
 			mDrawerList.addHeaderView(Drawerheader);
 
 		// Set the adapter for the list view
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item,R.id.drawer_list_textView, mNavTitles));
-		// Set the list's click listener
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
+                R.layout.drawer_list_item,R.id.drawer_list_textView, mNavTitles));
 
-		mTitle  = getTitle();
-
-		actionbar = getActionBar();
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                 R.drawable.ic_drawer,R.string.drawer_open, R.string.drawer_close) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
+                 R.string.drawer_open, R.string.drawer_close) {
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
@@ -143,9 +170,9 @@ public class MainActivity extends Activity {
 			}
 		};
 
-//        actionbar.setDisplayUseLogoEnabled(false);
-//        actionbar.setDisplayShowHomeEnabled(false);
-//        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
 
 		// Set the drawer toggle as the DrawerListener
         if(!isDrawerLocked) {
@@ -154,11 +181,10 @@ public class MainActivity extends Activity {
             actionbar.setHomeButtonEnabled(true);
         }
 
-		reloadCurrentFragment();
-
+        // Select either the default item (0) or the last selected item.
+        reloadCurrentFragment();
+        displayView(mCurrentSelectedPosition);
 		updateDrawerHeader();
-		mActivity = this;
-
         showcaseView();
 	}
 
@@ -237,74 +263,31 @@ public class MainActivity extends Activity {
 		case 3:
 			fragment = new SettingsFragment();
 			break;
-		case 4:
-			return;
-
 		default:
 			break;
 		}
 
 		if (fragment != null) {
-			// show the fragment
 			showFragment(fragment);
-
-			// update selected item and title, then close the drawer
-			mDrawerList.setItemChecked(position, true);
-			mDrawerList.setSelection(position);
-			mDrawerTitle = mNavTitles[position-1];
-			setTitle(mDrawerTitle);
-            if(!isDrawerLocked)
-			    mDrawerLayout.closeDrawer(mDrawerList);
+            selectItem(position);
 		} else {
 			Log.e(mTag, "Error in creating fragment");
 		}
 	}
-	
-	private void persistCurrentFragment() {
-        if(!LOGGED_OUT) {
-            SharedPreferences settings = getSharedPreferences("SETTINGS", 0);
-            SharedPreferences.Editor editor = settings.edit();
-            int fragmentPosition = 1;
-            Fragment installed = getInstalledFragment();
 
-            if (installed instanceof AttendanceListFragment) {
-                fragmentPosition = 1;
-            } else if (installed instanceof TimeTablePagerFragment) {
-                fragmentPosition = 2;
-            }
-
-            if (DEBUG_FRAGMENTS) {
-                Log.i(mTag, this + " persistCurrentFragment: Saving fragment " + installed + " at position " + fragmentPosition);
-            }
-
-            editor.putInt(PREFERENCE_ACTIVATED_FRAGMENT, fragmentPosition);
-            editor.commit();
-        }
-	}
-
-	private void reloadCurrentFragment() {
-		SharedPreferences settings = getSharedPreferences("SETTINGS", 0);
-		int fragmentPosition = settings.getInt(PREFERENCE_ACTIVATED_FRAGMENT, 1);
-		
-		if (DEBUG_FRAGMENTS) {
-			Log.i(mTag, this + " reloadCurrentFragment: Restoring fragment positon " + fragmentPosition);
-		}
-		
-		displayView(fragmentPosition);
-		}
-
-	@Override
-	public void setTitle(CharSequence title) {
-		mTitle = title;
-		actionbar.setTitle(mTitle);
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
-	}
+    /**
+     * Update selected item and title, then close the drawer
+     * @param position the item to highlight
+     */
+    private void selectItem(int position) {
+        mCurrentSelectedPosition = position;
+        mDrawerList.setItemChecked(position, true);
+        mDrawerList.setSelection(position);
+        mDrawerTitle = mNavTitles[position-1];
+        setTitle(mDrawerTitle);
+        if(!isDrawerLocked && mDrawerLayout.isDrawerOpen(mDrawerList))
+            mDrawerLayout.closeDrawer(mDrawerList);
+    }
 
 	/**
 	 * Push the installed fragment into our custom back stack (or optionally
@@ -321,42 +304,28 @@ public class MainActivity extends Activity {
 		if(isAttendanceListInstalled() && fragment instanceof AttendanceListFragment ||
 		   isTimeTablePagerInstalled() && fragment instanceof TimeTablePagerFragment ||
 		   isSettingsInstalled() && fragment instanceof SettingsFragment) {
-			
-			if (DEBUG_FRAGMENTS) {
-				Log.i(mTag, this + " showFragment: " + fragment + " is already installed");
-			}
 			return;
-		}
-
-		if (DEBUG_FRAGMENTS) {
-			Log.i(mTag, this + " backstack: [push] " + installed
-					+ " -> " + fragment);
 		}
 
 		if (mPreviousFragment != null) {
 			if (DEBUG_FRAGMENTS) {
 				Log.d(mTag, this + " showFragment: destroying previous fragment "
-						+ mPreviousFragment);
+						+ mPreviousFragment.getClass().getSimpleName());
 			}
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			ft.remove(mPreviousFragment);
 			mPreviousFragment = null;
 		}
 
-		// Remove the current fragment or push it into the backstack.
+		// Remove the current fragment and push it into the backstack.
 		if (installed != null) {
 			mPreviousFragment = installed;
-			if (DEBUG_FRAGMENTS) {
-				Log.d(mTag, this + " showFragment: detaching "
-						+ mPreviousFragment);
-			}
 			ft.detach(mPreviousFragment);
 		}
+
 		// Show the new one
-		if (DEBUG_FRAGMENTS) {
-			Log.d(mTag, this + " showFragment: replacing with " + fragment);
-		}
-		ft.replace(R.id.frame_container, fragment, FRAGMENT_TAG);
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		ft.add(R.id.frame_container,fragment,FRAGMENT_TAG);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.commit();
 	}
 
@@ -408,27 +377,51 @@ public class MainActivity extends Activity {
 		final FragmentTransaction ft = mFragmentManager.beginTransaction();
 		final Fragment installed = getInstalledFragment();     
 		int position = 0 ;
-		Log.i(mTag, this + " backstack: [pop] " + installed + " -> "
-				+ mPreviousFragment);
-		ft.remove(installed);
-		// Restore listContext.
-		if (mPreviousFragment instanceof AttendanceListFragment) {
-			position = 1;
-		} else if (mPreviousFragment instanceof TimeTablePagerFragment) {
-			position = 2;
-		} else if (mPreviousFragment instanceof SettingsFragment) {
-			position = 3;
-		}
-		mDrawerList.setItemChecked(position, true);
-		mDrawerList.setSelection(position-1);
-		mDrawerTitle = mNavTitles[position-1];
-		setTitle(mDrawerTitle);
+		Log.i(mTag, this + " backstack: [pop] " + installed.getClass().getSimpleName() + " -> "
+				+ mPreviousFragment.getClass().getSimpleName());
 
-		ft.attach(mPreviousFragment);
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-		mPreviousFragment = null;
-		ft.commit();
+		ft.remove(installed);
+        ft.attach(mPreviousFragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+        ft.commit();
+
+        // redraw fragment
+		if (mPreviousFragment instanceof AttendanceListFragment) {
+			position = Fragments.ATTENDANCE.getValue();
+		} else if (mPreviousFragment instanceof TimeTablePagerFragment) {
+			position = Fragments.TIMETABLE.getValue();
+		}
+        selectItem(position);
+        mPreviousFragment = null;
 	}
+
+    private void persistCurrentFragment() {
+        if(!LOGGED_OUT) {
+            SharedPreferences.Editor editor = getSharedPreferences("SETTINGS", 0).edit();
+            mCurrentSelectedPosition = mCurrentSelectedPosition == Fragments.SETTINGS.getValue() ?
+                    Fragments.ATTENDANCE.getValue() : mCurrentSelectedPosition;
+            editor.putInt(PREFERENCE_ACTIVATED_FRAGMENT, mCurrentSelectedPosition).apply();
+        }
+    }
+
+    private void reloadCurrentFragment() {
+        SharedPreferences settings = getSharedPreferences("SETTINGS", 0);
+        mCurrentSelectedPosition = settings.getInt(PREFERENCE_ACTIVATED_FRAGMENT, Fragments.ATTENDANCE.getValue());
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        actionbar.setTitle(mTitle);
+        actionbar.setSubtitle("");
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
 	/**
 	 * @return currently installed {@link Fragment} (1-pane has only one at most), or null if none
@@ -439,18 +432,15 @@ public class MainActivity extends Activity {
 	}
 
 	private boolean isAttendanceListInstalled() {
-		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
-        return mFragment instanceof AttendanceListFragment;
+        return getInstalledFragment() instanceof AttendanceListFragment;
     }
 	
 	private boolean isTimeTablePagerInstalled() {
-		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
-        return mFragment instanceof TimeTablePagerFragment;
+        return getInstalledFragment() instanceof TimeTablePagerFragment;
     }
 	
 	private boolean isSettingsInstalled() {
-		Fragment mFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
-        return mFragment instanceof SettingsFragment;
+        return getInstalledFragment() instanceof SettingsFragment;
     }
 
 	@Override
@@ -469,8 +459,8 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onDestroy() {
-		MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.AttendanceListFragment");
-		Crouton.cancelAllCroutons();
+		MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.fragment.AttendanceListFragment");
+        MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.fragment.TimeTablePagerFragment");
 		super.onDestroy();
 	}
 

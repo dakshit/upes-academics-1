@@ -19,15 +19,16 @@
 
 package com.shalzz.attendance.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends ActionBarActivity {
 	
 	MyPreferencesManager settings = new MyPreferencesManager(this);
 
@@ -35,6 +36,10 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
+
+        // set toolbar as actionbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Set all default values once for this application
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);

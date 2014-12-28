@@ -19,7 +19,6 @@
 
 package com.shalzz.attendance;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -35,12 +34,9 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
-
 public class DataAssembler {
 
-	private static String mTag = "Data Assembler";
+    private static String mTag = "Data Assembler";
 
     public static void parseStudentDetails(String response,Context mContext) {
         Document doc = Jsoup.parse(response);
@@ -51,7 +47,7 @@ public class DataAssembler {
         {
             String msg ="It seems your session has expired.\nPlease Login again.";
             if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-                Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
+                Miscellaneous.showSnackBar(mContext, msg);
             Log.e(mTag,"Login Session Expired");
         }
         else if (tddata != null && tddata.size() > 0) {
@@ -78,176 +74,176 @@ public class DataAssembler {
             db.close();
         }
     }
-	
-	/**
-	 * Extracts Attendance details from the HTML code.
-	 * @param response HTML page string
-	 */
-	public static void  parseAttendance(String response,Context mContext) {
+
+    /**
+     * Extracts Attendance details from the HTML code.
+     * @param response HTML page string
+     */
+    public static void  parseAttendance(String response,Context mContext) {
 
         DatabaseHandler db = new DatabaseHandler(mContext);
         db.deleteAllSubjects();
 
-		ArrayList<Float> claHeld = new ArrayList<Float>();
-		ArrayList<Float> claAttended = new ArrayList<Float>();
-		ArrayList<String> abDates = new ArrayList<String>();
-		ArrayList<String> projPer = new ArrayList<String>();
-		ArrayList<String> subjectName = new ArrayList<String>();
-		ArrayList<Float> percentage = new ArrayList<Float>();
+        ArrayList<Float> claHeld = new ArrayList<>();
+        ArrayList<Float> claAttended = new ArrayList<>();
+        ArrayList<String> abDates = new ArrayList<>();
+        ArrayList<String> projPer = new ArrayList<>();
+        ArrayList<String> subjectName = new ArrayList<>();
+        ArrayList<Float> percentage = new ArrayList<>();
 
-		Log.i(mTag, "Parsing response...");
-		Document doc = Jsoup.parse(response);
+        Log.i(mTag, "Parsing response...");
+        Document doc = Jsoup.parse(response);
 
-		Elements tddata = doc.select("td");
+        Elements tddata = doc.select("td");
 
-		if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
-		{
-			String msg ="It seems your session has expired.\nPlease Login again.";
-			if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
-			Log.e(mTag,"Login Session Expired");
-		}
-		else if (tddata != null && tddata.size() > 0)
-		{
-			int i=0;
-			for(Element element : tddata)
-			{
-			    if(i>29)
-				{
-					// for subjects
-					if ((i - 30) % 7 == 0) {
-						subjectName.add(element.text());
-					}
-					// for Classes Held
-					else if ((i - 31) % 7 == 0) {
-						claHeld.add(Float.parseFloat(element.text()));
-					}
-					// for Classes attended
-					else if ((i - 32) % 7 == 0) {
-						claAttended.add(Float.parseFloat(element.text()));
-					}
-					// for Dates Absent
-					else if ((i - 33) % 7 == 0) {
-						abDates.add(element.text());
-					}
-					// for attendance percentage
-					else if ((i - 34) % 7 == 0) {
-						percentage.add(Float.parseFloat(element.text()));
-					}
-					// for projected percentage
-					else if ((i - 35) % 7 == 0) {
-						projPer.add(element.text());
-					}
-				}
-				++i;
-			}
+        if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
+        {
+            String msg ="It seems your session has expired.\nPlease Login again.";
+            if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
+                Miscellaneous.showSnackBar(mContext, msg);
+            Log.e(mTag,"Login Session Expired");
+        }
+        else if (tddata != null && tddata.size() > 0)
+        {
+            int i=0;
+            for(Element element : tddata)
+            {
+                if(i>29)
+                {
+                    // for subjects
+                    if ((i - 30) % 7 == 0) {
+                        subjectName.add(element.text());
+                    }
+                    // for Classes Held
+                    else if ((i - 31) % 7 == 0) {
+                        claHeld.add(Float.parseFloat(element.text()));
+                    }
+                    // for Classes attended
+                    else if ((i - 32) % 7 == 0) {
+                        claAttended.add(Float.parseFloat(element.text()));
+                    }
+                    // for Dates Absent
+                    else if ((i - 33) % 7 == 0) {
+                        abDates.add(element.text());
+                    }
+                    // for attendance percentage
+                    else if ((i - 34) % 7 == 0) {
+                        percentage.add(Float.parseFloat(element.text()));
+                    }
+                    // for projected percentage
+                    else if ((i - 35) % 7 == 0) {
+                        projPer.add(element.text());
+                    }
+                }
+                ++i;
+            }
 
-			Elements total = doc.select("th");
-			ListFooter footer = new ListFooter();
-			footer.setAttended(Float.parseFloat(total.get(10).text()));
-			footer.setHeld(Float.parseFloat(total.get(9).text()));
-			footer.setPercentage(Float.parseFloat(total.get(12).text()));
-			db.addOrUpdateListFooter(footer);
+            Elements total = doc.select("th");
+            ListFooter footer = new ListFooter();
+            footer.setAttended(Float.parseFloat(total.get(10).text()));
+            footer.setHeld(Float.parseFloat(total.get(9).text()));
+            footer.setPercentage(Float.parseFloat(total.get(12).text()));
+            db.addOrUpdateListFooter(footer);
 
-			Log.i(mTag, "Response parsing complete.");
+            Log.i(mTag, "Response parsing complete.");
 
-			for(i=0;i<claHeld.size();i++)
-			{
-				Subject subject = new Subject(i+1, 
-						subjectName.get(i),
-						claHeld.get(i),
-						claAttended.get(i),
-						abDates.get(i),
-						percentage.get(i),
-						projPer.get(i));
-				db.addSubject(subject);
-			}
-			db.close();
-		}
-	}
+            for(i=0;i<claHeld.size();i++)
+            {
+                Subject subject = new Subject(i+1,
+                        subjectName.get(i),
+                        claHeld.get(i),
+                        claAttended.get(i),
+                        abDates.get(i),
+                        percentage.get(i),
+                        projPer.get(i));
+                db.addSubject(subject);
+            }
+            db.close();
+        }
+    }
 
-	public static int parseTimeTable(String response,Context mContext) {
+    public static int parseTimeTable(String response,Context mContext) {
 
         DatabaseHandler db = new DatabaseHandler(mContext);
         db.deleteAllPeriods();
 
-		Document doc = Jsoup.parse(response);
-		Elements thdata = doc.select("th");
+        Document doc = Jsoup.parse(response);
+        Elements thdata = doc.select("th");
 
-		ArrayList<String> time = new ArrayList<String>();
-		ArrayList<String> mon = new ArrayList<String>();
-		ArrayList<String> tue = new ArrayList<String>();
-		ArrayList<String> wed = new ArrayList<String>();
-		ArrayList<String> thur = new ArrayList<String>();
-		ArrayList<String> fri = new ArrayList<String>();
-		ArrayList<String> sat = new ArrayList<String>();
-		String dayNames[] = {"mon","tue","wed","thur","fri","sat"};
-		ArrayList<ArrayList<String>> days = new ArrayList<ArrayList<String>>();
-		days.add(mon);
-		days.add(tue);
-		days.add(wed);
-		days.add(thur);
-		days.add(fri);
-		days.add(sat);
+        ArrayList<String> time = new ArrayList<>();
+        ArrayList<String> mon = new ArrayList<>();
+        ArrayList<String> tue = new ArrayList<>();
+        ArrayList<String> wed = new ArrayList<>();
+        ArrayList<String> thur = new ArrayList<>();
+        ArrayList<String> fri = new ArrayList<>();
+        ArrayList<String> sat = new ArrayList<>();
+        String dayNames[] = {"mon","tue","wed","thur","fri","sat"};
+        ArrayList<ArrayList<String>> days = new ArrayList<>();
+        days.add(mon);
+        days.add(tue);
+        days.add(wed);
+        days.add(thur);
+        days.add(fri);
+        days.add(sat);
 
-		if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
-		{
-			String msg ="It seems your session has expired.\nPlease Login again.";
-			if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
-			Log.e(mTag,"Login Session Expired");
+        if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
+        {
+            String msg ="It seems your session has expired.\nPlease Login again.";
+            if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
+                Miscellaneous.showSnackBar(mContext, msg);
+            Log.e(mTag,"Login Session Expired");
             return -1;
-		}
+        }
         else if(doc.getElementsByClass("infomessage").text().equals("No reports found for the given criteria.")) {
             if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-                Crouton.makeText((Activity) mContext, "No TimeTable available at this time", Style.ALERT).show();
+                Miscellaneous.showSnackBar(mContext, "No TimeTable available at this time");
             Log.e(mTag,"No TimeTable");
             return -2;
         }
-		else if (thdata != null && thdata.size() > 0)
-		{
-			int i=0;
-			for(Element element : thdata)
-			{
-				if(i>8)
-				{
-					// get time
-					if ((i - 9) % 7 == 0) {
-						time.add(element.html());
-					}
-					// periods on mon
-					if ((i - 10) % 7 == 0) {
-						mon.add(element.html());
-					}
-					// periods on tue
-					if ((i - 11) % 7 == 0) {
-						tue.add(element.html());
-					}
-					// periods on wed
-					if ((i - 12) % 7 == 0) {
-						wed.add(element.html());
-					}
-					// periods on thur
-					if ((i - 13) % 7 == 0) {
-						thur.add(element.html());
-					}
-					// periods on fri
-					if ((i - 14) % 7 == 0) {
-						fri.add(element.html());
-					}
-					// periods on sat
-					if ((i - 15) % 7 == 0) {
-						sat.add(element.html());
-					}
-				}
-				++i;
-			}
+        else if (thdata != null && thdata.size() > 0)
+        {
+            int i=0;
+            for(Element element : thdata)
+            {
+                if(i>8)
+                {
+                    // get time
+                    if ((i - 9) % 7 == 0) {
+                        time.add(element.html());
+                    }
+                    // periods on mon
+                    if ((i - 10) % 7 == 0) {
+                        mon.add(element.html());
+                    }
+                    // periods on tue
+                    if ((i - 11) % 7 == 0) {
+                        tue.add(element.html());
+                    }
+                    // periods on wed
+                    if ((i - 12) % 7 == 0) {
+                        wed.add(element.html());
+                    }
+                    // periods on thur
+                    if ((i - 13) % 7 == 0) {
+                        thur.add(element.html());
+                    }
+                    // periods on fri
+                    if ((i - 14) % 7 == 0) {
+                        fri.add(element.html());
+                    }
+                    // periods on sat
+                    if ((i - 15) % 7 == 0) {
+                        sat.add(element.html());
+                    }
+                }
+                ++i;
+            }
 
-			for(int j=0;j<days.size();j++)
-			{
+            for(int j=0;j<days.size();j++)
+            {
                 ArrayList<String> dayofweek = days.get(j);
-				for(i=0;i<time.size();i++)
-				{
+                for(i=0;i<time.size();i++)
+                {
                     String[] parts = dayofweek.get(i).split("<br />");
                     int index = time.get(i).indexOf("-");
                     String start = time.get(i).substring(0,index);
@@ -295,10 +291,10 @@ public class DataAssembler {
                         period1.setTime(start,end);
                         db.addPeriod(period1);
                     }
-				}
-			}
+                }
+            }
             db.close();
-		}
+        }
         return 0;
-	}
+    }
 }

@@ -21,16 +21,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    style="@style/listViewActivatedStyle" >
-    
-<TextView 
-          android:id="@+id/drawer_list_textView"
-          android:layout_width="match_parent"
-    	  android:layout_height="48dp"
-    	  android:gravity="center_vertical"
-          android:text="New Text"
-          android:textColor="@color/list_item_title"
-          android:padding="7dp"
-          android:layout_marginLeft= "@dimen/navigation_drawer_margin"
-          android:textSize="18sp"/>
+    android:background="@drawable/list_item_selector">
+
+    <TextView
+        android:id="@+id/drawer_list_textView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="New Text"
+        android:textColor="@drawable/list_text_color_selector"
+        android:layout_marginLeft= "@dimen/navigation_drawer_margin"
+        android:layout_marginStart= "@dimen/navigation_drawer_margin"
+        android:layout_marginRight= "@dimen/navigation_drawer_margin"
+        android:layout_marginEnd= "@dimen/navigation_drawer_margin"
+        android:textSize="18sp"/>
+
+
 </RelativeLayout>

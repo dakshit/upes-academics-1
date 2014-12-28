@@ -22,7 +22,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="fill_horizontal"
-    android:src="@drawable/ic_menu_refresh"
+    android:src="@drawable/refresh"
     android:layout_margin="5dp"
     style="@android:style/Widget.ActionButton">
 

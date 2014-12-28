@@ -30,6 +30,8 @@ import com.android.volley.Request.Method;
 import com.android.volley.Request.Priority;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 import com.shalzz.attendance.activity.LoginActivity;
 import com.shalzz.attendance.activity.MainActivity;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
@@ -45,9 +47,6 @@ import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 
 public class UserAccount {
@@ -145,7 +144,11 @@ public class UserAccount {
 					else
 					{
 						misc.dismissProgressDialog();
-						Crouton.makeText((Activity) mContext,  "Error! Please try again later", Style.ALERT).show();	
+                        SnackbarManager.show(
+                                Snackbar.with(mContext)
+                                        .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+                                        .textColor(mContext.getResources().getColor(R.color.accent))
+                                        .text("Error! Please try again later"), (Activity) mContext);
 					}
 				}
 				else
@@ -298,8 +301,8 @@ public class UserAccount {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
-				misc.dismissProgressDialog();		
-				Crouton.makeText((Activity) mContext,  msg, Style.ALERT).show();		
+				misc.dismissProgressDialog();
+                Miscellaneous.showSnackBar(mContext,msg);
 				Log.e(mContext.getClass().getName(), msg);
 			}
 		};

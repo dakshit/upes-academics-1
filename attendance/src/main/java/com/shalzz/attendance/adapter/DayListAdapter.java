@@ -19,12 +19,10 @@
 
 package com.shalzz.attendance.adapter;
 
-import android.app.Activity;
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.shalzz.attendance.R;
@@ -34,62 +32,76 @@ import com.shalzz.attendance.model.Period;
 import java.text.ParseException;
 import java.util.List;
 
-public class DayListAdapter extends BaseAdapter{
-	private Context mContext;
-	private List<Period> periods;
+public class DayListAdapter extends RecyclerView.Adapter<DayListAdapter.ViewHolder>{
+    private List<Period> periods;
 
-	public DayListAdapter(Context context,Day day){
-		mContext = context;
-		periods = day.getAllPeriods();
-	}
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView tvSubjectName;
+        public TextView tvTime;
+        public TextView tvTeacher;
+        public TextView tvRoom;
 
-	@Override
-	public int getCount() {
-		return periods.size();
-	}
-
-	@Override
-	public Period getItem(int position) {
-		return periods.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater mInflater = (LayoutInflater)
-				mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-
-        // Check if we can recycle the view
-        if (convertView == null || (Integer) convertView.getTag() != R.layout.day_list_item+position)
-        {
-            convertView = mInflater.inflate(R.layout.day_list_item, parent, false);
-            // view = parent.findViewById(R.id.activity_expandablelistitem_content);
-            // Set the tag to make sure you can recycle it when you get it as a convert view
-            convertView.setTag(R.layout.day_list_item + position);
+        public ViewHolder(View itemView) {
+            super(itemView);
+            tvSubjectName = (TextView) itemView.findViewById(R.id.tvSubjectName);
+            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            tvTeacher = (TextView) itemView.findViewById(R.id.tvTeacher);
+            tvRoom = (TextView) itemView.findViewById(R.id.tvRoom);
         }
+    }
 
-		TextView tvSubjectName = (TextView) convertView.findViewById(R.id.tvSubjectName);
-		TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
-        TextView tvTeacher = (TextView) convertView.findViewById(R.id.tvTeacher);
-        TextView tvRoom = (TextView) convertView.findViewById(R.id.tvRoom);
-		Period period = periods.get(position);
+    public DayListAdapter(Day day){
+        if (day == null) {
+            throw new IllegalArgumentException(
+                    "Data set must not be null");
+        }
+        periods = day.getAllPeriods();
+    }
 
+    // Create new views (invoked by the layout manager)
+    @Override
+    public DayListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                        int viewType) {
+        // create a new view
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.day_list_item, parent, false);
+        return new ViewHolder(v);
+    }
+
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        // - get element from your dataset at this position
+        // - replace the contents of the view with that element
+
+        Period period = periods.get(position);
         if(!period.getBatch().equals("NULL"))
-		    tvSubjectName.setText(period.getSubjectName()+" - "+period.getBatch());
+            holder.tvSubjectName.setText(period.getSubjectName()+" - "+period.getBatch());
         else
-            tvSubjectName.setText(period.getSubjectName());
-        tvRoom.setText(period.getRoom());
-        tvTeacher.setText(period.getTeacher());
+            holder.tvSubjectName.setText(period.getSubjectName());
+        holder.tvRoom.setText(period.getRoom());
+        holder.tvTeacher.setText(period.getTeacher());
         try {
-            tvTime.setText(period.getTimein12hr());
+            holder.tvTime.setText(period.getTimein12hr());
         } catch (ParseException e) {
-            tvTime.setText(period.getTime());
+            holder.tvTime.setText(period.getTime());
             e.printStackTrace();
         }
-		return convertView;
-	}
+
+    }
+
+    public void setDataSet(Day day) {
+        periods = day.getAllPeriods();
+        notifyDataSetChanged();
+    }
+
+    // Return the size of your dataset (invoked by the layout manager)
+    @Override
+    public int getItemCount() {
+        return periods.size();
+    }
+
 }

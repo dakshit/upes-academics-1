@@ -19,17 +19,20 @@
 
 package com.shalzz.attendance.fragment;
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.shalzz.attendance.DatabaseHandler;
+import com.shalzz.attendance.DividerItemDecoration;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.adapter.DayListAdapter;
 import com.shalzz.attendance.model.Day;
@@ -37,93 +40,95 @@ import com.shalzz.attendance.wrapper.DateHelper;
 
 import java.util.Date;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
+public class DayFragment extends Fragment {
 
-public class DayFragment extends ListFragment {
-	
-	private Context mContext;
-	private Date mDate;
-	public static final String ARG_DATE = "date";
-	private DayListAdapter mAdapter;
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mContext = getActivity();
-		mDate = new Date();
-	}
-	
-	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		if(container==null)
-			return null;
+    private Context mContext;
+    private Date mDate;
+    public static final String ARG_DATE = "date";
+    private RecyclerView mRecyclerView;
+    private DayListAdapter mAdapter;
+    private Day mDay;
+    private View mEmptyView;
 
-		return inflater.inflate(R.layout.timetable_view, container, false);
-	}
 
-	@Override
-	public void onStart() {
-		DatabaseHandler db = new DatabaseHandler(mContext);
-		if(db.getRowCountofTimeTable()>0) 
-			setTimeTable();
-		super.onStart();
-	}
-	
-	public void setTimeTable() {
-		DatabaseHandler db = new DatabaseHandler(getActivity());
-		String weekday = getWeekDay();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = getActivity();
+        mDate = new Date();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if(container==null)
+            return null;
+        View mView = inflater.inflate(R.layout.timetable_view, container, false);
+
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.my_recycler_view);
+        mEmptyView = mView.findViewById(R.id.empty_view);
+        mDate = (Date) getArguments().getSerializable(ARG_DATE);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mLayoutManager.setSmoothScrollbarEnabled(true);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(itemDecoration);
+
+        return mView;
+    }
+
+    @Override
+    public void onStart() {
+        reloadDataSet();
+        mAdapter = new DayListAdapter(mDay);
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                checkAdapterIsEmpty();
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
+        checkAdapterIsEmpty();
+        super.onStart();
+    }
+
+    public void reloadDataSet() {
+        DatabaseHandler db = new DatabaseHandler(getActivity());
+        String weekday = DateHelper.getTechnicalWeekday(mDate);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         String pref_batch = sharedPref.getString("pref_batch", "");
 
-        if(weekday.equals("sun"))
-			return;
+        mDay = pref_batch.equals("NULL") ? db.getDay(weekday): db.getDay(weekday,pref_batch);
 
-        Day day;
-        if(pref_batch.equals("NULL"))
-            day = db.getDay(weekday);
-        else
-		    day = db.getDay(weekday,pref_batch);
+        if(mAdapter!=null)
+            mAdapter.setDataSet(mDay);
+    }
 
-        if(day!=null) {
-            mAdapter = new DayListAdapter(mContext, day);
-            if(mAdapter.getCount()==1 && mAdapter.getItem(0).getSubjectName().equals("")) // no classes
-                return;
-            setListAdapter(mAdapter);
+    private void checkAdapterIsEmpty () {
+        if (mAdapter.getItemCount() == 0) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyView.setVisibility(View.GONE);
         }
-	}
+    }
 
-	public String getWeekDay() {
-		setDate();
-		return DateHelper.getTechnicalWeekday(mDate);
-	}
-	
-	public void setDate() {
-		Date date = (Date) getArguments().getSerializable(ARG_DATE);
-		if(date!=null) // Can happen because of asynchronous fragment transactions.
-			mDate = date;
-	}
-	
-	public Date getDate() {
-		return mDate;
-	}
-	
-	public void notifyDataSetChanged() {
-		mAdapter.notifyDataSetChanged();
-	}
-	
-	@Override
-	public void onResume() {
-		DatabaseHandler db = new DatabaseHandler(mContext);
-		if(db.getRowCountofTimeTable()>0)
-			setTimeTable();
-		super.onResume();
-	}
+    public Date getDate() {
+        return mDate;
+    }
 
-	@Override
-	public void onDestroy() {
-		Crouton.cancelAllCroutons();
-		super.onDestroy();
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

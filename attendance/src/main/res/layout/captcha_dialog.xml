@@ -58,7 +58,6 @@
         android:layout_centerHorizontal="true"
         android:contentDescription="Captcha Image"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_launcher"
         android:visibility="invisible" />
 
     <Button
@@ -68,7 +67,7 @@
         android:layout_alignBottom="@+id/progressBar1"
         android:layout_margin="5dp"
         android:layout_toRightOf="@+id/ivCapImg"
-        android:background="@drawable/ic_menu_refresh"
+        android:background="@drawable/refresh_dark"
         android:focusable="false"
         android:gravity="center"
         android:minHeight="5dip"

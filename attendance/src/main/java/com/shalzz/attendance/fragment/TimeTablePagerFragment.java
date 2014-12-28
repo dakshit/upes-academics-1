@@ -19,21 +19,22 @@
 
 package com.shalzz.attendance.fragment;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -43,121 +44,133 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.shalzz.attendance.CircularIndeterminate;
 import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
-import com.shalzz.attendance.adapter.MySpinnerAdapter;
+import com.shalzz.attendance.activity.MainActivity;
 import com.shalzz.attendance.adapter.TimeTablePagerAdapter;
 import com.shalzz.attendance.wrapper.DateHelper;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
-import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
 import java.util.Calendar;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
+import java.util.Date;
 
 public class TimeTablePagerFragment extends Fragment {
 
-	private TimeTablePagerAdapter mTimeTablePagerAdapter;
-	private ViewPager mViewPager;
-	private String myTag = "Pager Fragment";
-	private Context mContext;
-	private Miscellaneous misc;
-	private ActionBar actionbar;
-	private MySpinnerAdapter mSpinnerAdapter ;
-    private MenuItem refreshItem ;
-    private boolean initialize = true;
+    /**
+     * The {@link android.support.v4.widget.SwipeRefreshLayout} that detects swipe gestures and
+     * triggers callbacks in the app.
+     */
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mContext = getActivity();
-		misc  = new Miscellaneous(mContext);
-		actionbar= getActivity().getActionBar();
-		actionbar.setDisplayShowTitleEnabled(false);
+    /**
+     * Remember the position of the previous pager position.
+     */
+    private static final String STATE_PREVIOUSE_POSITION = "previous_pager_position";
 
-		mSpinnerAdapter = new MySpinnerAdapter(mContext);
+    private int mPreviousPosition = 15;
+    private TimeTablePagerAdapter mTimeTablePagerAdapter;
+    private ViewPager mViewPager;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private String myTag = "Pager Fragment";
+    private Context mContext;
+    private CircularIndeterminate mProgress;
+    private ActionBar actionbar;
+    private Date mToday;
 
-		ActionBar.OnNavigationListener mOnNavigationListener = new ActionBar.OnNavigationListener() {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = getActivity();
+        actionbar= ((ActionBarActivity)getActivity()).getSupportActionBar();
 
-			@Override
-			public boolean onNavigationItemSelected(int position, long itemId) {
-				Log.d(myTag,"selected "+position+": "+itemId);
-                if(initialize)
-                    initialize=false;
-                else if(position == 1) {
-                    Calendar today = Calendar.getInstance();
-                    today.setTime(DateHelper.getToDay());
-                    DatePickerDialog mDatePickerDialog = new DatePickerDialog(mContext,onDateSetListner()
-                            ,today.get(Calendar.YEAR)
-                            ,today.get(Calendar.MONTH)
-                            ,today.get(Calendar.DAY_OF_MONTH));
-                    mDatePickerDialog.show();
-                    actionbar.setSelectedNavigationItem(0);
-                    return true;
+        if (savedInstanceState != null) {
+            mPreviousPosition = savedInstanceState.getInt(STATE_PREVIOUSE_POSITION);
+        }
+    }
 
-				}
-				else if (position == 2) {
-                    mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), DateHelper.getToDay());
-                    mViewPager.setAdapter(mTimeTablePagerAdapter);
-                    updateFragments();
-                    scrollToToday();
-                    updateSpinner();
-                    actionbar.setSelectedNavigationItem(0);
-                    return true;
-				}
-				return false;
-			}
-		};
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if(container==null)
+            return null;
 
-		actionbar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
-	}
+        setHasOptionsMenu(true);
+        View view = inflater.inflate(R.layout.swipe_layout, container, false);
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		if(container==null)
-			return null;
+        mViewPager = (ViewPager) view.findViewById(R.id.pager);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        mProgress = (CircularIndeterminate) view.findViewById(R.id.circular_indet);
+        mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
 
-		setHasOptionsMenu(true);
-		View view = inflater.inflate(R.layout.swipe_layout, container, false);
+        // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.swipe_color_1, R.color.swipe_color_2,
+                R.color.swipe_color_3, R.color.swipe_color_4);
 
-		mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), DateHelper.getToDay());
-		mViewPager = (ViewPager) view.findViewById(R.id.pager);
-		mViewPager.setAdapter(mTimeTablePagerAdapter);
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+        mToday =  DateHelper.getToDay();
+        mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), mToday);
+        mViewPager.setAdapter(mTimeTablePagerAdapter);
+        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 
-			public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {}
 
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-				updateSpinner();
-			}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                updateTitle();
+            }
 
-			public void onPageSelected(int position) {}
-		});
+            public void onPageSelected(int position) {}
+        });
 
-		return view;
-	}
+        return view;
+    }
 
-	@Override
-	public void onStart() {
-		DatabaseHandler db = new DatabaseHandler(mContext);
-		if(db.getRowCountofTimeTable()<=0) {
-			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
-			misc.showProgressDialog("Loading your TimeTable...","Loading", true, pdCancelListener());
-		}
-		else
-			scrollToToday();
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        DatabaseHandler db = new DatabaseHandler(mContext);
+        if(db.getRowCountofTimeTable()<=0) {
+            DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
+            mProgress.setVisibility(View.VISIBLE);
+            mViewPager.setVisibility(View.GONE);
+        }
+        else
+            mViewPager.setCurrentItem(mPreviousPosition, true);
 
         MyPreferencesManager prefs = new MyPreferencesManager(mContext);
         if(prefs.isFirstLaunch(myTag))
             showcaseView();
-		super.onStart();
-	}
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
+            }
+        });
+
+        // fix for oversensitive horizontal scroll of swipe view
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mSwipeRefreshLayout.setEnabled(false);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        // TODO: fix recyclerview scroll
+                        mSwipeRefreshLayout.setEnabled(true);
+                        break;
+                }
+                return false;
+            }
+        });
+    }
 
     public void showcaseView() {
         MyPreferencesManager prefs = new MyPreferencesManager(mContext);
@@ -178,84 +191,87 @@ public class TimeTablePagerFragment extends Fragment {
         });
     }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		menuInflater.inflate(R.menu.time_table, menu);
-	}
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.time_table, menu);
+    }
 
-	/* Called whenever we call invalidateOptionsMenu() */
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content view
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+        menu.findItem(R.id.menu_date).setVisible(!drawerOpen);
+        menu.findItem(R.id.menu_today).setVisible(!drawerOpen);
 
-		DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-		ListView mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+        updateTitle();
 
-		// set the Navigation mode to standard
-		if(drawerOpen) {
-			actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-			actionbar.setDisplayShowTitleEnabled(true);
-		}
-		else {
-			actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-			actionbar.setDisplayShowTitleEnabled(false);
-		}
-	}
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.menu_logout)
-		{
-			new UserAccount(mContext).Logout();
-		}
-		else if(item.getItemId() == R.id.menu_refresh)
-		{
-            refreshItem = item;
-			DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
-			misc.animateRefreshActionItem(refreshItem);
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_logout)
+        {
+            new UserAccount(mContext).Logout();
+        }
+        else if(item.getItemId() == R.id.menu_refresh)
+        {
+            DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
 
-	private void updateFragments() {
-		for (DayFragment fragment : mTimeTablePagerAdapter.getActiveFragments()) {
-			Log.d("TimeTableActivity", "Update Fragment " + fragment.getDate() + " with new data.");
-			//fragment.notifyDataSetChanged();
-			fragment.setTimeTable();
-		}
-        updateSpinner();
-	}
+            // We make sure that the SwipeRefreshLayout is displaying it's refreshing indicator
+            if (!mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        }
+        else if(item.getItemId() == R.id.menu_date)
+        {
+            Calendar today = Calendar.getInstance();
+            today.setTime(mToday);
+            DatePickerDialog mDatePickerDialog = new DatePickerDialog(mContext,onDateSetListner()
+                    ,today.get(Calendar.YEAR)
+                    ,today.get(Calendar.MONTH)
+                    ,today.get(Calendar.DAY_OF_MONTH));
+            mDatePickerDialog.show();
+        }
+        else if(item.getItemId() == R.id.menu_today)
+        {
+            if(mTimeTablePagerAdapter.getDate() != mToday) {
+                mTimeTablePagerAdapter.setDate(mToday);
+            }
+            scrollToToday();
+            updateTitle();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	private void updateSpinner() {
-		DayFragment fragment = mTimeTablePagerAdapter.getFragment(mViewPager.getCurrentItem());
-		if(fragment!=null && actionbar.getNavigationMode()== ActionBar.NAVIGATION_MODE_LIST) {// Can happen because of asynchronous fragment transactions.
-			mSpinnerAdapter.setDate(fragment.getDate());
-		}
-	}
+    private void updateFragments() {
+        for (DayFragment fragment : mTimeTablePagerAdapter.getActiveFragments()) {
+            Log.d("TimeTableActivity", "Update Fragment " + fragment.getDate() + " with new data.");
+            fragment.reloadDataSet();
+        }
+        updateTitle();
+    }
 
-	private void scrollToToday() {
-		mViewPager.setCurrentItem(15, true);
-		Log.d(myTag,"Scrolling to Today");
-	}
+    private void updateTitle() {
+        DayFragment fragment = mTimeTablePagerAdapter.getFragment(mViewPager.getCurrentItem());
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        if(drawerOpen) {
+            String mNavTitles[] = getResources().getStringArray(R.array.drawer_array);
+            actionbar.setTitle(mNavTitles[MainActivity.Fragments.TIMETABLE.getValue()-1]);
+            actionbar.setSubtitle("");
+        }
+        else if(fragment!=null) {
+            Date mDate = fragment.getDate();
+            actionbar.setTitle(DateHelper.getProperWeekday(mDate));
+            actionbar.setSubtitle(DateHelper.formatToProperFormat(mDate));
+        }
+    }
 
-	public void scrollToPosition(int position) {
-		mViewPager.setCurrentItem(position);
-	}
-
-	DialogInterface.OnCancelListener pdCancelListener() {
-		return new DialogInterface.OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				// Cancel all pending requests when user presses back button.
-				Crouton.makeText(getActivity(), "Refresh canceled", Style.INFO).show();
-				MyVolley.getInstance().cancelPendingRequests(myTag);
-			}
-		};
-
-	}
+    private void scrollToToday() {
+        mViewPager.setCurrentItem(15, true);
+    }
 
     DatePickerDialog.OnDateSetListener onDateSetListner() {
         return new DatePickerDialog.OnDateSetListener() {
@@ -263,59 +279,63 @@ public class TimeTablePagerFragment extends Fragment {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar date = Calendar.getInstance();
                 date.set(year, monthOfYear, dayOfMonth);
-                mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), date.getTime());
-                mViewPager.setAdapter(mTimeTablePagerAdapter);
-                updateSpinner();
-                updateFragments();
+                mTimeTablePagerAdapter.setDate(date.getTime());
+                updateTitle();
                 scrollToToday();
             }
         };
     }
 
-	private Response.Listener<String> timeTableSuccessListener() {
-		return new Response.Listener<String>() {
-			@Override
-			public void onResponse(String response) {
-                misc.dismissProgressDialog();
-                misc.completeRefreshActionItem(refreshItem);
+    private Response.Listener<String> timeTableSuccessListener() {
+        return new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                // Stop the refreshing indicator
+                mProgress.setVisibility(View.GONE);
+                mViewPager.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setRefreshing(false);
                 try {
                     if (DataAssembler.parseTimeTable(response, mContext) == 0) {
+                        mTimeTablePagerAdapter.setDate(mToday);
                         updateFragments();
                         scrollToToday();
                     }
                 }
                 catch(Exception e) {
                     e.printStackTrace();
-                    Crouton.makeText((Activity) mContext, "An unexpected error occurred", Style.ALERT).show();
+                    Miscellaneous.showSnackBar(mContext,"An unexpected error occurred");
                 }
-			}
-		};
-	}
+            }
+        };
+    }
 
-	private Response.ErrorListener myErrorListener() {
-		return new Response.ErrorListener() {
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				misc.dismissProgressDialog();
-                misc.completeRefreshActionItem(refreshItem);
-				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
-				Crouton.makeText((Activity) mContext, msg, Style.ALERT).show();
-				Log.e(myTag, msg);
-			}
-		};
-	}
+    private Response.ErrorListener myErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Stop the refreshing indicator
+                mProgress.setVisibility(View.GONE);
+                mViewPager.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setRefreshing(false);
+                String msg = MyVolleyErrorHelper.getMessage(error, mContext);
+                Miscellaneous.showSnackBar(mContext, msg);
+                Log.e(myTag, msg);
+            }
+        };
+    }
 
-	@Override
-	public void onResume() {
-		mTimeTablePagerAdapter.notifyDataSetChanged();
-		updateFragments();
-		updateSpinner();
-		super.onResume();
-	}
+    public void notifyDataSetChanged() {
+        mTimeTablePagerAdapter.notifyDataSetChanged();
+    }
 
-	@Override
-	public void onDestroy() {
-        Crouton.cancelAllCroutons();
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_PREVIOUSE_POSITION, mViewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
     }
 

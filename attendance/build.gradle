@@ -23,42 +23,49 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '20.0.0'
+    buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId 'com.shalzz.attendance'
         minSdkVersion 14
         targetSdkVersion 21
+
+        resConfigs "en"
+        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
     }
 
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            zipAlign true
+//            zipAlign true
         }
         release {
-            runProguard false
+//            runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            zipAlign true
+//            zipAlign true
         }
     }
-    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/layouts-sw720dp-land'] } }
-}
+    sourceSets {
+        main { res.srcDirs = ['src/main/res', 'src/main/res/layouts-sw720dp-land'] }
 
-dependencies {
-    // aar binary library projects
-    compile 'com.mcxiaoke.volley:library:1.0.+@aar'
-    compile 'com.nhaarman.listviewanimations:library:+@aar'
-    compile 'com.github.amlcurran.showcaseview:library:5.1.0-SNAPSHOT@aar'
-    // Jars
-    compile 'com.google.android.gms:play-services:6.+'
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:support-v4:21.+'
-    compile 'com.android.support:appcompat-v7:21.0.+'
-    compile 'com.android.support:support-v13:21.+'
-    compile 'org.jsoup:jsoup:1.7.3'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
-    compile 'de.keyboardsurfer.android.widget:crouton:1.8.4@aar'
-    compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
-        exclude module: 'support-v4'
+    }
+
+    dependencies {
+        // aar binary library projects
+        compile 'com.mcxiaoke.volley:library:1.0.+@aar'
+        compile 'com.nhaarman.listviewanimations:library:+@aar'
+        compile 'com.github.amlcurran.showcaseview:library:5.1.0-SNAPSHOT@aar'
+        // Jars
+        compile 'com.google.android.gms:play-services:6.+'
+        compile 'com.android.support:recyclerview-v7:21.0.+'
+        compile 'com.android.support:support-v4:21.+'
+        compile 'com.android.support:appcompat-v7:21.0.+'
+        compile 'com.android.support:support-v13:21.+'
+
+        compile 'org.jsoup:jsoup:1.7.3'
+        compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+        compile 'com.nispok:snackbar:2.7.3'
+        compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
+            exclude module: 'support-v4'
+        }
     }
 }

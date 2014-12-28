@@ -30,37 +30,24 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 import com.shalzz.attendance.wrapper.MyVolley;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-
-import de.keyboardsurfer.android.widget.crouton.Configuration;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class Miscellaneous {
 
 	private AlertDialog.Builder builder = null;
 	private ProgressDialog pd = null;
 	private Context mContext;
-
-    private Animation rotation;
-    private LayoutInflater inflater;
-	//private String mTag = "Miscellaneous";
 
 	public Miscellaneous(Context context) {
 		mContext = context;
@@ -124,28 +111,6 @@ public class Miscellaneous {
 		}
 		pd.show();
 	}
-	
-	/**
-	 * Displays the default Progress Dialog.
-	 * @param mMessage The message to display
-	 * @param mTitle The title of the progress dialog
-	 */
-	public void showProgressDialog(String mMessage,String mTitle,boolean cancable, DialogInterface.OnCancelListener progressDialogCancelListener) {
-		// lazy initialise
-		if(pd==null)
-		{
-			// Setup the Progress Dialog
-			pd = new ProgressDialog(mContext);
-			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pd.setMessage(mMessage);
-			pd.setTitle(mTitle);
-			pd.setIndeterminate(true);
-			pd.setCancelable(cancable);
-			pd.setCanceledOnTouchOutside(false);
-			pd.setOnCancelListener(progressDialogCancelListener);
-		}
-		pd.show();
-	}
 
 	/**
 	 * Dismisses the Progress Dialog.
@@ -154,37 +119,6 @@ public class Miscellaneous {
 		if(pd!=null)
 			pd.dismiss();
 	}
-
-    /**
-     * Rotates the refresh ActionBar item clockwise.
-     * @param item refresh action item
-     */
-    public void animateRefreshActionItem(MenuItem item) {
-        if (mContext != null) {
-             /* Attach a rotating ImageView to the refresh item as an ActionView */
-            if (inflater==null)
-                inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
-
-            if (rotation==null)
-                rotation = AnimationUtils.loadAnimation(mContext, R.anim.clockwise_refresh);
-            rotation.setRepeatCount(Animation.INFINITE);
-            iv.startAnimation(rotation);
-
-            item.setActionView(iv);
-        }
-    }
-
-    /**
-     * Stops the rotating animation and restores the original state to action item.
-     * @param item refresh action item
-     */
-    public void completeRefreshActionItem(MenuItem item) {
-        if(rotation!=null && inflater!=null) {
-            item.getActionView().clearAnimation();
-            item.setActionView(null);
-        }
-    }
 
 	/**
 	 * Displays a basic Alert Dialog.
@@ -208,17 +142,19 @@ public class Miscellaneous {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
-	
-	public static void makeCroutonInfinity(Activity activity, CharSequence msg) {
-		final Crouton c = Crouton.makeText(activity,  msg, Style.ALERT)
-				.setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_INFINITE).build());
-				c.setOnClickListener(new OnClickListener() {			
-					@Override
-					public void onClick(View v) {
-						c.hide();
-					}
-				}).show();	
-	}
+
+    /**
+     * Material design snack bar
+     * @param context activity context
+     * @param msg message to be displayed
+     */
+    public static void showSnackBar(Context context, String msg) {
+        SnackbarManager.show(
+                Snackbar.with(context)
+                        .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+                        .textColor(context.getResources().getColor(R.color.accent))
+                        .text(msg), (Activity) context);
+    }
 
 	/**
 	 * Determines whether to use proxy settings or not.

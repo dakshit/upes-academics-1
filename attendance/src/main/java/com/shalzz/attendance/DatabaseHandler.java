@@ -669,9 +669,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		Cursor cursor = db.query(TABLE_TIMETABLE, null, KEY_DAY + "=?",
 				new String[] { String.valueOf(dayName) }, null, null, KEY_START, null);
 
-        Day day = null;
+        Day day = new Day();
         if (cursor.moveToFirst()) {
-            day = new Day();
             do {
                 Period period = new Period();
                 period.setDay(cursor.getString(cursor.getColumnIndexOrThrow(KEY_DAY)));

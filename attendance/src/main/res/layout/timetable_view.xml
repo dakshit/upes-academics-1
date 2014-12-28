@@ -18,22 +18,21 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".fragment.TimeTablePagerFragment">
 
-    <ListView
-        android:id="@id/android:list"
+    <!-- A RecyclerView with some commonly used attributes -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:dividerHeight="2dp"
-        android:fadingEdge="vertical"
-        android:fadingEdgeLength="10dp" />
+        android:layout_height="match_parent"
+        tools:context=".fragment.Dayfragment"
+        tools:listitem="@layout/day_list_item"/>
 
-    <LinearLayout android:id="@id/android:empty"
+    <LinearLayout android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
@@ -52,9 +51,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:gravity="left"
+            android:layout_marginStart="15dp"
+            android:gravity="start"
             android:text="@string/swipe_info"/>
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
