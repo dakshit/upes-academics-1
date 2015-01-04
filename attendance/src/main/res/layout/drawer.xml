@@ -62,13 +62,12 @@
 
         <!-- The navigation drawer -->
         <ListView android:id="@+id/list_slidermenu"
-            android:layout_width="@dimen/drawer_size"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:choiceMode="singleChoice"
             android:divider="@null"
             android:soundEffectsEnabled="true"
-            android:dividerHeight="1dp"
             android:listSelector="@drawable/list_item_selector"
             android:hapticFeedbackEnabled="true"
             android:background="@color/list_background"
