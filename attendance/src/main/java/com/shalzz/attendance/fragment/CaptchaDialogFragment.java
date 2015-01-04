@@ -179,7 +179,6 @@ public class CaptchaDialogFragment extends DialogFragment{
 	 */
 	private void getImg() 
 	{
-		// TODO Set priority and timeout
 		Log.i(LoginActivity.class.getName(), "Loading captcha image...");
 		ImageLoader imageLoader = MyVolley.getInstance().getImageLoader();
 		imageLoader.setBatchedResponseDelay(0);

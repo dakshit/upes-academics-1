@@ -263,7 +263,7 @@ public class ExpandableListAdapter extends BaseAdapter {
             if (views.childView != null) {
                 views.childView.setVisibility(View.GONE);
             }
-
+            // TODO: implement elevation pre L
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.setTranslationZ(0);
             }

@@ -30,6 +30,7 @@
             android:title="@string/pref_subjectLimit" />
     </PreferenceCategory>
     <PreferenceCategory android:title="timetable" >
+        <!--TODO: Implement this-->
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="pref_mute"
@@ -81,6 +82,7 @@
                 android:title="Password" />
         </PreferenceScreen>
     </PreferenceCategory>
+    <!--TODO: fix preference screens-->
     <PreferenceCategory
         android:key="pref_key_storage_about"
         android:title="About" >

@@ -105,6 +105,7 @@ public class TimeTablePagerFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.swipe_layout, container, false);
 
+        // TODO: optimise view pager
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         mProgress = (CircularIndeterminate) view.findViewById(R.id.circular_indet);
