@@ -23,6 +23,7 @@
     android:id="@+id/child_view"
     android:layout_height="0dp" >
 
+    <!--TODO: find an alternative to depth shadow-->
     <!--<View-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="5dp"-->
