@@ -55,7 +55,7 @@
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/tvPercent"
         android:gravity="center_vertical"
-        android:progressDrawable="@drawable/progress_amber"
+        android:progressDrawable="@drawable/progress_level"
         android:progress="100" />
 
     <TextView

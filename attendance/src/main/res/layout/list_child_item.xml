@@ -23,10 +23,10 @@
     android:id="@+id/child_view"
     android:layout_height="0dp" >
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@drawable/toolbar_dropshadow" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="5dp"-->
+        <!--android:background="@drawable/toolbar_dropshadow" />-->
 
     <TextView
         android:id="@+id/tvClass"

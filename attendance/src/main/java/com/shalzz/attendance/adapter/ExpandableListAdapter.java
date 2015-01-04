@@ -20,12 +20,14 @@
 package com.shalzz.attendance.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -34,13 +36,16 @@ import android.widget.TextView;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.model.Subject;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAdapter.ViewHolder> {
+public class ExpandableListAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Subject> mSubjects;
+    private final List<Long> mExpandedIds = new ArrayList<>();
     private float mExpandedTranslationZ;
+    private int mLimit = -1;
 
     /** Constant used to indicate no row is expanded. */
     private static final long NONE_EXPANDED = -1;
@@ -50,11 +55,6 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
      * previously expanded call log entry can be animated on rebind.
      */
     private long mPreviouslyExpanded = NONE_EXPANDED;
-
-    /**
-     * Tracks the currently expanded call log row.
-     */
-    private long mCurrentlyExpanded = NONE_EXPANDED;
 
 
     private SubjectItemExpandedListener mSubjectItemExpandedListener;
@@ -118,14 +118,21 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
 
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
-    public ExpandableListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                               int viewType) {
-        // create a new view
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card, parent, false);
-        return new ViewHolder(v);
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        View v = convertView;
+        ViewHolder vh;
+        if(v == null) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card, parent, false);
+            vh = new ViewHolder(v);
+        }
+        else
+            vh = (ViewHolder) convertView.getTag();
+
+        onBindViewHolder(vh,position);
+
+        return v;
     }
 
     /**
@@ -140,7 +147,6 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
     };
 
     // Replace the contents of a view (invoked by the layout manager)
-    @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.position = position;
         holder.itemView.setTag(holder);
@@ -152,17 +158,8 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
         holder.percentage.setText(mSubjects.get(position).getPercentage().toString()+"%");
         holder.classes.setText(mSubjects.get(position).getClassesAttended().intValue()+"/"+mSubjects.get(position).getClassesHeld().intValue());
         holder.percent.setProgress(percent.intValue());
-        // TODO: change progress bar color
-
-//        if(percent<67.0) {
-//            convertView = inflater.inflate(R.layout.list_group_item_amber,parent,false);
-//        }
-//        else if(percent<75.0) {
-//            convertView = inflater.inflate(R.layout.list_group_item_yellow,parent,false);
-//        }
-//        else {
-//            convertView = inflater.inflate(R.layout.list_group_item_green,parent,false);
-//        }
+        Drawable d = holder.percent.getProgressDrawable();
+        d.setLevel(percent.intValue()*100);
 
         // In the call log, expand/collapse an actions section for the call log entry when
         // the primary view is tapped.
@@ -188,6 +185,8 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
         if (stub != null) {
             views.childView = (RelativeLayout) stub.inflate();
         }
+        else
+            views.childView = (RelativeLayout) views.itemView.findViewById(R.id.subTree);
 
         // child view
         View childView = views.childView;
@@ -209,17 +208,23 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
      * @return True where the row is now expanded, false otherwise.
      */
     private boolean toggleExpansion(long rowId) {
-        if (rowId == mCurrentlyExpanded) {
+        if (isExpanded(rowId)) {
             // Collapsing currently expanded row.
-            mPreviouslyExpanded = NONE_EXPANDED;
-            mCurrentlyExpanded = NONE_EXPANDED;
+            mExpandedIds.remove(rowId);
 
             return false;
         } else {
-            // Expanding a row (collapsing current expanded one).
+            // Expanding a row.
+            mExpandedIds.add(rowId);
 
-            mPreviouslyExpanded = mCurrentlyExpanded;
-            mCurrentlyExpanded = rowId;
+            // Collapse a view if limit reached
+            boolean shouldCollapseOther =  mLimit > 0 && mExpandedIds.size() > mLimit;
+            if(shouldCollapseOther) {
+                mPreviouslyExpanded = mExpandedIds.get(0);
+                mExpandedIds.remove(mPreviouslyExpanded);
+            }
+            else
+                mPreviouslyExpanded = NONE_EXPANDED;
             return true;
         }
     }
@@ -230,7 +235,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
      * @return True if the row is expanded.
      */
     private boolean isExpanded(long rowId) {
-        return mCurrentlyExpanded == rowId;
+        return mExpandedIds.contains(rowId);
     }
 
     /**
@@ -247,7 +252,8 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
             inflateChildView(view);
 
             views.childView.setVisibility(View.VISIBLE);
-            views.childView.setAlpha(1.0f);if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            views.childView.setAlpha(1.0f);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.setTranslationZ(mExpandedTranslationZ);
             }
         } else {
@@ -393,15 +399,33 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<ExpandableListAd
         }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
-    public int getItemCount() {
+    public int getCount() {
         return mSubjects.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mSubjects.get(position);
     }
 
     @Override
     public long getItemId(int position) {
         return (long) position;
+    }
+
+
+    /**
+     * Set the maximum number of items allowed to be expanded. When the
+     * (limit+1)th item is expanded, the first expanded item will collapse.
+     *
+     * @param limit the maximum number of items allowed to be expanded. Use <= 0
+     * for no limit.
+     */
+    public void setLimit(final int limit) {
+        mLimit = limit;
+        mExpandedIds.clear();
+        notifyDataSetChanged();
     }
 
     public void setDataSet(List<Subject> subjects) {

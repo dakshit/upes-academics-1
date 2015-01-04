@@ -22,7 +22,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <include layout="@layout/list_group_item_amber"/>
+    <include layout="@layout/list_group_item"/>
     <ViewStub android:id="@+id/subject_details_stub"
         android:inflatedId="@+id/subTree"
         android:layout="@layout/list_child_item"
