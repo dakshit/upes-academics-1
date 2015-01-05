@@ -128,7 +128,8 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		noticePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-                new LicensesDialog.Builder(mContext).setNotices(R.raw.notices).build().show();
+                new LicensesDialog.Builder(mContext).setNotices(R.raw.notices).setIncludeOwnLicense(true)
+                        .build().show();
 				return true;
 			}
 		});
