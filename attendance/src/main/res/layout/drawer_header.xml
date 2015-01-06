@@ -34,6 +34,7 @@
         android:layout_marginEnd= "@dimen/navigation_drawer_margin"
         android:text="New Text"
         android:textColor="@color/list_item_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="18sp" />
 
     <TextView

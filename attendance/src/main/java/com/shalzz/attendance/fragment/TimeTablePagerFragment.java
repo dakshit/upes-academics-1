@@ -22,6 +22,7 @@ package com.shalzz.attendance.fragment;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -89,11 +90,6 @@ public class TimeTablePagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-        actionbar= ((ActionBarActivity)getActivity()).getSupportActionBar();
-
-        if (savedInstanceState != null) {
-            mPreviousPosition = savedInstanceState.getInt(STATE_PREVIOUSE_POSITION);
-        }
     }
 
     @Override
@@ -102,10 +98,15 @@ public class TimeTablePagerFragment extends Fragment {
         if(container==null)
             return null;
 
-        setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.swipe_layout, container, false);
+        if (savedInstanceState != null) {
+            mPreviousPosition = savedInstanceState.getInt(STATE_PREVIOUSE_POSITION);
+        }
 
-        // TODO: optimise view pager
+        setHasOptionsMenu(true);
+        setRetainInstance(false);
+        actionbar= ((ActionBarActivity)getActivity()).getSupportActionBar();
+        final View view = inflater.inflate(R.layout.swipe_layout, container, false);
+
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         mProgress = (CircularIndeterminate) view.findViewById(R.id.circular_indet);
@@ -120,15 +121,17 @@ public class TimeTablePagerFragment extends Fragment {
         mToday =  DateHelper.getToDay();
         mTimeTablePagerAdapter = new TimeTablePagerAdapter(getActivity().getFragmentManager(), mToday);
         mViewPager.setAdapter(mTimeTablePagerAdapter);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 
             public void onPageScrollStateChanged(int state) {}
 
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            public void onPageSelected(int position) {
+                mPreviousPosition = position;
                 updateTitle();
             }
-
-            public void onPageSelected(int position) {}
         });
 
         return view;
@@ -256,7 +259,8 @@ public class TimeTablePagerFragment extends Fragment {
     }
 
     private void updateTitle() {
-        DayFragment fragment = mTimeTablePagerAdapter.getFragment(mViewPager.getCurrentItem());
+        DayFragment fragment = mTimeTablePagerAdapter.getFragment(mPreviousPosition);
+        Log.d(myTag,"Dayfragment: " + fragment);
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         if(drawerOpen) {
             String mNavTitles[] = getResources().getStringArray(R.array.drawer_array);
@@ -332,7 +336,13 @@ public class TimeTablePagerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STATE_PREVIOUSE_POSITION, mViewPager.getCurrentItem());
+        outState.putInt(STATE_PREVIOUSE_POSITION, mPreviousPosition);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        notifyDataSetChanged();
     }
 
     @Override

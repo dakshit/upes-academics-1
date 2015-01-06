@@ -22,8 +22,10 @@ package com.shalzz.attendance.adapter;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.shalzz.attendance.fragment.DayFragment;
@@ -45,7 +47,7 @@ public class TimeTablePagerAdapter extends FragmentStatePagerAdapter {
 	}
 
 	@Override
-	public Fragment getItem(int position) {
+	public DayFragment getItem(int position) {
 		DayFragment fragment = new DayFragment();
 		Bundle args = new Bundle();
 		args.putSerializable(DayFragment.ARG_DATE, DateHelper.addDays(mDate, -15+position));
@@ -73,14 +75,19 @@ public class TimeTablePagerAdapter extends FragmentStatePagerAdapter {
         return mDate;
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
     public void setDate(Date date) {
         mDate = date;
         notifyDataSetChanged();
     }
 
 	@Override
-	public void destroyItem(ViewGroup container, int position, Object object) {
+	public void destroyItem(ViewGroup viewPager, int position, Object object) {
 		activeFragments.remove(position);
-		super.destroyItem(container, position, object);
+		super.destroyItem(viewPager, position, object);
 	}
 }

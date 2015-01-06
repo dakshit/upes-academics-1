@@ -92,10 +92,10 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
     private View mDropShadow;
 
     private float mExpandedItemTranslationZ;
-    private int mFadeInDuration = 200;
-    private int mFadeInStartDelay = 225;
-    private int mFadeOutDuration = 30;
-    private int mExpandCollapseDuration = 300;
+    private int mFadeInDuration = 150;
+    private int mFadeInStartDelay = 150;
+    private int mFadeOutDuration = 20;
+    private int mExpandCollapseDuration = 200;
 
     /**
      * View Holder for list view header and footer views.
@@ -266,7 +266,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
 
         // TODO: fix search action view
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setQueryHint("Search subjects");
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
 
         MenuItemCompat.setOnActionExpandListener(searchItem , new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -348,7 +348,8 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
                 }
                 catch (Exception e) {
                     e.printStackTrace();
-                    Miscellaneous.showSnackBar(mContext,"An unexpected error occurred");
+                    String msg = getResources().getString(R.string.unexpected_error);
+                    Miscellaneous.showSnackBar(mContext,msg);
                 }
             }
         };

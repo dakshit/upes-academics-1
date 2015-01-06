@@ -88,7 +88,8 @@ public class DayFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         reloadDataSet();
         mAdapter = new DayListAdapter(mDay);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -100,7 +101,6 @@ public class DayFragment extends Fragment {
         });
         mRecyclerView.setAdapter(mAdapter);
         checkAdapterIsEmpty();
-        super.onStart();
     }
 
     public void reloadDataSet() {
@@ -124,6 +124,7 @@ public class DayFragment extends Fragment {
         }
     }
 
+    @NonNull
     public Date getDate() {
         return mDate;
     }

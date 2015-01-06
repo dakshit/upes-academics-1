@@ -90,9 +90,11 @@ public class MainActivity extends ActionBarActivity {
      */
     public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT2.2";
 
-    private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT_TAG";
+    private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT";
 
-	private static final String mTag = "Main Activity";
+    private static final String PREVIOUS_FRAGMENT_TAG = "MainActivity.PREVOIUS_FRAGMENT";
+
+    private static final String mTag = "MainActivity";
 
     /**
      * Debug flag
@@ -101,34 +103,34 @@ public class MainActivity extends ActionBarActivity {
 
     private int mCurrentSelectedPosition = 0;
     private static MainActivity mActivity;
-	private String[] mNavTitles;
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
-	private CharSequence mDrawerTitle;
-	private CharSequence mTitle;
-	private ActionBarDrawerToggle mDrawerToggle;
-	private View Drawerheader;
-	private FragmentManager mFragmentManager;
+    private String[] mNavTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private View Drawerheader;
+    private FragmentManager mFragmentManager;
     private Fragment fragment = null;
     private ActionBar actionbar;
     public View dropShadow;
-	// Our custom poor-man's back stack which has only one entry at maximum.
-	private Fragment mPreviousFragment;
+    // Our custom poor-man's back stack which has only one entry at maximum.
+    private Fragment mPreviousFragment;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.drawer);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.drawer);
 
         // set toolbar as actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-		mNavTitles = getResources().getStringArray(R.array.drawer_array);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        mNavTitles = getResources().getStringArray(R.array.drawer_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
         dropShadow = findViewById(R.id.drop_shadow);
-		mFragmentManager = getFragmentManager();
+        mFragmentManager = getFragmentManager();
         mTitle  = getTitle();
         actionbar = getSupportActionBar();
         mActivity = this;
@@ -143,38 +145,38 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // set Drawer header
-		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		Drawerheader = inflater.inflate(R.layout.drawer_header, null);
-		if(mDrawerList.getHeaderViewsCount()==0)
-			mDrawerList.addHeaderView(Drawerheader);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Drawerheader = inflater.inflate(R.layout.drawer_header, null);
+        if(mDrawerList.getHeaderViewsCount()==0)
+            mDrawerList.addHeaderView(Drawerheader);
 
-		// Set the adapter for the list view
+        // Set the adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item,R.id.drawer_list_textView, mNavTitles));
 
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
-                 R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
+                R.string.drawer_open, R.string.drawer_close) {
 
-			/** Called when a drawer has settled in a completely closed state. */
-			public void onDrawerClosed(View view) {
-				super.onDrawerClosed(view);
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
                 actionbar.setTitle(mTitle);
-				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-			}
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
 
-			/** Called when a drawer has settled in a completely open state. */
-			public void onDrawerOpened(View drawerView) {
-				super.onDrawerOpened(drawerView);
-				actionbar.setTitle(mDrawerTitle);
-				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-			}
-		};
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                actionbar.setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
-		// Set the drawer toggle as the DrawerListener
+        // Set the drawer toggle as the DrawerListener
         if(!isDrawerLocked) {
             mDrawerLayout.setDrawerListener(mDrawerToggle);
             actionbar.setDisplayHomeAsUpEnabled(true);
@@ -182,11 +184,24 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Select either the default item (0) or the last selected item.
-        reloadCurrentFragment();
-        displayView(mCurrentSelectedPosition);
-		updateDrawerHeader();
+        mCurrentSelectedPosition = reloadCurrentFragment();
+
+        // Recycle fragment
+        if(savedInstanceState != null) {
+            fragment =  getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            mPreviousFragment = getFragmentManager().getFragment(savedInstanceState, PREVIOUS_FRAGMENT_TAG);
+            Log.d(mTag, "current fag found: " + fragment );
+            Log.d(mTag, "previous fag found: " + mPreviousFragment );
+            showFragment(fragment);
+            selectItem(mCurrentSelectedPosition);
+        }
+        else {
+            displayView(mCurrentSelectedPosition);
+        }
+
+        updateDrawerHeader();
         showcaseView();
-	}
+    }
 
     void showcaseView() {
         MyPreferencesManager prefs = new MyPreferencesManager(this);
@@ -212,68 +227,68 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-	public static MainActivity getInstance(){
-		return mActivity;
-	}
+    public static MainActivity getInstance(){
+        return mActivity;
+    }
 
-	public void updateDrawerHeader() {
-		DatabaseHandler db = new DatabaseHandler(this);
-		if(db.getRowCount()>0) {
-			ListHeader listheader = db.getListHeader();
+    public void updateDrawerHeader() {
+        DatabaseHandler db = new DatabaseHandler(this);
+        if(db.getRowCount()>0) {
+            ListHeader listheader = db.getListHeader();
 
-			TextView tv_name = (TextView) Drawerheader.findViewById(R.id.drawer_header_name);
-			TextView tv_course = (TextView) Drawerheader.findViewById(R.id.drawer_header_course);
-			tv_name.setText(listheader.getName());
-			tv_course.setText(listheader.getCourse());
-		}
-	}
+            TextView tv_name = (TextView) Drawerheader.findViewById(R.id.drawer_header_name);
+            TextView tv_course = (TextView) Drawerheader.findViewById(R.id.drawer_header_course);
+            tv_name.setText(listheader.getName());
+            tv_course.setText(listheader.getCourse());
+        }
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home)
-		{
-			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-				mDrawerLayout.closeDrawer(mDrawerList);
-			} else {
-				mDrawerLayout.openDrawer(mDrawerList);
-			}
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
+        {
+            if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+                mDrawerLayout.closeDrawer(mDrawerList);
+            } else {
+                mDrawerLayout.openDrawer(mDrawerList);
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			displayView(position);
-		}
-	}
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            displayView(position);
+        }
+    }
 
-	void displayView(int position) {
-		// update the main content by replacing fragments
-		switch (position) {
-		case 0:
-			return;
-		case 1:
-			fragment = new AttendanceListFragment();
-			break;
-		case 2:
-			fragment = new TimeTablePagerFragment();
-			break;
-		case 3:
-			fragment = new SettingsFragment();
-			break;
-		default:
-			break;
-		}
+    void displayView(int position) {
+        // update the main content by replacing fragments
+        switch (position) {
+            case 0:
+                return;
+            case 1:
+                fragment = new AttendanceListFragment();
+                break;
+            case 2:
+                fragment = new TimeTablePagerFragment();
+                break;
+            case 3:
+                fragment = new SettingsFragment();
+                break;
+            default:
+                break;
+        }
 
-		if (fragment != null) {
-			showFragment(fragment);
+        if (fragment != null) {
+            showFragment(fragment);
             selectItem(position);
-		} else {
-			Log.e(mTag, "Error in creating fragment");
-		}
-	}
+        } else {
+            Log.e(mTag, "Error in creating fragment");
+        }
+    }
 
     /**
      * Update selected item and title, then close the drawer
@@ -289,111 +304,115 @@ public class MainActivity extends ActionBarActivity {
             mDrawerLayout.closeDrawer(mDrawerList);
     }
 
-	/**
-	 * Push the installed fragment into our custom back stack (or optionally
-	 * {@link FragmentTransaction#remove} it) and {@link FragmentTransaction#add} {@code fragment}.
-	 *
-	 * @param fragment {@link Fragment} to be added.
-	 *
-	 */
-	private void showFragment(Fragment fragment) {
-		final FragmentTransaction ft = mFragmentManager.beginTransaction();
-		final Fragment installed = getInstalledFragment();
+    /**
+     * Push the installed fragment into our custom back stack (or optionally
+     * {@link FragmentTransaction#remove} it) and {@link FragmentTransaction#add} {@code fragment}.
+     *
+     * @param fragment {@link Fragment} to be added.
+     *
+     */
+    private void showFragment(Fragment fragment) {
+        final FragmentTransaction ft = mFragmentManager.beginTransaction();
+        final Fragment installed = getInstalledFragment();
 
-		// return if the fragment is already installed 
-		if(isAttendanceListInstalled() && fragment instanceof AttendanceListFragment ||
-		   isTimeTablePagerInstalled() && fragment instanceof TimeTablePagerFragment ||
-		   isSettingsInstalled() && fragment instanceof SettingsFragment) {
-			return;
-		}
+        // return if the fragment is already installed
+        if(isAttendanceListInstalled() && fragment instanceof AttendanceListFragment ||
+                isTimeTablePagerInstalled() && fragment instanceof TimeTablePagerFragment ||
+                isSettingsInstalled() && fragment instanceof SettingsFragment) {
+            return;
+        }
 
-		if (mPreviousFragment != null) {
-			if (DEBUG_FRAGMENTS) {
-				Log.d(mTag, this + " showFragment: destroying previous fragment "
-						+ mPreviousFragment.getClass().getSimpleName());
-			}
+        if (mPreviousFragment != null) {
+            if (DEBUG_FRAGMENTS) {
+                Log.d(mTag, this + " showFragment: destroying previous fragment "
+                        + mPreviousFragment.getClass().getSimpleName());
+            }
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			ft.remove(mPreviousFragment);
-			mPreviousFragment = null;
-		}
+            ft.remove(mPreviousFragment);
+            mPreviousFragment = null;
+        }
 
-		// Remove the current fragment and push it into the backstack.
-		if (installed != null) {
-			mPreviousFragment = installed;
-			ft.detach(mPreviousFragment);
-		}
+        // Remove the current fragment and push it into the backstack.
+        if (installed != null) {
+            mPreviousFragment = installed;
+            ft.detach(mPreviousFragment);
+        }
 
-		// Show the new one
-		ft.add(R.id.frame_container,fragment,FRAGMENT_TAG);
+        // Show the new one
+        ft.add(R.id.frame_container,fragment,FRAGMENT_TAG);
+        if(fragment instanceof SettingsFragment)
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        else
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.commit();
-	}
+        ft.commit();
+    }
 
-	@Override
-	public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         // close drawer if it is open
         if (mDrawerLayout.isDrawerOpen(mDrawerList) && !isDrawerLocked)
         {
             mDrawerLayout.closeDrawer(mDrawerList);
         }
-		// Custom back stack
-		else if (shouldPopFromBackStack()) {
-			if (DEBUG_FRAGMENTS) {
-				Log.d(mTag, this + " Back: Popping from back stack");
-			}
-			popFromBackStack();
-		}
-		else
-			super.onBackPressed();
-	}
+        // Custom back stack
+        else if (shouldPopFromBackStack()) {
+            if (DEBUG_FRAGMENTS) {
+                Log.d(mTag, this + " Back: Popping from back stack");
+            }
+            popFromBackStack();
+        }
+        else
+            super.onBackPressed();
+    }
 
-	/**
-	 * @return true if we should pop from our custom back stack.
-	 */
-	private boolean shouldPopFromBackStack() {
+    /**
+     * @return true if we should pop from our custom back stack.
+     */
+    private boolean shouldPopFromBackStack() {
 
-		if (mPreviousFragment == null) {
-			return false; // Nothing in the back stack
-		}
-		final Fragment installed = getInstalledFragment();
-		if (installed == null) {
-			// If no fragment is installed right now, do nothing.
-			return false;
-		}
-		// Okay now we have 2 fragments; the one in the back stack and the one that's currently
-		// installed.
+        if (mPreviousFragment == null) {
+            return false; // Nothing in the back stack
+        }
+        final Fragment installed = getInstalledFragment();
+        if (installed == null) {
+            // If no fragment is installed right now, do nothing.
+            return false;
+        }
+        // Okay now we have 2 fragments; the one in the back stack and the one that's currently
+        // installed.
         return !(installed instanceof AttendanceListFragment ||
                 installed instanceof TimeTablePagerFragment);
 
     }
 
-	/**
-	 * Pop from our custom back stack.
-	 */
-	private void popFromBackStack() {
-		if (mPreviousFragment == null) {
-			return;
-		}
-		final FragmentTransaction ft = mFragmentManager.beginTransaction();
-		final Fragment installed = getInstalledFragment();     
-		int position = 0 ;
-		Log.i(mTag, this + " backstack: [pop] " + installed.getClass().getSimpleName() + " -> "
-				+ mPreviousFragment.getClass().getSimpleName());
+    /**
+     * Pop from our custom back stack.
+     */
+    private void popFromBackStack() {
+        if (mPreviousFragment == null) {
+            return;
+        }
+        final FragmentTransaction ft = mFragmentManager.beginTransaction();
+        final Fragment installed = getInstalledFragment();
+        int position = 0 ;
+        Log.i(mTag, this + " backstack: [pop] " + installed.getClass().getSimpleName() + " -> "
+                + mPreviousFragment.getClass().getSimpleName());
 
-		ft.remove(installed);
+        ft.remove(installed);
         ft.attach(mPreviousFragment);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         ft.commit();
 
         // redraw fragment
-		if (mPreviousFragment instanceof AttendanceListFragment) {
-			position = Fragments.ATTENDANCE.getValue();
-		} else if (mPreviousFragment instanceof TimeTablePagerFragment) {
-			position = Fragments.TIMETABLE.getValue();
-		}
+        if (mPreviousFragment instanceof AttendanceListFragment) {
+            position = Fragments.ATTENDANCE.getValue();
+        } else if (mPreviousFragment instanceof TimeTablePagerFragment) {
+            position = Fragments.TIMETABLE.getValue();
+            ((TimeTablePagerFragment) mPreviousFragment).notifyDataSetChanged();
+        }
         selectItem(position);
         mPreviousFragment = null;
-	}
+    }
 
     private void persistCurrentFragment() {
         if(!LOGGED_OUT) {
@@ -404,9 +423,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private void reloadCurrentFragment() {
+    private int reloadCurrentFragment() {
         SharedPreferences settings = getSharedPreferences("SETTINGS", 0);
-        mCurrentSelectedPosition = settings.getInt(PREFERENCE_ACTIVATED_FRAGMENT, Fragments.ATTENDANCE.getValue());
+        return settings.getInt(PREFERENCE_ACTIVATED_FRAGMENT, Fragments.ATTENDANCE.getValue());
     }
 
     @Override
@@ -423,45 +442,55 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle.syncState();
     }
 
-	/**
-	 * @return currently installed {@link Fragment} (1-pane has only one at most), or null if none
-	 *         exists.
-	 */
-	private Fragment getInstalledFragment() {
-		return mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
-	}
+    /**
+     * @return currently installed {@link Fragment} (1-pane has only one at most), or null if none
+     *         exists.
+     */
+    private Fragment getInstalledFragment() {
+        return mFragmentManager.findFragmentByTag(FRAGMENT_TAG);
+    }
 
-	private boolean isAttendanceListInstalled() {
+    private boolean isAttendanceListInstalled() {
         return getInstalledFragment() instanceof AttendanceListFragment;
     }
-	
-	private boolean isTimeTablePagerInstalled() {
+
+    private boolean isTimeTablePagerInstalled() {
         return getInstalledFragment() instanceof TimeTablePagerFragment;
     }
-	
-	private boolean isSettingsInstalled() {
+
+    private boolean isSettingsInstalled() {
         return getInstalledFragment() instanceof SettingsFragment;
     }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		mDrawerToggle.onConfigurationChanged(newConfig);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // for orientation changes, etc.
+        if (mPreviousFragment != null) {
+            getFragmentManager()
+                    .putFragment(outState, PREVIOUS_FRAGMENT_TAG, mPreviousFragment);
+            Log.d(mTag, "previous fag saved: " + mPreviousFragment.getClass().getSimpleName());
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
         actionbar.setTitle(mTitle);
-	}
+    }
 
     @Override
     public void onPause() {
-        mPreviousFragment = null;
         persistCurrentFragment();
         super.onPause();
     }
 
-	@Override
-	public void onDestroy() {
-		MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.fragment.AttendanceListFragment");
+    @Override
+    public void onDestroy() {
+        MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.fragment.AttendanceListFragment");
         MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.fragment.TimeTablePagerFragment");
-		super.onDestroy();
-	}
+        super.onDestroy();
+    }
 
 }
