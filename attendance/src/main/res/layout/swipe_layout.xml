@@ -18,7 +18,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.v4.widget.SwipeRefreshLayout
+<com.shalzz.attendance.MultiSwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swiperefresh"
     android:layout_width="match_parent"
@@ -43,4 +43,4 @@
 
     </FrameLayout>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</com.shalzz.attendance.MultiSwipeRefreshLayout>

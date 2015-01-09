@@ -18,7 +18,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.v4.widget.SwipeRefreshLayout
+<com.shalzz.attendance.MultiSwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_refresh_atten"
@@ -38,7 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:dividerHeight="1dp"
-            android:stateListAnimator="@anim/raise"
             android:clipToPadding="false"
             tools:context=".fragment.AttendanceListFragment"
             tools:listitem="@layout/card"/>
@@ -52,4 +51,4 @@
 
     </FrameLayout>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</com.shalzz.attendance.MultiSwipeRefreshLayout>

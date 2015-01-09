@@ -52,6 +52,7 @@ import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.Miscellaneous;
+import com.shalzz.attendance.MultiSwipeRefreshLayout;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.activity.MainActivity;
@@ -69,7 +70,7 @@ public class TimeTablePagerFragment extends Fragment {
      * The {@link android.support.v4.widget.SwipeRefreshLayout} that detects swipe gestures and
      * triggers callbacks in the app.
      */
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private MultiSwipeRefreshLayout mSwipeRefreshLayout;
 
     /**
      * Remember the position of the previous pager position.
@@ -108,7 +109,8 @@ public class TimeTablePagerFragment extends Fragment {
         final View view = inflater.inflate(R.layout.swipe_layout, container, false);
 
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout = (MultiSwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setSwipeableChildren(R.id.pager);
         mProgress = (CircularIndeterminate) view.findViewById(R.id.circular_indet);
         mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
@@ -157,21 +159,6 @@ public class TimeTablePagerFragment extends Fragment {
             @Override
             public void onRefresh() {
                 DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
-            }
-        });
-
-        // fix for oversensitive horizontal scroll of swipe view
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mSwipeRefreshLayout.setEnabled(false);
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_UP:
-                        // TODO: fix recyclerview scroll
-                        mSwipeRefreshLayout.setEnabled(true);
-                        break;
-                }
-                return false;
             }
         });
     }

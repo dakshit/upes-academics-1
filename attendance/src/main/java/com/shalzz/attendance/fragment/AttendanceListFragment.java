@@ -58,6 +58,7 @@ import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.Miscellaneous;
+import com.shalzz.attendance.MultiSwipeRefreshLayout;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.activity.MainActivity;
@@ -77,7 +78,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
      * The {@link android.support.v4.widget.SwipeRefreshLayout} that detects swipe gestures and
      * triggers callbacks in the app.
      */
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private MultiSwipeRefreshLayout mSwipeRefreshLayout;
 
     private View mFooter;
     private View mHeader;
@@ -139,7 +140,8 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         setHasOptionsMenu(true);
         View mView = inflater.inflate(R.layout.attenview, container, false);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_refresh_atten);
+        mSwipeRefreshLayout = (MultiSwipeRefreshLayout) mView.findViewById(R.id.swipe_refresh_atten);
+        mSwipeRefreshLayout.setSwipeableChildren(android.R.id.list);
         mProgress = (CircularIndeterminate) mView.findViewById(R.id.circular_indet_atten);
         mDropShadow = MainActivity.getInstance().dropShadow;
 
@@ -190,14 +192,10 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int topRowVerticalPosition = (mListView == null || mListView.getChildCount() == 0) ?
-                        0 : mListView.getChildAt(0).getTop();
-                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
                 mDropShadow.setVisibility(mHeader.isShown() ? View.GONE : View.VISIBLE);
             }
         });
