@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.shalzz.attendance.CircularIndeterminate;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.activity.LoginActivity;
@@ -51,7 +52,7 @@ import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 public class CaptchaDialogFragment extends DialogFragment{
 
 	private ImageView ivCapImg;
-	private ProgressBar pbar;
+	private CircularIndeterminate pbar;
 	private EditText Captxt;
 	private Context mContext;
 	private String mTag = "Captcha Dialog";
@@ -144,7 +145,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 		Button bRefreshCaptcha = (Button) dialogView.findViewById(R.id.bRefresh);
 		Captxt = (EditText) dialogView.findViewById(R.id.etCapTxt);
 		ivCapImg = (ImageView) dialogView.findViewById(R.id.ivCapImg);
-		pbar = (ProgressBar) dialogView.findViewById(R.id.progressBar1);
+		pbar = (CircularIndeterminate) dialogView.findViewById(R.id.progressBar1);
 		
 		AlertDialog alertDialog = (AlertDialog) getDialog();
 		final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);

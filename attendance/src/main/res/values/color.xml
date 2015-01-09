@@ -47,6 +47,7 @@
     <color name="list_background_selected">#5f906f</color>
     <color name="list_divider">#272727</color>
     <color name="material_divider">#B6B6B6</color>
+    <color name="divider">#1e000000</color>
 
     <!-- Main theme colors -->
     <color name="primary_dark">#00796B</color>

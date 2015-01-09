@@ -23,11 +23,12 @@
     android:id="@+id/child_view"
     android:layout_height="0dp" >
 
-    <!--TODO: find an alternative to depth shadow-->
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="5dp"-->
-        <!--android:background="@drawable/toolbar_dropshadow" />-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/divider" />
 
     <TextView
         android:id="@+id/tvClass"
@@ -35,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="5dp"
         android:paddingLeft="5dp"
         android:gravity="center"
         android:text="You have attended 0 out of 0 classes"
