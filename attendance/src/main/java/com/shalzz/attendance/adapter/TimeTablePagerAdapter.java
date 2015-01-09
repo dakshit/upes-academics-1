@@ -75,11 +75,6 @@ public class TimeTablePagerAdapter extends FragmentStatePagerAdapter {
         return mDate;
     }
 
-    @Override
-    public int getItemPosition(Object object) {
-        return POSITION_NONE;
-    }
-
     public void setDate(Date date) {
         mDate = date;
         notifyDataSetChanged();
