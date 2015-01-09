@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -45,6 +46,7 @@ import android.widget.TextView;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.fragment.AttendanceListFragment;
@@ -206,8 +208,20 @@ public class MainActivity extends ActionBarActivity {
     void showcaseView() {
         MyPreferencesManager prefs = new MyPreferencesManager(this);
         if(prefs.isFirstLaunch(mTag)) {
+
+            Target homeTarget = new Target() {
+                @Override
+                public Point getPoint() {
+                    // Get approximate position of home icon's center
+                    int actionBarSize = getSupportActionBar().getHeight();
+                    int x = actionBarSize / 2;
+                    int y = actionBarSize / 2;
+                    return new Point(x, y);
+                }
+            };
+
             final ShowcaseView sv = new ShowcaseView.Builder(this)
-                    .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.HOME))
+                    .setTarget(homeTarget)
                     .setStyle(R.style.AppBaseTheme)
                     .setContentTitle("Navigation bar")
                     .setContentText("Press this button or swipe from the left edge to access the navigation bar")
