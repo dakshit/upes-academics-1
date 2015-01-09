@@ -373,7 +373,8 @@ public class MainActivity extends ActionBarActivity {
             if (DEBUG_FRAGMENTS) {
                 Log.d(mTag, this + " Back: Popping from back stack");
             }
-            popFromBackStack();
+            if(!getFragmentManager().popBackStackImmediate())
+                popFromBackStack();
         }
         else
             super.onBackPressed();
@@ -394,8 +395,7 @@ public class MainActivity extends ActionBarActivity {
         }
         // Okay now we have 2 fragments; the one in the back stack and the one that's currently
         // installed.
-        return !(installed instanceof AttendanceListFragment ||
-                installed instanceof TimeTablePagerFragment);
+        return installed instanceof SettingsFragment;
 
     }
 

@@ -19,6 +19,8 @@
 
 package com.shalzz.attendance.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -29,20 +31,10 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.wrapper.MySyncManager;
-
-import de.psdev.licensesdialog.LicensesDialog;
-import de.psdev.licensesdialog.licenses.GnuGeneralPublicLicense30;
-import de.psdev.licensesdialog.licenses.License;
-import de.psdev.licensesdialog.model.Notice;
 
 public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener{
 
@@ -55,12 +47,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 
 		addPreferencesFromResource(R.xml.preferences);
 
-		String key = "pref_key_proxy_username";
-		Preference connectionPref = findPreference(key);
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-		connectionPref.setSummary(sharedPref.getString(key, ""));
-
-		key = "subjects_expanded_limit";
+        String key = "subjects_expanded_limit";
 		ListPreference listPref = (ListPreference) findPreference(key);
 		listPref.setSummary(listPref.getEntry());
 
@@ -74,24 +61,25 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (key.equals("pref_key_proxy_username")) {
-			Preference connectionPref = findPreference(key);
-			connectionPref.setSummary(sharedPreferences.getString(key, ""));
-		}
-		else if(key.equals("subjects_expanded_limit")) {
-			ListPreference connectionPref = (ListPreference) findPreference(key);
-			connectionPref.setSummary(connectionPref.getEntry());
-		}
-        else if(key.equals("pref_batch")) {
-            ListPreference connectionPref = (ListPreference) findPreference(key);
-            connectionPref.setSummary(connectionPref.getEntry());
+        switch (key) {
+            case "subjects_expanded_limit": {
+                ListPreference connectionPref = (ListPreference) findPreference(key);
+                connectionPref.setSummary(connectionPref.getEntry());
+                break;
+            }
+            case "pref_batch": {
+                ListPreference connectionPref = (ListPreference) findPreference(key);
+                connectionPref.setSummary(connectionPref.getEntry());
+                break;
+            }
+            case "data_sync_interval": {
+                DatabaseHandler db = new DatabaseHandler(mContext);
+                ListPreference connectionPref = (ListPreference) findPreference(key);
+                connectionPref.setSummary(connectionPref.getEntry());
+                MySyncManager.addPeriodicSync(mContext, "" + db.getListHeader().getSAPId());
+                break;
+            }
         }
-		else if(key.equals("data_sync_interval")) {
-			DatabaseHandler db = new DatabaseHandler(mContext);
-			ListPreference connectionPref = (ListPreference) findPreference(key);
-			connectionPref.setSummary(connectionPref.getEntry());
-			MySyncManager.addPeriodicSync(mContext,""+db.getListHeader().getSAPId());
-		}
 	}
 
 	@Override
@@ -111,27 +99,34 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 
 		PreferenceCategory prefCategory = (PreferenceCategory) getPreferenceScreen().getPreference(3);
 		PreferenceScreen prefScreen =  (PreferenceScreen) prefCategory.getPreference(0);
-		Preference pref = prefScreen.getPreference(0);
-		pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
+        prefScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-		        final String name = "UPES Academics";
-		        final String url = "http://www.github.com/shalzz/upes-academics";
-		        final String copyright = "Copyright (C) 2013 - 2014 Shaleen Jain <shaleen.jain95@gmail.com>";
-		        final License license = new GnuGeneralPublicLicense30();
-		        final Notice notice = new Notice(name, url, copyright, license);
-                new LicensesDialog.Builder(mContext).setNotices(notice).build().show();
+                Fragment mFragment = new AboutSettingsFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.frame_container, mFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
 				return true;
 			}
 		});
-		Preference noticePref = prefScreen.getPreference(1);
-		noticePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-                new LicensesDialog.Builder(mContext).setNotices(R.raw.notices).setIncludeOwnLicense(true)
-                        .build().show();
-				return true;
-			}
-		});
+
+        PreferenceCategory proxyPrefCategory = (PreferenceCategory) getPreferenceScreen().getPreference(2);
+        PreferenceScreen proxyPrefScreen =  (PreferenceScreen) proxyPrefCategory.getPreference(2);
+        proxyPrefScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Fragment mFragment = new ProxySettings();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.frame_container, mFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+                return true;
+            }
+        });
 	}
 }

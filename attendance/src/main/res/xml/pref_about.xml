@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="pref_info_this_license"
+        android:summary="License details for this application"
+        android:title="License" />
+    <Preference
+        android:key="pref_info_notices"
+        android:summary="License details for 3rd party open source software's"
+        android:title="Open source license" />
+
+    <Preference
+        android:key="pref_info_version"
+        android:summary="@string/pref_version"
+        android:title="Build Version" />
+</PreferenceScreen>

@@ -31,11 +31,11 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="timetable" >
         <!--TODO: Implement this-->
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_mute"
-            android:summary="Automatically mutes the phone during lessons"
-            android:title="Mute during lessons" />
+        <!--<CheckBoxPreference-->
+            <!--android:defaultValue="false"-->
+            <!--android:key="pref_mute"-->
+            <!--android:summary="Automatically mutes the phone during lessons"-->
+            <!--android:title="Mute during lessons" />-->
         <ListPreference
             android:defaultValue="NULL"
             android:dialogTitle="Select your batch"
@@ -65,48 +65,19 @@
             android:persistent="false"
             android:title="Proxy Authentication"
             android:summary="Configure proxy server settings" >
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="pref_key_use_proxy"
-                android:summary="Automatically set proxy when connected to UPESNET"
-                android:title="Enable Proxy" />
-
-            <EditTextPreference
-                android:dependency="pref_key_use_proxy"
-                android:key="pref_key_proxy_username"
-                android:title="Username" />
-            <EditTextPreference
-                android:dependency="pref_key_use_proxy"
-                android:inputType="textPassword"
-                android:key="pref_key_proxy_password"
-                android:title="Password" />
         </PreferenceScreen>
     </PreferenceCategory>
-    <!--TODO: fix preference screens-->
     <PreferenceCategory
         android:key="pref_key_storage_about"
         android:title="About" >
-        
+
         <!-- opens another nested subscreen -->
         <PreferenceScreen
             android:key="pref_info_about"
             android:persistent="false"
             android:summary="UPES Academics \nCopyright  ©   2013-2014  Shaleen Jain"
-            android:title="About" >
-            <Preference
-                android:key="pref_info_this_license"
-                android:summary="License details for this application"
-                android:title="License" />
-            <Preference
-                android:key="pref_info_notices"
-                android:summary="License details for 3rd party open source software's"
-                android:title="Open source license" />
-            
-            <Preference
-                android:key="pref_info_version"
-                android:summary="@string/pref_version"
-                android:title="Build Version" />
-        </PreferenceScreen>
+            android:title="About"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
