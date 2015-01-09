@@ -50,7 +50,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	/**
 	 * Database Version
 	 */
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 6;
 
 	/**
 	 * Database Name
@@ -245,7 +245,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			cursor.moveToFirst();
 
 		Subject subject = new Subject();
-		subject.setID(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)));
+        assert cursor != null;
+        subject.setID(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)));
 		subject.setName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_NAME)));
 		subject.setClassesHeld(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_CLASSES_HELD)));
 		subject.setClassesAttended(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_CLASSES_ATTENDED)));
@@ -502,7 +503,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			cursor.moveToFirst();
 
 		ListHeader header = new ListHeader();
-		header.setName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_STU_NAME)));
+        assert cursor != null;
+        header.setName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_STU_NAME)));
 		header.setFatherName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_FATHER_NAME)));
 		header.setCourse(cursor.getString(cursor.getColumnIndexOrThrow(KEY_COURSE)));
 		header.setSection(cursor.getString(cursor.getColumnIndexOrThrow(KEY_SECTION)));
@@ -543,7 +545,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			cursor.moveToFirst();
 
 		ListFooter footer = new ListFooter();
-		footer.setSNo(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SNO)));
+        assert cursor != null;
+        footer.setSNo(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SNO)));
 		footer.setHeld(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_HELD)));
 		footer.setAttended(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_ATTEND)));
 		footer.setPercentage(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_PERCANTAGE)));

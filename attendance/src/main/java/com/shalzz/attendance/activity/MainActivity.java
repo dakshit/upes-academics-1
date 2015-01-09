@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Remember the position of the selected item.
      */
-    public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT2.2";
+    public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT3.0";
 
     private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT";
 
