@@ -99,10 +99,9 @@ public class DataAssembler {
 
         if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
         {
-            // TODO: use multiline snackbar
             String msg ="It seems your session has expired.\nPlease Login again.";
             if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-                Miscellaneous.showSnackBar(mContext, msg);
+                Miscellaneous.showMultilineSnackBar(mContext, msg);
             Log.e(mTag,"Login Session Expired");
         }
         else if (tddata != null && tddata.size() > 0)
@@ -192,7 +191,7 @@ public class DataAssembler {
         {
             String msg ="It seems your session has expired.\nPlease Login again.";
             if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-                Miscellaneous.showSnackBar(mContext, msg);
+                Miscellaneous.showMultilineSnackBar(mContext, msg);
             Bugsnag.leaveBreadcrumb("Login Session Expired");
             return -1;
         }

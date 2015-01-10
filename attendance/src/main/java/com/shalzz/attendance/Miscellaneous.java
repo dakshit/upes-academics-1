@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.enums.SnackbarType;
 import com.shalzz.attendance.wrapper.MyVolley;
 
 import java.net.Authenticator;
@@ -151,6 +152,20 @@ public class Miscellaneous {
     public static void showSnackBar(Context context, String msg) {
         SnackbarManager.show(
                 Snackbar.with(context)
+                        .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+                        .textColor(context.getResources().getColor(R.color.accent))
+                        .text(msg), (Activity) context);
+    }
+
+    /**
+     * Material design snack bar
+     * @param context activity context
+     * @param msg message to be displayed
+     */
+    public static void showMultilineSnackBar(Context context, String msg) {
+        SnackbarManager.show(
+                Snackbar.with(context)
+                        .type(SnackbarType.MULTI_LINE)
                         .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
                         .textColor(context.getResources().getColor(R.color.accent))
                         .text(msg), (Activity) context);
