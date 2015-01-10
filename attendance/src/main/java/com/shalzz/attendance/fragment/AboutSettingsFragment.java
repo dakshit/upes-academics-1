@@ -56,4 +56,5 @@ public class AboutSettingsFragment extends PreferenceFragment{
             }
         });
     }
+
 }

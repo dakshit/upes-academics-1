@@ -93,7 +93,7 @@ public class MainActivity extends ActionBarActivity {
      */
     public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT3.0";
 
-    private static final String FRAGMENT_TAG = "MainActivity.FRAGMENT";
+    public static final String FRAGMENT_TAG = "MainActivity.FRAGMENT";
 
     private static final String PREVIOUS_FRAGMENT_TAG = "MainActivity.PREVOIUS_FRAGMENT";
 
@@ -397,7 +397,8 @@ public class MainActivity extends ActionBarActivity {
         }
         // Okay now we have 2 fragments; the one in the back stack and the one that's currently
         // installed.
-        return installed instanceof SettingsFragment;
+        return !(installed instanceof AttendanceListFragment ||
+                installed instanceof TimeTablePagerFragment);
 
     }
 

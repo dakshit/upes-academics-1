@@ -35,6 +35,7 @@ import android.preference.PreferenceScreen;
 import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
+import com.shalzz.attendance.activity.MainActivity;
 import com.shalzz.attendance.wrapper.MySyncManager;
 
 public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener{
@@ -107,7 +108,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
                 Fragment mFragment = new AboutSettingsFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-                transaction.replace(R.id.frame_container, mFragment);
+                transaction.replace(R.id.frame_container, mFragment, MainActivity.FRAGMENT_TAG);
                 transaction.addToBackStack(null);
 
                 transaction.commit();
@@ -123,7 +124,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
                 Fragment mFragment = new ProxySettings();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-                transaction.replace(R.id.frame_container, mFragment);
+                transaction.replace(R.id.frame_container, mFragment, MainActivity.FRAGMENT_TAG);
                 transaction.addToBackStack(null);
 
                 transaction.commit();

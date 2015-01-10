@@ -258,7 +258,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
 
         if(getActivity().getIntent().hasExtra("SAPID")) {
             Bugsnag.setUserId("" + listheader.getSAPId());
-            Bugsnag.setUserName(listheader.getName()); // TODO: ?? safe?
+            Bugsnag.setUserName(listheader.getName());
         }
 
         MainActivity.getInstance().updateDrawerHeader();
