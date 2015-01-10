@@ -61,6 +61,7 @@ android {
 
 
         // 3rd party library projects
+        compile 'com.bugsnag:bugsnag-android:+'
         compile 'com.mcxiaoke.volley:library:1.0.+@aar'
         compile 'com.github.amlcurran.showcaseview:library:5.1.0-SNAPSHOT@aar'
         compile 'org.jsoup:jsoup:1.7.3'

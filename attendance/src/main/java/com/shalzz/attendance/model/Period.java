@@ -19,6 +19,8 @@
 
 package com.shalzz.attendance.model;
 
+import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Severity;
 import com.shalzz.attendance.wrapper.DateHelper;
 
 import java.text.ParseException;
@@ -123,6 +125,7 @@ public class Period {
             this.start = DateHelper.to24HrFormat(start);
             this.end = DateHelper.to24HrFormat(end);
         } catch (ParseException e) {
+            Bugsnag.notify(e);
             e.printStackTrace();
         }
 	}

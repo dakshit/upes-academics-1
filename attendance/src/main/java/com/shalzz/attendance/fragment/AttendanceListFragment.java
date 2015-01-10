@@ -51,6 +51,8 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Severity;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.shalzz.attendance.CircularIndeterminate;
@@ -129,6 +131,8 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         prefs = new MyPreferencesManager(mContext.getApplicationContext());
         mExpandedItemTranslationZ =
                 getResources().getDimension(R.dimen.atten_view_expanded_elevation);
+
+        Bugsnag.setContext("AttendanceList");
     }
 
     @Override
@@ -252,6 +256,11 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         mHFViewHolder.tvSap.setText(String.valueOf(listheader.getSAPId()));
         mHFViewHolder.tvCourse.setText(listheader.getCourse());
 
+        if(getActivity().getIntent().hasExtra("SAPID")) {
+            Bugsnag.setUserId("" + listheader.getSAPId());
+            Bugsnag.setUserName(listheader.getName()); // TODO: ?? safe?
+        }
+
         MainActivity.getInstance().updateDrawerHeader();
 
     }
@@ -346,6 +355,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
                 }
                 catch (Exception e) {
                     e.printStackTrace();
+                    Bugsnag.notify(e, Severity.ERROR);
                     String msg = getResources().getString(R.string.unexpected_error);
                     Miscellaneous.showSnackBar(mContext,msg);
                 }

@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 
@@ -36,6 +37,7 @@ public class SplashActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
+        Bugsnag.setContext("SplashActivity");
 
         // set toolbar as actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

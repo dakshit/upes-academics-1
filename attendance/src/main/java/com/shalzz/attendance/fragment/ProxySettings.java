@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.R;
 
 public class ProxySettings extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -15,6 +16,7 @@ public class ProxySettings extends PreferenceFragment implements SharedPreferenc
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context mContext = getActivity();
+        Bugsnag.setContext("ProxySettings");
 
         addPreferencesFromResource(R.xml.pref_proxy);
 

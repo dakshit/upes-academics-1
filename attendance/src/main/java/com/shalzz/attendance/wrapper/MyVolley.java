@@ -31,6 +31,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.Volley;
+import com.bugsnag.android.Bugsnag;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -75,6 +76,9 @@ public class MyVolley extends Application {
 		
 		// Initialize the singleton
 		sInstance = this;
+
+        Bugsnag.init(this);
+        Bugsnag.setNotifyReleaseStages("production", "development", "testing");
 		
 		// Set a cookie manager
 		Log.i(MyVolley.class.getName(), "Setting CookieHandler");

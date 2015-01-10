@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bugsnag.android.Bugsnag;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.shalzz.attendance.R;
@@ -24,7 +25,8 @@ public class AdFragment extends Fragment {
         super.onActivityCreated(bundle);
         AdView mAdView = (AdView) getView().findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("FF6EDBEB25A680CE17574F685EEB37EC")
+//                .addTestDevice("FF6EDBEB25A680CE17574F685EEB37EC")
+                .addTestDevice("DADEBD5774411E6AD1E72943FBBC60B3")
                 .build();
         mAdView.loadAd(adRequest);
     }

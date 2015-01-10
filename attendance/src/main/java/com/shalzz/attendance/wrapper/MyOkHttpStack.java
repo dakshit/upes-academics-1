@@ -23,6 +23,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.HurlStack;
+import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 import com.squareup.okhttp.OkHttpClient;
@@ -67,6 +68,7 @@ public class MyOkHttpStack extends HurlStack {
 		}
 
         /* fix the SslHandShake exception */
+        Bugsnag.leaveBreadcrumb("Adding CA to trusted keystore");
         MySSLSocketFactory sslf;
         try {
             KeyStore ks = MySSLSocketFactory.getKeystoreOfCA(MyVolley.getAppContext().getResources().openRawResource(R.raw.gd_bundle));
@@ -74,6 +76,7 @@ public class MyOkHttpStack extends HurlStack {
             okUrlFactory.client().setSslSocketFactory(sslf.getSSLSocketFactory());
         }
         catch (Exception e) {
+            Bugsnag.notify(e);
             e.printStackTrace();
         }
 

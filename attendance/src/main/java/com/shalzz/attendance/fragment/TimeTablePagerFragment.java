@@ -43,6 +43,8 @@ import android.widget.ListView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Severity;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
 import com.nispok.snackbar.Snackbar;
@@ -91,6 +93,7 @@ public class TimeTablePagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
+        Bugsnag.setContext("Timetable");
     }
 
     @Override
@@ -293,9 +296,11 @@ public class TimeTablePagerFragment extends Fragment {
                         scrollToToday();
                     }
                 }
-                catch(Exception e) {
+                catch (Exception e) {
                     e.printStackTrace();
-                    Miscellaneous.showSnackBar(mContext,"An unexpected error occurred");
+                    Bugsnag.notify(e, Severity.ERROR);
+                    String msg = getResources().getString(R.string.unexpected_error);
+                    Miscellaneous.showSnackBar(mContext, msg);
                 }
             }
         };

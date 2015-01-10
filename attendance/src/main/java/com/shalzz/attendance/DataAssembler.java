@@ -22,6 +22,7 @@ package com.shalzz.attendance;
 import android.content.Context;
 import android.util.Log;
 
+import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.model.ListFooter;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Period;
@@ -98,6 +99,7 @@ public class DataAssembler {
 
         if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
         {
+            // TODO: use multiline snackbar
             String msg ="It seems your session has expired.\nPlease Login again.";
             if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
                 Miscellaneous.showSnackBar(mContext, msg);
@@ -191,13 +193,13 @@ public class DataAssembler {
             String msg ="It seems your session has expired.\nPlease Login again.";
             if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
                 Miscellaneous.showSnackBar(mContext, msg);
-            Log.e(mTag,"Login Session Expired");
+            Bugsnag.leaveBreadcrumb("Login Session Expired");
             return -1;
         }
         else if(doc.getElementsByClass("infomessage").text().equals("No reports found for the given criteria.")) {
             if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
                 Miscellaneous.showSnackBar(mContext, "No TimeTable available at this time");
-            Log.e(mTag,"No TimeTable");
+            Bugsnag.leaveBreadcrumb("No TimeTable");
             return -2;
         }
         else if (thdata != null && thdata.size() > 0)
