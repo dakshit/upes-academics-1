@@ -54,26 +54,17 @@ public class MyPreferencesManager {
 	public void setLastSyncTime() {
 		Time now = new Time();
 		now.setToNow();
-		SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", 0);
+		SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", Context.MODE_MULTI_PROCESS);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong("REFRESH_TIME", now.toMillis(false));
-		editor.apply();
+		editor.commit();
 	}
-
-    public void setLastSyncTime(int mode) {
-        Time now = new Time();
-        now.setToNow();
-        SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", mode);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putLong("REFRESH_TIME", now.toMillis(false));
-        editor.apply();
-    }
 	
 	public long getLastSyncTime() {
         Time now = new Time();
         now.setToNow();
         Long now_L = now.toMillis(false);
-		SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", 0);
+		SharedPreferences settings = mContext.getApplicationContext().getSharedPreferences("SETTINGS", Context.MODE_MULTI_PROCESS);
 		Long last_sync = settings.getLong("REFRESH_TIME", now_L );
 		return (now_L-last_sync)/(1000*60*60); // convert milliseconds to hours
 	}

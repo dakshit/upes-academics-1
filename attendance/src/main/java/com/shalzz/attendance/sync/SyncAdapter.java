@@ -95,8 +95,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 {
                     parseAttendance(response, mContext);
                     MyPreferencesManager pref = new MyPreferencesManager(mContext);
-                    pref.setLastSyncTime(Context.MODE_MULTI_PROCESS);
-                    // TODO: fix this ^^
+                    pref.setLastSyncTime();
                 }
                 catch(Exception e) {
                     Bugsnag.notify(e);
