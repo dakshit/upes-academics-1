@@ -81,7 +81,10 @@ public class DayFragment extends Fragment {
 
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST);
+//        RecyclerView.ItemDecoration calendarItemDecoration =
+//                new CalendarItemDecoration(mContext, mDate, CalendarItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
+//        mRecyclerView.addItemDecoration(calendarItemDecoration);
         // TODO: add calendar itemDecoration
 
         return mView;

@@ -31,6 +31,11 @@
     <string name="incorrect_captcha" translatable="false">alert(\'Please enter correct code.\'); window.history.go(-1);</string>
     <string name="incorrect_user_or_pass" translatable="false">alert(\'Incorrect username or password.
         Please try again.\'); window.history.go(-1);</string>
+    <string name="session_error_identifier" translatable="false">UPES - Home</string>
+    <string name="unavailable_data_identifier" translatable="false">Data not available.</string>
+    <string name="unavailable_timetable_identifier" translatable="false">No reports found for the given criteria.</string>
+    <string name="http_tag_title" translatable="false">title</string>
+    <string name="http_tag_div" translatable="false">infomessage</string>
 
     <!--URL's-->
     <string name="URL_login" translatable="false">https://academics.ddn.upes.ac.in/upes/index.php</string>
@@ -40,13 +45,16 @@
     <!--////  Actual user visible text ////-->
 
     <!--User friendly error messages-->
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_password">This password is too short</string>
     <string name="generic_server_down">It seems the web server is down or not responding.</string>
     <string name="no_internet">No connection</string>
     <string name="generic_error">Network Error occurred.</string>
     <string name="proxy_error">Proxy Authentication failed. Please check your credentials</string>
     <string name="unexpected_error">An unexpected error occurred</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="session_error">It seems your session has expired.\nPlease Login again.</string>
+    <string name="unavailable_data">No Data available at this time</string>
+    <string name="unavailable_timetable">No TimeTable available at this time</string>
 
     <!--EditText's and TextView's-->
     <string name="description">© 2013–2014 \n All rights reserved. \n Developed by  \n Shaleen Jain </string>

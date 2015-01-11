@@ -42,6 +42,7 @@ import java.util.List;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
+    // TODO: do in background
     /**
      * Context
      */
@@ -438,6 +439,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		return rowCount;
 	}
+
+    /**
+     * Check if the Student data is in database.
+     * */
+    public int getHeaderRowCount() {
+        String countQuery = "SELECT  * FROM " + TABLE_HEADER;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int rowCount = cursor.getCount();
+        db.close();
+        cursor.close();
+
+        return rowCount;
+    }
 	
 	public int getRowCountofTimeTable() {
 		String countQuery = "SELECT  * FROM " + TABLE_TIMETABLE;

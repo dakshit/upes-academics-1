@@ -33,6 +33,11 @@ public class DateHelper {
     private static DateFormat technicalDateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.US);
     private static DateFormat properDateFormat = new SimpleDateFormat("dd/MM/yyyy",Locale.US);
 
+    public interface DateTimeInterpreter {
+        String interpretDate(Calendar date);
+        String interpretTime(int hour);
+    }
+
     public static String getTechnicalWeekday(Date date) {
         Calendar today = Calendar.getInstance();
         today.setTime(date);

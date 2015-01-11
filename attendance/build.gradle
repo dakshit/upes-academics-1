@@ -33,17 +33,14 @@ android {
         resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
     }
 
-
 //  TODO: proguard the app
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-//            zipAlign true
         }
         release {
-//            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-//            zipAlign true
         }
     }
     sourceSets {
@@ -58,7 +55,6 @@ android {
         compile 'com.android.support:support-v4:21.+'
         compile 'com.android.support:appcompat-v7:21.0.+'
         compile 'com.android.support:support-v13:21.+'
-
 
         // 3rd party library projects
         compile 'com.bugsnag:bugsnag-android:+'

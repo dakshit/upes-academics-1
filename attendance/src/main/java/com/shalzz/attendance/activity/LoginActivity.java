@@ -40,8 +40,6 @@ import com.android.volley.Request.Priority;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bugsnag.android.Bugsnag;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;

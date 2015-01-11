@@ -22,14 +22,14 @@
 
     <PreferenceCategory android:title="Attendance" >
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="3"
             android:dialogTitle="Limit expanded subjects to"
             android:entries="@array/pref_subject_limit_entries"
             android:entryValues="@array/pref_subject_limit_values"
             android:key="subjects_expanded_limit"
             android:title="@string/pref_subjectLimit" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="timetable" >
+    <PreferenceCategory android:title="Timetable" >
         <!--TODO: Implement this-->
         <!--<CheckBoxPreference-->
             <!--android:defaultValue="false"-->
@@ -44,7 +44,7 @@
             android:key="pref_batch"
             android:title="Batch" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="NETWORK" >
+    <PreferenceCategory android:title="Network" >
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="data_sync"

@@ -20,6 +20,7 @@
 package com.shalzz.attendance;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.bugsnag.android.Bugsnag;
@@ -37,19 +38,26 @@ import java.util.ArrayList;
 
 public class DataAssembler {
 
+    // TODO: do in background
     private static String mTag = "Data Assembler";
+    private static String sync_class = "com.shalzz.attendance.wrapper.MyVolley";
 
-    public static void parseStudentDetails(String response,Context mContext) {
+    public static int parseStudentDetails(String response,Context mContext) {
+        Resources resources = mContext.getResources();
+        String session_error = resources.getString(R.string.session_error);
+        String session_error_identifier = resources.getString(R.string.session_error_identifier);
+        String http_tag_title = resources.getString(R.string.http_tag_title);
+
         Document doc = Jsoup.parse(response);
-
         Elements tddata = doc.select("td");
+        Log.i(mTag, "Parsing student details...");
 
-        if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
+        if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
         {
-            String msg ="It seems your session has expired.\nPlease Login again.";
-            if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-                Miscellaneous.showSnackBar(mContext, msg);
-            Log.e(mTag,"Login Session Expired");
+            if(!mContext.getClass().getName().equals(sync_class))
+                Miscellaneous.showMultilineSnackBar(mContext, session_error);
+            Bugsnag.leaveBreadcrumb("Login Session Expired");
+            return -1;
         }
         else if (tddata != null && tddata.size() > 0) {
             int i = 0;
@@ -70,17 +78,27 @@ public class DataAssembler {
                 ++i;
             }
 
+            Log.i(mTag, "Got student details.");
             DatabaseHandler db = new DatabaseHandler(mContext);
             db.addOrUpdateListHeader(header);
             db.close();
         }
+        return 0;
     }
 
     /**
      * Extracts Attendance details from the HTML code.
      * @param response HTML page string
      */
-    public static void  parseAttendance(String response,Context mContext) {
+    public static int  parseAttendance(String response,Context mContext) {
+
+        Resources resources = mContext.getResources();
+        String session_error = resources.getString(R.string.session_error);
+        String session_error_identifier = resources.getString(R.string.session_error_identifier);
+        String unavailable_data = resources.getString(R.string.unavailable_data);
+        String unavailable_data_identifier = resources.getString(R.string.unavailable_data_identifier);
+        String http_tag_title = resources.getString(R.string.http_tag_title);
+        String http_tag_div = resources.getString(R.string.http_tag_div);
 
         DatabaseHandler db = new DatabaseHandler(mContext);
         db.deleteAllSubjects();
@@ -97,12 +115,18 @@ public class DataAssembler {
 
         Elements tddata = doc.select("td");
 
-        if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
+        if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
         {
-            String msg ="It seems your session has expired.\nPlease Login again.";
-            if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-                Miscellaneous.showMultilineSnackBar(mContext, msg);
-            Log.e(mTag,"Login Session Expired");
+            if(!mContext.getClass().getName().equals(sync_class))
+                Miscellaneous.showMultilineSnackBar(mContext, session_error);
+            Bugsnag.leaveBreadcrumb("Login Session Expired");
+            return -1;
+        }
+        else if(doc.getElementsByClass(http_tag_div).text().equals(unavailable_data_identifier)) {
+            if(!mContext.getClass().getName().equals(sync_class))
+                Miscellaneous.showMultilineSnackBar(mContext, unavailable_data);
+            Bugsnag.leaveBreadcrumb("Data not available");
+            return -2;
         }
         else if (tddata != null && tddata.size() > 0)
         {
@@ -161,9 +185,18 @@ public class DataAssembler {
             }
             db.close();
         }
+        return 0;
     }
 
     public static int parseTimeTable(String response,Context mContext) {
+
+        Resources resources = mContext.getResources();
+        String session_error = resources.getString(R.string.session_error);
+        String session_error_identifier = resources.getString(R.string.session_error_identifier);
+        String unavailable_timetable = resources.getString(R.string.unavailable_timetable);
+        String unavailable_timetable_identifier = resources.getString(R.string.unavailable_timetable_identifier);
+        String http_tag_title = resources.getString(R.string.http_tag_title);
+        String http_tag_div = resources.getString(R.string.http_tag_div);
 
         DatabaseHandler db = new DatabaseHandler(mContext);
         db.deleteAllPeriods();
@@ -187,17 +220,16 @@ public class DataAssembler {
         days.add(fri);
         days.add(sat);
 
-        if(doc.getElementsByTag("title").size()==0 || doc.getElementsByTag("title").get(0).text().equals("UPES - Home"))
+        if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
         {
-            String msg ="It seems your session has expired.\nPlease Login again.";
-            if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-                Miscellaneous.showMultilineSnackBar(mContext, msg);
+            if(!mContext.getClass().getName().equals(sync_class))
+                Miscellaneous.showMultilineSnackBar(mContext, session_error);
             Bugsnag.leaveBreadcrumb("Login Session Expired");
             return -1;
         }
-        else if(doc.getElementsByClass("infomessage").text().equals("No reports found for the given criteria.")) {
-            if(!mContext.getClass().getName().equals("com.shalzz.attendance.wrapper.MyVolley"))
-                Miscellaneous.showSnackBar(mContext, "No TimeTable available at this time");
+        else if(doc.getElementsByClass(http_tag_div).text().equals(unavailable_timetable_identifier)) {
+            if(!mContext.getClass().getName().equals(sync_class))
+                Miscellaneous.showSnackBar(mContext, unavailable_timetable);
             Bugsnag.leaveBreadcrumb("No TimeTable");
             return -2;
         }

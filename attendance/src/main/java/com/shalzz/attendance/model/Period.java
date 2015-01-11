@@ -20,12 +20,9 @@
 package com.shalzz.attendance.model;
 
 import com.bugsnag.android.Bugsnag;
-import com.bugsnag.android.Severity;
 import com.shalzz.attendance.wrapper.DateHelper;
 
 import java.text.ParseException;
-
-import javax.annotation.meta.When;
 
 public class Period {
 

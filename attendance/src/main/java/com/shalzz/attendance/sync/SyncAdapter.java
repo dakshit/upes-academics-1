@@ -31,7 +31,6 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bugsnag.android.Bugsnag;
-import com.bugsnag.android.Severity;
 import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
@@ -97,6 +96,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     parseAttendance(response, mContext);
                     MyPreferencesManager pref = new MyPreferencesManager(mContext);
                     pref.setLastSyncTime(Context.MODE_MULTI_PROCESS);
+                    // TODO: fix this ^^
                 }
                 catch(Exception e) {
                     Bugsnag.notify(e);

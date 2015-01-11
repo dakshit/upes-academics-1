@@ -46,7 +46,6 @@ import android.widget.TextView;
 
 import com.bugsnag.android.Bugsnag;
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.R;
@@ -249,13 +248,16 @@ public class MainActivity extends ActionBarActivity {
 
     public void updateDrawerHeader() {
         DatabaseHandler db = new DatabaseHandler(this);
-        if(db.getRowCount()>0) {
+        if(db.getHeaderRowCount()>0) {
             ListHeader listheader = db.getListHeader();
 
             TextView tv_name = (TextView) Drawerheader.findViewById(R.id.drawer_header_name);
             TextView tv_course = (TextView) Drawerheader.findViewById(R.id.drawer_header_course);
             tv_name.setText(listheader.getName());
             tv_course.setText(listheader.getCourse());
+
+            Bugsnag.setUserId("" + listheader.getSAPId());
+            Bugsnag.setUserName(listheader.getName());
         }
     }
 

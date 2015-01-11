@@ -22,9 +22,11 @@ package com.shalzz.attendance.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -93,6 +95,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
     private CircularIndeterminate mProgress;
     private MyPreferencesManager prefs;
     private View mDropShadow;
+    private Resources mResourses;
 
     private float mExpandedItemTranslationZ;
     private int mFadeInDuration = 150;
@@ -129,10 +132,16 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         mContext = getActivity();
         mTag = getActivity().getLocalClassName();
         prefs = new MyPreferencesManager(mContext.getApplicationContext());
-        mExpandedItemTranslationZ =
-                getResources().getDimension(R.dimen.atten_view_expanded_elevation);
 
         Bugsnag.setContext("AttendanceList");
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mResourses = getResources();
+        mExpandedItemTranslationZ =
+                mResourses.getDimension(R.dimen.atten_view_expanded_elevation);
     }
 
     @Override
@@ -175,8 +184,10 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
 
         DatabaseHandler db = new DatabaseHandler(mContext);
         if(db.getRowCount()<=0) {
-            String SAPID = getActivity().getIntent().getExtras().getString("SAPID");
-            MySyncManager.addPeriodicSync(mContext,SAPID);
+            if(getActivity().getIntent().hasExtra("SAPID")) {
+                String SAPID = getActivity().getIntent().getExtras().getString("SAPID");
+                MySyncManager.addPeriodicSync(mContext, SAPID);
+            }
             DataAPI.getAttendance(mContext, successListener(), errorListener());
             mProgress.setVisibility(View.VISIBLE);
         }
@@ -210,12 +221,14 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         firstElementPosition += mListView.getHeaderViewsCount();
         View firstElementView = mListView.getChildAt(firstElementPosition);
 
-        new ShowcaseView.Builder(getActivity())
-                .setStyle(R.style.AppBaseTheme)
-                .setTarget(new ViewTarget(firstElementView))
-                .setContentTitle("Expandable item")
-                .setContentText("Touch a Subject for more details about it")
-                .build();
+        if(firstElementView != null) {
+            new ShowcaseView.Builder(getActivity())
+                    .setStyle(R.style.AppBaseTheme)
+                    .setTarget(new ViewTarget(firstElementView))
+                    .setContentTitle("Expandable item")
+                    .setContentText("Touch a Subject for more details about it")
+                    .build();
+        }
     }
 
     protected void updateLastRefresh() {
@@ -256,11 +269,6 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         mHFViewHolder.tvSap.setText(String.valueOf(listheader.getSAPId()));
         mHFViewHolder.tvCourse.setText(listheader.getCourse());
 
-        if(getActivity().getIntent().hasExtra("SAPID")) {
-            Bugsnag.setUserId("" + listheader.getSAPId());
-            Bugsnag.setUserName(listheader.getName());
-        }
-
         MainActivity.getInstance().updateDrawerHeader();
 
     }
@@ -273,7 +281,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
 
         // TODO: fix search action view
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+        searchView.setQueryHint(mResourses.getString(R.string.search_hint));
 
         MenuItemCompat.setOnActionExpandListener(searchItem , new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -348,15 +356,18 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
                 mSwipeRefreshLayout.setRefreshing(false);
                 try {
                     DataAssembler.parseStudentDetails(response, mContext);
-                    DataAssembler.parseAttendance(response, mContext);
-                    setAttendance();
-                    prefs.setLastSyncTime();
-                    updateLastRefresh();
+                    if(DataAssembler.parseAttendance(response, mContext) == 0) {
+                        prefs.setLastSyncTime();
+                        updateLastRefresh();
+                        setAttendance();
+                    }
+                    else
+                            MainActivity.getInstance().updateDrawerHeader();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                     Bugsnag.notify(e, Severity.ERROR);
-                    String msg = getResources().getString(R.string.unexpected_error);
+                    String msg = mResourses.getString(R.string.unexpected_error);
                     Miscellaneous.showSnackBar(mContext,msg);
                 }
             }
