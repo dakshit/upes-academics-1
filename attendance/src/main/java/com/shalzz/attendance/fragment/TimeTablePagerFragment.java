@@ -63,13 +63,21 @@ import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.Optional;
+
 public class TimeTablePagerFragment extends Fragment {
 
     /**
      * The {@link android.support.v4.widget.SwipeRefreshLayout} that detects swipe gestures and
      * triggers callbacks in the app.
      */
-    private MultiSwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.swiperefresh) MultiSwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.circular_indet) CircularIndeterminate mProgress;
+    @InjectView(R.id.pager) ViewPager mViewPager;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
 
     /**
      * Remember the position of the previous pager position.
@@ -78,12 +86,8 @@ public class TimeTablePagerFragment extends Fragment {
 
     private int mPreviousPosition = 15;
     private TimeTablePagerAdapter mTimeTablePagerAdapter;
-    private ViewPager mViewPager;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
     private String myTag = "Pager Fragment";
     private Context mContext;
-    private CircularIndeterminate mProgress;
     private ActionBar actionbar;
     private Date mToday;
 
@@ -107,11 +111,9 @@ public class TimeTablePagerFragment extends Fragment {
         setRetainInstance(false);
         actionbar= ((ActionBarActivity)getActivity()).getSupportActionBar();
         final View view = inflater.inflate(R.layout.swipe_layout, container, false);
+        ButterKnife.inject(this,view);
 
-        mViewPager = (ViewPager) view.findViewById(R.id.pager);
-        mSwipeRefreshLayout = (MultiSwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setSwipeableChildren(R.id.pager);
-        mProgress = (CircularIndeterminate) view.findViewById(R.id.circular_indet);
         mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
 
@@ -335,8 +337,9 @@ public class TimeTablePagerFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
     }
 
 }

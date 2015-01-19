@@ -56,6 +56,9 @@ import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyVolley;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class MainActivity extends ActionBarActivity {
 
     /**
@@ -103,11 +106,14 @@ public class MainActivity extends ActionBarActivity {
      */
     private final Boolean DEBUG_FRAGMENTS = true;
 
+    // Views
+    @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @InjectView(R.id.list_slidermenu) ListView mDrawerList;
+    @InjectView(R.id.drop_shadow) public View dropShadow;
+
     private int mCurrentSelectedPosition = 0;
     private static MainActivity mActivity;
     private String[] mNavTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -115,7 +121,6 @@ public class MainActivity extends ActionBarActivity {
     private FragmentManager mFragmentManager;
     private Fragment fragment = null;
     private ActionBar actionbar;
-    public View dropShadow;
     // Our custom poor-man's back stack which has only one entry at maximum.
     private Fragment mPreviousFragment;
 
@@ -123,6 +128,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer);
+        ButterKnife.inject(this);
         Bugsnag.setContext("MainActivity");
 
         // set toolbar as actionbar
@@ -130,9 +136,6 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         mNavTitles = getResources().getStringArray(R.array.drawer_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-        dropShadow = findViewById(R.id.drop_shadow);
         mFragmentManager = getFragmentManager();
         mTitle  = getTitle();
         actionbar = getSupportActionBar();

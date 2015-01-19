@@ -57,31 +57,30 @@ import org.jsoup.select.Elements;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class LoginActivity extends ActionBarActivity implements CaptchaDialogFragment.CaptchaDialogListener{
 
-	private EditText etSapid;
-	private EditText etPass;
+    @InjectView(R.id.etSapid) EditText etSapid;
+    @InjectView(R.id.etPass) EditText etPass;
 	@SuppressWarnings("FieldCanBeLocal")
-    private Button bLogin;
+    @InjectView(R.id.bLogin) Button bLogin;
+
 	private String charset = HTTP.ISO_8859_1;
 	private Map<String, String> data = new HashMap<String, String>();
 	private String myTag ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
         Bugsnag.setContext("LoginActivity");
 
         // set toolbar as actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-		// Reference to the layout components
-		etSapid = (EditText) findViewById(R.id.etSapid);
-		etPass = (EditText) findViewById(R.id.etPass);
-		bLogin = (Button) findViewById(R.id.bLogin);
-
         myTag = getLocalClassName();
 
 		getHiddenData();
@@ -90,7 +89,7 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
 		etPass.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {                    
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
 					if(isValid())
 					{
 						showCaptchaDialog();
@@ -102,14 +101,12 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
 
 		// OnClickListener event for the Login Button
 		bLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {		
-				if(isValid())
-				{
-					showCaptchaDialog();
-				}
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                if (isValid())
+                    showCaptchaDialog();
+            }
+        });
 
         showcaseView();
 	}
@@ -132,9 +129,9 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
 	 * Checks if the form is valid
 	 * @return true or false
 	 */
-	public boolean isValid() {		
+	public boolean isValid() {
 		String sapid = etSapid.getText().toString();
-		String password = etPass.getText().toString();	
+		String password = etPass.getText().toString();
 
 		if(sapid.length()==0 || sapid.length()!=9) {
 			// workaround for enrollment number.
@@ -145,8 +142,8 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
 					etSapid.setError("SAP ID should be of 9 digits");
 					Miscellaneous.showKeyboard(this,etSapid);
 					return false;
-				}			
-			} 
+				}
+			}
 			else {
 				etSapid.requestFocus();
 				etSapid.setError("SAP ID should be of 9 digits");
@@ -189,7 +186,7 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
 		.Login(sapid,
 				etPass.getText().toString(),
 				Captxt.getText().toString(),
-				data);		
+				data);
 		Miscellaneous.closeKeyboard(this, Captxt);
 		dialog.dismiss();
 	}

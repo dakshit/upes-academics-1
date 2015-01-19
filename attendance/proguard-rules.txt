@@ -18,6 +18,11 @@
 -ignorewarnings
 -dontobfuscate
 
+# Butterknife
+-dontwarn butterknife.internal.**
+-keep class **$$ViewInjector { *; }
+-keepnames class * { @butterknife.InjectView *;}
+
 # Save the obfuscation mapping to a file, so you can de-obfuscate any stack
 # traces later on.
 

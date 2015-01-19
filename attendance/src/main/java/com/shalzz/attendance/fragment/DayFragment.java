@@ -40,15 +40,18 @@ import com.shalzz.attendance.wrapper.DateHelper;
 
 import java.util.Date;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class DayFragment extends Fragment {
 
+    @InjectView(R.id.my_recycler_view) RecyclerView mRecyclerView;
+    @InjectView(R.id.empty_view) View mEmptyView;
     private Context mContext;
     private Date mDate;
     public static final String ARG_DATE = "date";
-    private RecyclerView mRecyclerView;
     private DayListAdapter mAdapter;
     private Day mDay;
-    private View mEmptyView;
 
 
     @Override
@@ -64,9 +67,8 @@ public class DayFragment extends Fragment {
         if(container==null)
             return null;
         View mView = inflater.inflate(R.layout.timetable_view, container, false);
+        ButterKnife.inject(this,mView);
 
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.my_recycler_view);
-        mEmptyView = mView.findViewById(R.id.empty_view);
         mDate = (Date) getArguments().getSerializable(ARG_DATE);
 
         // use this setting to improve performance if you know that changes
@@ -133,7 +135,8 @@ public class DayFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
     }
 }

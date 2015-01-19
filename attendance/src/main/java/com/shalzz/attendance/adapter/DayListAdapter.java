@@ -34,6 +34,9 @@ import com.shalzz.attendance.model.Period;
 import java.text.ParseException;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class DayListAdapter extends RecyclerView.Adapter<DayListAdapter.ViewHolder>{
     private List<Period> periods;
 
@@ -41,17 +44,14 @@ public class DayListAdapter extends RecyclerView.Adapter<DayListAdapter.ViewHold
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvSubjectName;
-        public TextView tvTime;
-        public TextView tvTeacher;
-        public TextView tvRoom;
+        @InjectView(R.id.tvSubjectName) TextView tvSubjectName;
+        @InjectView(R.id.tvTime) TextView tvTime;
+        @InjectView(R.id.tvTeacher) TextView tvTeacher;
+        @InjectView(R.id.tvRoom) TextView tvRoom;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvSubjectName = (TextView) itemView.findViewById(R.id.tvSubjectName);
-            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
-            tvTeacher = (TextView) itemView.findViewById(R.id.tvTeacher);
-            tvRoom = (TextView) itemView.findViewById(R.id.tvRoom);
+            ButterKnife.inject(this,itemView);
         }
     }
 

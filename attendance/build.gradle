@@ -48,6 +48,10 @@ android {
 
     }
 
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
     dependencies {
         // google support libraries
         compile 'com.google.android.gms:play-services:6.+'
@@ -57,6 +61,7 @@ android {
         compile 'com.android.support:support-v13:21.+'
 
         // 3rd party library projects
+        compile 'com.jakewharton:butterknife:6.0.0'
         compile 'com.bugsnag:bugsnag-android:+'
         compile 'com.mcxiaoke.volley:library:1.0.+@aar'
         compile 'com.github.amlcurran.showcaseview:library:5.1.0-SNAPSHOT@aar'

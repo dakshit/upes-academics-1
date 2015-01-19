@@ -49,11 +49,15 @@ import com.shalzz.attendance.activity.LoginActivity;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class CaptchaDialogFragment extends DialogFragment{
 
-	private ImageView ivCapImg;
-	private CircularIndeterminate pbar;
-	private EditText Captxt;
+	@InjectView(R.id.ivCapImg) ImageView ivCapImg;
+    @InjectView(R.id.progressBar1) CircularIndeterminate pbar;
+    @InjectView(R.id.etCapTxt) EditText Captxt;
+    @InjectView(R.id.bRefresh) Button bRefreshCaptcha;
 	private Context mContext;
 	private String mTag = "Captcha Dialog";
 
@@ -88,11 +92,12 @@ public class CaptchaDialogFragment extends DialogFragment{
     @Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View mView = inflater.inflate(R.layout.captcha_dialog, null);
+        ButterKnife.inject(this,mView);
 
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		
-		builder.setView(inflater.inflate(R.layout.captcha_dialog, null))
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setView(mView)
 		.setTitle("Input Captcha")
 		.setIcon(R.drawable.ic_menu_edit)
 		.setCancelable(true)
@@ -108,8 +113,8 @@ public class CaptchaDialogFragment extends DialogFragment{
 
 		    @Override
 		    public void onShow(DialogInterface dialog) {
+                final EditText captxt = (EditText) alertDialog.findViewById(R.id.etCapTxt);
 
-        		EditText captxt = (EditText) alertDialog.findViewById(R.id.etCapTxt);
         		Miscellaneous.showKeyboard(getActivity(), captxt);
         		
 		        Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -117,7 +122,6 @@ public class CaptchaDialogFragment extends DialogFragment{
 
 		            @Override
 		            public void onClick(View view) {
-		        		EditText captxt = (EditText) alertDialog.findViewById(R.id.etCapTxt);
 		            	if (captxt.getText().toString().length()!=6) {
 		            		captxt.setError("Captcha must be of 6 digits");
 		            		Miscellaneous.showKeyboard(getActivity(), captxt);
@@ -128,8 +132,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 		        });
 		    }
 		});
-		
-		
+
 		return alertDialog;
 	}
 
@@ -139,13 +142,6 @@ public class CaptchaDialogFragment extends DialogFragment{
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		// Reference the views from the layout
-		Dialog dialogView = CaptchaDialogFragment.this.getDialog();
-		Button bRefreshCaptcha = (Button) dialogView.findViewById(R.id.bRefresh);
-		Captxt = (EditText) dialogView.findViewById(R.id.etCapTxt);
-		ivCapImg = (ImageView) dialogView.findViewById(R.id.ivCapImg);
-		pbar = (CircularIndeterminate) dialogView.findViewById(R.id.progressBar1);
 		
 		AlertDialog alertDialog = (AlertDialog) getDialog();
 		final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -214,4 +210,10 @@ public class CaptchaDialogFragment extends DialogFragment{
 			}
 		});
 	}
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
 }

@@ -39,6 +39,9 @@ import com.shalzz.attendance.model.Subject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class ExpandableListAdapter extends BaseAdapter {
 
     private Context mContext;
@@ -95,10 +98,10 @@ public class ExpandableListAdapter extends BaseAdapter {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public int position = -1;
 
-        public TextView subject;
-        public TextView percentage;
-        public TextView classes;
-        public ProgressBar percent;
+        @InjectView(R.id.tvSubj) TextView subject;
+        @InjectView(R.id.tvPercent) TextView percentage;
+        @InjectView(R.id.tvClasses) TextView classes;
+        @InjectView(R.id.pbPercent) ProgressBar percent;
 
         //child views
         public RelativeLayout childView;
@@ -110,10 +113,7 @@ public class ExpandableListAdapter extends BaseAdapter {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            subject = (TextView) itemView.findViewById(R.id.tvSubj);
-            percentage = (TextView) itemView.findViewById(R.id.tvPercent);
-            classes = (TextView) itemView.findViewById(R.id.tvClasses);
-            percent = (ProgressBar) itemView.findViewById(R.id.pbPercent);
+            ButterKnife.inject(this,itemView);
         }
 
     }

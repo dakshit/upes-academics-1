@@ -76,13 +76,20 @@ import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class AttendanceListFragment extends ListFragment implements ExpandableListAdapter.SubjectItemExpandedListener{
 
     /**
      * The {@link android.support.v4.widget.SwipeRefreshLayout} that detects swipe gestures and
      * triggers callbacks in the app.
      */
-    private MultiSwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.swipe_refresh_atten)
+    MultiSwipeRefreshLayout mSwipeRefreshLayout;
+
+    @InjectView(R.id.circular_indet_atten)
+    CircularIndeterminate mProgress;
 
     private View mFooter;
     private View mHeader;
@@ -92,7 +99,6 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
     private Context mContext;
     private String mTag;
     private ExpandableListAdapter mAdapter;
-    private CircularIndeterminate mProgress;
     private MyPreferencesManager prefs;
     private View mDropShadow;
     private Resources mResourses;
@@ -152,10 +158,9 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
 
         setHasOptionsMenu(true);
         View mView = inflater.inflate(R.layout.attenview, container, false);
+        ButterKnife.inject(this, mView);
 
-        mSwipeRefreshLayout = (MultiSwipeRefreshLayout) mView.findViewById(R.id.swipe_refresh_atten);
         mSwipeRefreshLayout.setSwipeableChildren(android.R.id.list);
-        mProgress = (CircularIndeterminate) mView.findViewById(R.id.circular_indet_atten);
         mDropShadow = MainActivity.getInstance().dropShadow;
 
         // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
@@ -163,7 +168,6 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
                 R.color.swipe_color_1, R.color.swipe_color_2,
                 R.color.swipe_color_3, R.color.swipe_color_4);
         mSwipeRefreshLayout.setProgressViewOffset(true, 1, 46);
-
 
         return mView;
     }
@@ -259,7 +263,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         Float percent = listfooter.getPercentage();
 
         mHFViewHolder.tvPercent.setText(listfooter.getPercentage()+"%");
-        mHFViewHolder.tvClasses.setText(listfooter.getAttended().intValue()+"/"+listfooter.getHeld().intValue());
+        mHFViewHolder.tvClasses.setText(listfooter.getAttended().intValue() + "/" + listfooter.getHeld().intValue());
         mHFViewHolder.pbPercent.setProgress(percent.intValue());
         Drawable d = mHFViewHolder.pbPercent.getProgressDrawable();
         d.setLevel(percent.intValue() * 100);
@@ -390,11 +394,6 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onItemExpanded(final View view) {
         final int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         final ExpandableListAdapter.ViewHolder viewHolder = (ExpandableListAdapter.ViewHolder) view.getTag();
@@ -520,5 +519,22 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         }
 
         return null;
+    }
+
+    public void onResume() {
+        super.onResume();
+        mDropShadow.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onStop() {
+        mDropShadow.setVisibility(View.VISIBLE);
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
     }
 }
