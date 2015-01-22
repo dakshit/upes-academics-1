@@ -355,25 +355,33 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                // Stop the refreshing indicator
-                mProgress.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
                 try {
-                    DataAssembler.parseStudentDetails(response, mContext);
-                    if(DataAssembler.parseAttendance(response, mContext) == 0) {
-                        prefs.setLastSyncTime();
-                        updateLastRefresh();
-                        setAttendance();
-                    }
-                    else
-                            MainActivity.getInstance().updateDrawerHeader();
+                    new DataAssembler.ParseStudentDetails(mContext, null).execute(response);
+                    new DataAssembler.ParseAttendance(mContext, parseListener()).execute(response);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
                     Bugsnag.notify(e, Severity.ERROR);
                     String msg = mResourses.getString(R.string.unexpected_error);
                     Miscellaneous.showSnackBar(mContext,msg);
                 }
+            }
+        };
+    }
+
+    private DataAssembler.Listener parseListener() {
+        return new DataAssembler.Listener() {
+            @Override
+            public void onParseComplete(int result) {
+                // Stop the refreshing indicator
+                mProgress.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
+                if(result == 0) {
+                    prefs.setLastSyncTime();
+                    updateLastRefresh();
+                    setAttendance();
+                }
+                else
+                    MainActivity.getInstance().updateDrawerHeader();
             }
         };
     }

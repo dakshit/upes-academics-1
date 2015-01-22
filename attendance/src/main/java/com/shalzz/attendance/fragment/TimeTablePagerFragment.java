@@ -35,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -65,7 +66,6 @@ import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.Optional;
 
 public class TimeTablePagerFragment extends Fragment {
 
@@ -161,6 +161,20 @@ public class TimeTablePagerFragment extends Fragment {
             @Override
             public void onRefresh() {
                 DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
+            }
+        });
+
+        // fix for oversensitive horizontal scroll of swipe view
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mSwipeRefreshLayout.setEnabled(false);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        mSwipeRefreshLayout.setEnabled(true);
+                        break;
+                }
+                return false;
             }
         });
     }
@@ -284,16 +298,8 @@ public class TimeTablePagerFragment extends Fragment {
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                // Stop the refreshing indicator
-                mProgress.setVisibility(View.GONE);
-                mViewPager.setVisibility(View.VISIBLE);
-                mSwipeRefreshLayout.setRefreshing(false);
                 try {
-                    if (DataAssembler.parseTimeTable(response, mContext) == 0) {
-                        mTimeTablePagerAdapter.setDate(mToday);
-                        updateFragments();
-                        scrollToToday();
-                    }
+                    new DataAssembler.ParseTimeTable(mContext, parseListener()).execute(response);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -316,6 +322,24 @@ public class TimeTablePagerFragment extends Fragment {
                 String msg = MyVolleyErrorHelper.getMessage(error, mContext);
                 Miscellaneous.showSnackBar(mContext, msg);
                 Log.e(myTag, msg);
+            }
+        };
+    }
+
+    private DataAssembler.Listener parseListener() {
+        return new DataAssembler.Listener() {
+            @Override
+            public void onParseComplete(int result) {
+                // Stop the refreshing indicator
+                mProgress.setVisibility(View.GONE);
+                mViewPager.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setRefreshing(false);
+                if(result == 0) {
+                    mTimeTablePagerAdapter.setDate(mToday);
+                    updateFragments();
+                    scrollToToday();
+                    updateTitle();
+                }
             }
         };
     }

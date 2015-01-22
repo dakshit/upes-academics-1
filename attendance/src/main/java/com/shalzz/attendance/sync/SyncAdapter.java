@@ -36,12 +36,6 @@ import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
-import static com.shalzz.attendance.DataAssembler.parseAttendance;
-
-/**
- * Handle the transfer of data between a server and an
- * app, using the Android sync adapter framework.
- */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	// Global variables
@@ -93,7 +87,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			public void onResponse(String response) {
                 try
                 {
-                    parseAttendance(response, mContext);
+                    new DataAssembler.ParseAttendance(mContext, null).execute(response);
                     MyPreferencesManager pref = new MyPreferencesManager(mContext);
                     pref.setLastSyncTime();
                 }
@@ -111,7 +105,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			public void onResponse(String response) {
                 try
                 {
-                    DataAssembler.parseTimeTable(response, mContext);
+                    new DataAssembler.ParseTimeTable(mContext, null).execute(response);
                     Bugsnag.leaveBreadcrumb("Sync complete");
                 }
                 catch(Exception e) {
