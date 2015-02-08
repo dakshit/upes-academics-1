@@ -203,7 +203,7 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
                 Log.i(getClass().getName(),"Parsing hidden data...");
 
                 // Get Hidden values
-                Elements hiddenvalues = doc.select("input[type=hidden]");
+                Elements hiddenvalues = doc.select(getString(R.string.selector_hidden_data));
                 for(Element hiddenvalue : hiddenvalues)
                 {
                     String name = hiddenvalue.attr("name");

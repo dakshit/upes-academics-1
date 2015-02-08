@@ -225,8 +225,8 @@ public class MainActivity extends ActionBarActivity {
             final ShowcaseView sv = new ShowcaseView.Builder(this)
                     .setTarget(homeTarget)
                     .setStyle(R.style.AppBaseTheme)
-                    .setContentTitle("Navigation bar")
-                    .setContentText("Press this button or swipe from the left edge to access the navigation bar")
+                    .setContentTitle(getString(R.string.sv_main_activity_title))
+                    .setContentText(getString(R.string.sv_main_activity_content))
                     .build();
 
             sv.overrideButtonClick(new View.OnClickListener() {

@@ -186,8 +186,8 @@ public class TimeTablePagerFragment extends Fragment {
                 .setStyle(R.style.AppBaseTheme)
                 .setTarget(Target.NONE)
                 .doNotBlockTouches()
-                .setContentTitle("Previous or next Day")
-                .setContentText("Swipe left or right to switch between days")
+                .setContentTitle(getString(R.string.sv_timetable_title))
+                .setContentText(getString(R.string.sv_timetable_content))
                 .build();
         prefs.setFirstLaunch(myTag);
 

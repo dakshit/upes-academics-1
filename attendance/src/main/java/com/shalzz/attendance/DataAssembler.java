@@ -62,7 +62,7 @@ public class DataAssembler {
             String http_tag_title = resources.getString(R.string.http_tag_title);
 
             Document doc = Jsoup.parse(response[0]);
-            Elements tddata = doc.select("td");
+            Elements tddata = doc.select(mContext.getString(R.string.selector_table_data));
             Log.i(mTag, "Parsing student details...");
 
             if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
@@ -169,7 +169,7 @@ public class DataAssembler {
         Log.i(mTag, "Parsing response...");
         Document doc = Jsoup.parse(response);
 
-        Elements tddata = doc.select("td");
+        Elements tddata = doc.select(mContext.getString(R.string.selector_table_data));
 
         if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
         {
@@ -215,7 +215,7 @@ public class DataAssembler {
                 ++i;
             }
 
-            Elements total = doc.select("th");
+            Elements total = doc.select(mContext.getString(R.string.selector_table_header));
             ListFooter footer = new ListFooter();
             footer.setAttended(Float.parseFloat(total.get(10).text()));
             footer.setHeld(Float.parseFloat(total.get(9).text()));
@@ -250,7 +250,7 @@ public class DataAssembler {
         db.deleteAllPeriods();
 
         Document doc = Jsoup.parse(response);
-        Elements thdata = doc.select("th");
+        Elements thdata = doc.select(mContext.getString(R.string.selector_table_header));
 
         ArrayList<String> time = new ArrayList<>();
         ArrayList<String> mon = new ArrayList<>();

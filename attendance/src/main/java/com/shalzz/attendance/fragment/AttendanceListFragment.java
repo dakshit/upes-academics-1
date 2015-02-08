@@ -215,7 +215,8 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
                 mDropShadow.setVisibility(mHeader.isShown() ? View.GONE : View.VISIBLE);
             }
         });
@@ -231,14 +232,14 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         new ShowcaseView.Builder(getActivity())
                 .setStyle(R.style.AppBaseTheme)
                 .setTarget(target)
-                .setContentTitle("Expandable item")
-                .setContentText("Touch a Subject for more details about it")
+                .setContentTitle(getString(R.string.sv_attendance_title))
+                .setContentText(getString(R.string.sv_attendance_content))
                 .build();
 
     }
 
     protected void updateLastRefresh() {
-        mLastRefreshView.setText("Last refreshed " + prefs.getLastSyncTime() + " hours ago");
+        mLastRefreshView.setText(getString(R.string.last_refresh, prefs.getLastSyncTime()));
     }
 
     private void setAttendance() {
