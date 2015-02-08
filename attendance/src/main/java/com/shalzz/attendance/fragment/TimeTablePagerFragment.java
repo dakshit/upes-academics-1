@@ -183,7 +183,7 @@ public class TimeTablePagerFragment extends Fragment {
     public void showcaseView() {
         MyPreferencesManager prefs = new MyPreferencesManager(mContext);
         final ShowcaseView sv = new ShowcaseView.Builder(getActivity())
-                .setStyle(R.style.AppBaseTheme)
+                .setStyle(R.style.CustomShowcaseTheme)
                 .setTarget(Target.NONE)
                 .doNotBlockTouches()
                 .setContentTitle(getString(R.string.sv_timetable_title))

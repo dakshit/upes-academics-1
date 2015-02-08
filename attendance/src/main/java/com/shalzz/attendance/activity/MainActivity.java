@@ -224,7 +224,7 @@ public class MainActivity extends ActionBarActivity {
 
             final ShowcaseView sv = new ShowcaseView.Builder(this)
                     .setTarget(homeTarget)
-                    .setStyle(R.style.AppBaseTheme)
+                    .setStyle(R.style.CustomShowcaseTheme)
                     .setContentTitle(getString(R.string.sv_main_activity_title))
                     .setContentText(getString(R.string.sv_main_activity_content))
                     .build();

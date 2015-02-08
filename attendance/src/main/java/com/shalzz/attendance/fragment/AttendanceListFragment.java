@@ -230,7 +230,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
                 : new ViewTarget(mListView);
 
         new ShowcaseView.Builder(getActivity())
-                .setStyle(R.style.AppBaseTheme)
+                .setStyle(R.style.CustomShowcaseTheme)
                 .setTarget(target)
                 .setContentTitle(getString(R.string.sv_attendance_title))
                 .setContentText(getString(R.string.sv_attendance_content))
