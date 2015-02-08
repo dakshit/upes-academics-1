@@ -56,8 +56,8 @@
     <string name="error_field_required">This field is required</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="generic_server_down">It seems the web server is down or not responding.</string>
-    <string name="no_internet">No connection</string>
-    <string name="generic_error">Network Error occurred.</string>
+    <string name="no_internet">No Connection</string>
+    <string name="generic_error">Network error occurred.</string>
     <string name="proxy_error">Proxy Authentication failed. Please check your credentials</string>
     <string name="unexpected_error">An unexpected error occurred</string>
     <string name="session_error">It seems your session has expired.\nPlease Login again.</string>
@@ -75,7 +75,7 @@
 
     <!--Preferences-->
     <string name="pref_subjectLimit">Limit Expanded Subjects</string>
-    <string name="pref_description">© 2013–2014 \n All rights reserved. \n Developed by  \n Shaleen Jain </string>
+    <string name="pref_description">UPES Academics \nCopyright © 2013&#8211;2015  Shaleen Jain</string>
 
     <!--Showcase View-->
     <string name="sv_attendance_title">Expandable item</string>

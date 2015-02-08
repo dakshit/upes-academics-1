@@ -75,7 +75,7 @@
         <PreferenceScreen
             android:key="pref_info_about"
             android:persistent="false"
-            android:summary="UPES Academics \nCopyright  ©   2013-2014  Shaleen Jain"
+            android:summary="@string/pref_description"
             android:title="About"/>
 
     </PreferenceCategory>
