@@ -118,6 +118,7 @@ public class Period {
 	}
 
 	public void setTime(String start, String end) {
+        // always store time in 24 hour format
         try {
             this.start = DateHelper.to24HrFormat(start);
             this.end = DateHelper.to24HrFormat(end);
@@ -135,6 +136,7 @@ public class Period {
         return this.name.equals(period.getSubjectName()) &&
                 this.room.equals(period.getRoom()) &&
                 this.teacher.equals(period.getTeacher()) &&
+                this.start.equals(period.getEndTime()) &&
                 this.day.equals(period.getDay());
     }
 

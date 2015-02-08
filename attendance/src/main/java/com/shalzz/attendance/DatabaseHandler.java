@@ -681,6 +681,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addDay(Day day) {
+        for(Period period : day.getAllPeriods()) {
+            addPeriod(period);
+        }
+    }
+
 	public Day getDay(String dayName) {
 		SQLiteDatabase db = this.getReadableDatabase();
 

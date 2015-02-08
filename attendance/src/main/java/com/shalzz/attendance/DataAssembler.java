@@ -25,16 +25,19 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.bugsnag.android.Bugsnag;
+import com.shalzz.attendance.model.Day;
 import com.shalzz.attendance.model.ListFooter;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Period;
 import com.shalzz.attendance.model.Subject;
+import com.shalzz.attendance.wrapper.DateHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class DataAssembler {
@@ -157,7 +160,6 @@ public class DataAssembler {
         String http_tag_div = resources.getString(R.string.http_tag_div);
 
         DatabaseHandler db = new DatabaseHandler(mContext);
-        db.deleteAllSubjects();
 
         ArrayList<Float> claHeld = new ArrayList<>();
         ArrayList<Float> claAttended = new ArrayList<>();
@@ -215,6 +217,7 @@ public class DataAssembler {
                 ++i;
             }
 
+            db.deleteAllSubjects();
             Elements total = doc.select(mContext.getString(R.string.selector_table_header));
             ListFooter footer = new ListFooter();
             footer.setAttended(Float.parseFloat(total.get(10).text()));
@@ -247,7 +250,6 @@ public class DataAssembler {
         String http_tag_div = resources.getString(R.string.http_tag_div);
 
         DatabaseHandler db = new DatabaseHandler(mContext);
-        db.deleteAllPeriods();
 
         Document doc = Jsoup.parse(response);
         Elements thdata = doc.select(mContext.getString(R.string.selector_table_header));
@@ -316,9 +318,11 @@ public class DataAssembler {
                 ++i;
             }
 
+            db.deleteAllPeriods();
             for(int j=0;j<days.size();j++)
             {
                 ArrayList<String> dayofweek = days.get(j);
+                Day day = new Day();
                 for(i=0;i<time.size();i++)
                 {
                     String[] parts = dayofweek.get(i).split("<br />");
@@ -346,7 +350,6 @@ public class DataAssembler {
                             period1.setBatch(batch);
                         }
                         else if (!parts[0].isEmpty()) {
-                            System.out.println(parts[0]);
                             String batch = parts[0].substring(parts[0].indexOf('-')+1);
                             period.setTeacher(parts[1].replaceAll("&amp;", "&"));
                             period.setSubjectName(parts[2].replaceAll("&amp;", "&"));
@@ -360,15 +363,28 @@ public class DataAssembler {
                         }
                     }
                     period.setDay(dayNames[j]);
-                    period.setTime(start,end);
-                    if(!period.getSubjectName().isEmpty())
-                        db.addPeriod(period);
+                    period.setTime(start, end);
+                    period1.setDay(dayNames[j]);
+                    period1.setTime(start, end);
+                    int count = day.getCount();
+                    if(count>0 ) {
+                        Period period0 = day.getPeriod(count - 1);
+                        if(period.isEqual(period0) || period1.isEqual(period0)) {
+                            if (period.isEqual(period0))
+                                period0.setTime(period0.getStartTime(), period.getEndTime());
+                            if (period1.isEqual(period0))
+                                period0.setTime(period0.getStartTime(), period1.getEndTime());
+                            continue;
+                        }
+                    }
+                    if(!period.getSubjectName().isEmpty()) {
+                        day.addPeriod(period);
+                    }
                     if(parts.length==7) {
-                        period1.setDay(dayNames[j]);
-                        period1.setTime(start,end);
-                        db.addPeriod(period1);
+                        day.addPeriod(period1);
                     }
                 }
+                db.addDay(day);
             }
             db.close();
         }
