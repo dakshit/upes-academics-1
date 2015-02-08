@@ -168,7 +168,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.swipe_color_1, R.color.swipe_color_2,
                 R.color.swipe_color_3, R.color.swipe_color_4);
-        mSwipeRefreshLayout.setProgressViewOffset(true, 1, 58);
+        mSwipeRefreshLayout.setProgressViewOffset(true, 1, 92);
 
         return mView;
     }
