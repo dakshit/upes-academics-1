@@ -25,7 +25,7 @@ public class CircularIndeterminate extends View {
     public CircularIndeterminate(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         int color = context.getResources().getColor(R.color.accent);
-        mDrawable = new CircularProgressDrawable(color, 4);
+        mDrawable = new CircularProgressDrawable(color, 8);
         mDrawable.setCallback(this);
     }
 
