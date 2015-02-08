@@ -93,7 +93,7 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Remember the position of the selected item.
      */
-    public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT3.0";
+    public static String PREFERENCE_ACTIVATED_FRAGMENT = "ACTIVATED_FRAGMENT2.2";
 
     public static final String FRAGMENT_TAG = "MainActivity.FRAGMENT";
 
@@ -185,8 +185,6 @@ public class MainActivity extends ActionBarActivity {
         // Set the drawer toggle as the DrawerListener
         if(!isDrawerLocked) {
             mDrawerLayout.setDrawerListener(mDrawerToggle);
-            actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setHomeButtonEnabled(true);
         }
 
         // Select either the default item (0) or the last selected item.
@@ -430,7 +428,9 @@ public class MainActivity extends ActionBarActivity {
             position = Fragments.ATTENDANCE.getValue();
         } else if (mPreviousFragment instanceof TimeTablePagerFragment) {
             position = Fragments.TIMETABLE.getValue();
-            ((TimeTablePagerFragment) mPreviousFragment).notifyDataSetChanged();
+            ((TimeTablePagerFragment) mPreviousFragment).updateFragments();
+            // fixme: this is a crude hack for viewpager not redrawing itself
+            showFragment(new TimeTablePagerFragment());
         }
         selectItem(position);
         mPreviousFragment = null;
@@ -441,7 +441,7 @@ public class MainActivity extends ActionBarActivity {
             SharedPreferences.Editor editor = getSharedPreferences("SETTINGS", 0).edit();
             mCurrentSelectedPosition = mCurrentSelectedPosition == Fragments.SETTINGS.getValue() ?
                     Fragments.ATTENDANCE.getValue() : mCurrentSelectedPosition;
-            editor.putInt(PREFERENCE_ACTIVATED_FRAGMENT, mCurrentSelectedPosition).apply();
+            editor.putInt(PREFERENCE_ACTIVATED_FRAGMENT, mCurrentSelectedPosition).commit();
         }
     }
 
@@ -510,8 +510,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onDestroy() {
-        MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.fragment.AttendanceListFragment");
-        MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.fragment.TimeTablePagerFragment");
+        MyVolley.getInstance().cancelPendingRequests("com.shalzz.attendance.activity.MainActivity");
         super.onDestroy();
     }
 

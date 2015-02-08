@@ -27,7 +27,7 @@ android {
     defaultConfig {
         applicationId 'com.shalzz.attendance'
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 19 // fixme
 
         resConfigs "en"
         resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
@@ -61,10 +61,11 @@ android {
         compile 'com.android.support:support-v13:21.+'
 
         // 3rd party library projects
+        compile 'com.afollestad:material-dialogs:0.6.1.2'
         compile 'com.jakewharton:butterknife:6.0.0'
         compile 'com.bugsnag:bugsnag-android:+'
         compile 'com.mcxiaoke.volley:library:1.0.+@aar'
-        compile 'com.github.amlcurran.showcaseview:library:5.1.0-SNAPSHOT@aar'
+        compile 'com.github.amlcurran.showcaseview:library:5.1.1-SNAPSHOT@aar'
         compile 'org.jsoup:jsoup:1.7.3'
         compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
         compile 'com.nispok:snackbar:2.7.3'

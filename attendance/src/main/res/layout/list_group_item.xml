@@ -20,8 +20,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:id="@+id/group_view"
-    android:layout_height="wrap_content"
-    android:background="@color/white" >
+    android:layout_height="wrap_content" >
 
     <TextView
         android:id="@+id/tvSubj"
@@ -56,7 +55,7 @@
         android:layout_toLeftOf="@+id/tvPercent"
         android:gravity="center_vertical"
         android:progressDrawable="@drawable/progress_level"
-        android:progress="100" />
+        android:progress="0" />
 
     <TextView
         android:id="@+id/tvClasses"

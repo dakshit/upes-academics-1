@@ -67,8 +67,8 @@
             android:layout_gravity="start"
             android:choiceMode="singleChoice"
             android:divider="@null"
+            android:listSelector="@drawable/drawer_selector"
             android:soundEffectsEnabled="true"
-            android:listSelector="@drawable/list_item_selector"
             android:hapticFeedbackEnabled="true"
             android:background="@color/list_background"
             android:layout_below="@+id/toolbar"/>

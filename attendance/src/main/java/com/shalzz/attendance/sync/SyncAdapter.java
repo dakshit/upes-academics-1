@@ -87,7 +87,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			public void onResponse(String response) {
                 try
                 {
-                    new DataAssembler.ParseAttendance(mContext, null).execute(response);
+                    DataAssembler.parseAttendance(response, mContext);
                     MyPreferencesManager pref = new MyPreferencesManager(mContext);
                     pref.setLastSyncTime();
                 }
@@ -105,7 +105,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			public void onResponse(String response) {
                 try
                 {
-                    new DataAssembler.ParseTimeTable(mContext, null).execute(response);
+                    DataAssembler.parseTimetable(response, mContext);
                     Bugsnag.leaveBreadcrumb("Sync complete");
                 }
                 catch(Exception e) {

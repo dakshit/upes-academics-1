@@ -52,12 +52,13 @@ import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.Miscellaneous;
-import com.shalzz.attendance.MultiSwipeRefreshLayout;
+import com.shalzz.attendance.wrapper.MultiSwipeRefreshLayout;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.activity.MainActivity;
 import com.shalzz.attendance.adapter.TimeTablePagerAdapter;
 import com.shalzz.attendance.wrapper.DateHelper;
+import com.shalzz.attendance.wrapper.ErrorHelper;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
@@ -253,7 +254,7 @@ public class TimeTablePagerFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateFragments() {
+    public void updateFragments() {
         for (DayFragment fragment : mTimeTablePagerAdapter.getActiveFragments()) {
             Log.d("TimeTableActivity", "Update Fragment " + fragment.getDate() + " with new data.");
             fragment.reloadDataSet();
@@ -340,6 +341,7 @@ public class TimeTablePagerFragment extends Fragment {
                     scrollToToday();
                     updateTitle();
                 }
+                ErrorHelper.showSnackbar(result,mContext);
             }
         };
     }

@@ -159,7 +159,7 @@ public class MyPreferencesManager {
 		editor.putBoolean("LOGGEDIN"+mContext.getResources().getString(R.string.version), true);
 		//editor.putString("USERNAME", username);
 		//editor.putString("PASSWORD", password);
-		editor.apply();
+		editor.commit();
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class MyPreferencesManager {
 		editor.putBoolean("LOGGEDIN"+mContext.getResources().getString(R.string.version), false);
 		editor.remove("USERNAME");
 		editor.remove("PASSWORD");
-		editor.apply();
+		editor.commit();
 	}
 
     /**
@@ -192,18 +192,18 @@ public class MyPreferencesManager {
         SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("FIRSTLAUNCH"+tag, false);
-        editor.apply();
+        editor.commit();
     }
 
     public void removeSettings() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = settings.edit();
         editor.clear();
-        editor.apply();
+        editor.commit();
 
         settings = mContext.getSharedPreferences("SETTINGS", 0);
         editor = settings.edit();
         editor.clear();
-        editor.apply();
+        editor.commit();
     }
 }

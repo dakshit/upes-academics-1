@@ -62,7 +62,7 @@ import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.Miscellaneous;
-import com.shalzz.attendance.MultiSwipeRefreshLayout;
+import com.shalzz.attendance.wrapper.MultiSwipeRefreshLayout;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.activity.MainActivity;
@@ -70,6 +70,7 @@ import com.shalzz.attendance.adapter.ExpandableListAdapter;
 import com.shalzz.attendance.model.ListFooter;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Subject;
+import com.shalzz.attendance.wrapper.ErrorHelper;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MySyncManager;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
@@ -167,7 +168,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.swipe_color_1, R.color.swipe_color_2,
                 R.color.swipe_color_3, R.color.swipe_color_4);
-        mSwipeRefreshLayout.setProgressViewOffset(true, 1, 46);
+        mSwipeRefreshLayout.setProgressViewOffset(true, 1, 58);
 
         return mView;
     }
@@ -224,15 +225,16 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         int firstElementPosition = 0;
         firstElementPosition += mListView.getHeaderViewsCount();
         View firstElementView = mListView.getChildAt(firstElementPosition);
+        ViewTarget target = firstElementView != null ? new ViewTarget(firstElementView)
+                : new ViewTarget(mListView);
 
-        if(firstElementView != null) {
-            new ShowcaseView.Builder(getActivity())
-                    .setStyle(R.style.AppBaseTheme)
-                    .setTarget(new ViewTarget(firstElementView))
-                    .setContentTitle("Expandable item")
-                    .setContentText("Touch a Subject for more details about it")
-                    .build();
-        }
+        new ShowcaseView.Builder(getActivity())
+                .setStyle(R.style.AppBaseTheme)
+                .setTarget(target)
+                .setContentTitle("Expandable item")
+                .setContentText("Touch a Subject for more details about it")
+                .build();
+
     }
 
     protected void updateLastRefresh() {
@@ -283,9 +285,8 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
         menuInflater.inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.menu_search);
 
-        // TODO: fix search action view
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setQueryHint(mResourses.getString(R.string.search_hint));
+        searchView.setQueryHint(mResourses.getString(R.string.hint_search));
 
         MenuItemCompat.setOnActionExpandListener(searchItem , new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -382,6 +383,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
                 }
                 else
                     MainActivity.getInstance().updateDrawerHeader();
+                ErrorHelper.showSnackbar(result, mContext);
             }
         };
     }

@@ -21,7 +21,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.shalzz.attendance"
     android:versionCode="6"
-    android:versionName="3.0" >
+    android:versionName="2.2" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -36,10 +36,10 @@
 
     <supports-screens
         android:smallScreens="true"
-        android:normalScreens="true"
-        android:largeScreens="true"
-        android:xlargeScreens="true"
-        android:anyDensity="false"/>
+        android:normalScreens="true"/>
+        <!--android:largeScreens="true"-->
+        <!--android:xlargeScreens="true"-->
+        <!--android:anyDensity="false"/>-->
 
     <application
         android:name=".wrapper.MyVolley"

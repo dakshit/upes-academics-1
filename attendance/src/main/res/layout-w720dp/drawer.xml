@@ -47,7 +47,7 @@
                 android:divider="@null"
                 android:soundEffectsEnabled="true"
                 android:dividerHeight="1dp"
-                android:listSelector="@drawable/list_item_selector"
+                android:listSelector="@drawable/list_item_background"
                 android:hapticFeedbackEnabled="true"
                 android:background="@color/list_background" />
         </android.support.v4.widget.DrawerLayout>

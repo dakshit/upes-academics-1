@@ -20,6 +20,7 @@
 package com.shalzz.attendance;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request.Method;
@@ -35,7 +36,7 @@ public class DataAPI {
 
 	public static void getAttendance(final Context mContext,Response.Listener<String> successListener, Response.ErrorListener errorListener) {
 
-		String mURL = "https://academics.ddn.upes.ac.in/upes/index.php?option=com_stuattendance&task='view'&Itemid=7631";
+		String mURL = mContext.getString(R.string.URL_attendance);
 		MyStringRequest requestAttendance = new MyStringRequest(Method.POST,
 				mURL,
 				successListener,
@@ -54,7 +55,7 @@ public class DataAPI {
 
 	public static void getTimeTable(final Context mContext,Response.Listener<String> successListener, Response.ErrorListener errorListener) {
 
-		String mURL = "https://academics.ddn.upes.ac.in/upes/index.php?option=com_course_report&Itemid=7794";
+        String mURL = mContext.getString(R.string.URL_timetable);
 		MyStringRequest requestTimeTable = new MyStringRequest(Method.POST,
 				mURL,
 				successListener,

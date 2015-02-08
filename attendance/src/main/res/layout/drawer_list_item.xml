@@ -21,7 +21,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@drawable/list_item_selector">
+    android:background="@drawable/list_item_background">
 
     <TextView
         android:id="@+id/drawer_list_textView"
@@ -31,10 +31,10 @@
         android:text="New Text"
         android:textColor="@drawable/list_text_color_selector"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:layout_marginLeft= "@dimen/navigation_drawer_margin"
-        android:layout_marginStart= "@dimen/navigation_drawer_margin"
-        android:layout_marginRight= "@dimen/navigation_drawer_margin"
-        android:layout_marginEnd= "@dimen/navigation_drawer_margin"
+        android:layout_marginLeft= "@dimen/material_vertical_keyline"
+        android:layout_marginStart= "@dimen/material_vertical_keyline"
+        android:layout_marginRight= "@dimen/material_vertical_keyline"
+        android:layout_marginEnd= "@dimen/material_vertical_keyline"
         android:textSize="18sp"/>
 
 </RelativeLayout>

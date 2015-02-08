@@ -21,8 +21,8 @@
 <resources>
 
     <string name="app_name" translatable="false">Upes Academics</string>
-    <string name="version" translatable="false">3.0</string>
-    <string name="pref_version" translatable="false">v3.0</string>
+    <string name="version" translatable="false">2.2</string>
+    <string name="pref_version" translatable="false">v2.2</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-4430276599804177/4801693846</string>
     <string name="test_banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 
@@ -41,6 +41,9 @@
     <string name="URL_login" translatable="false">https://academics.ddn.upes.ac.in/upes/index.php</string>
     <string name="URL_logout" translatable="false">https://academics.ddn.upes.ac.in/upes/index.php?option=logout</string>
     <string name="URL_home" translatable="false">https://academics.ddn.upes.ac.in/upes/</string>
+    <string name="URL_attendance" translatable="false">https://academics.ddn.upes.ac.in/upes/index.php?option=com_stuattendance&amp;task=\'view\'&amp;Itemid=7631</string>
+    <string name="URL_timetable" translatable="false">https://academics.ddn.upes.ac.in/upes/index.php?option=com_course_report&amp;Itemid=7794</string>
+    <string name="URL_captcha" translatable="false">https://academics.ddn.upes.ac.in/upes/modules/create_image.php</string>
 
     <!--////  Actual user visible text ////-->
 
@@ -55,19 +58,31 @@
     <string name="session_error">It seems your session has expired.\nPlease Login again.</string>
     <string name="unavailable_data">No Data available at this time</string>
     <string name="unavailable_timetable">No TimeTable available at this time</string>
+    <string name="form_sapid_error">SAP ID should be of 9 digits</string>
+    <string name="form_password_error">Password cannot be empty</string>
+    <string name="form_captcha_error">Captcha must be of 6 digits</string>
 
     <!--EditText's and TextView's-->
     <string name="description">© 2013–2014 \n All rights reserved. \n Developed by  \n Shaleen Jain </string>
-    <string name="contact">Contact Us:\n shaleen.jain95@gmail.com \n www.groupofdevelopers.com</string>
     <string name="pref_subjectLimit">Limit Expanded Subjects</string>
-    <string name="search_hint">Search subjects</string>
     <string name="no_classes">You don\'t have any classes on this day :)</string>
     <string name="swipe_info">To switch to any other day, either swipe across the screen or
         click the jump to date in the top right corner.</string>
 
+    <!--EditText Hint's-->
+    <string name="hint_captcha">Captcha</string>
+    <string name="hint_sapid">SAP ID</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_search">Search subjects</string>
+
+    <!--Buttons-->
+    <string name="log_in">Log In</string>
+
     <!--Accessibility-->
     <string name="drawer_open">Navigation drawer opened</string>
     <string name="drawer_close">Navigation drawer closed</string>
+    <string name="captcha_image_view">Captcha image</string>
+    <string name="refresh_captcha_button">Captcha refresh button</string>
 
     <!--Options Menu-->
     <string name="menu_logout">Log Out</string>

@@ -45,6 +45,7 @@ public class SplashActivity extends ActionBarActivity {
 
         // Set all default values once for this application
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_proxy, false);
 
 		boolean loggedin = settings.getLoginStatus();
 		

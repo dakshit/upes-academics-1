@@ -20,7 +20,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
@@ -29,9 +29,7 @@ buildscript {
 
 allprojects {
     repositories {
-        mavenCentral()
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
-        }
+        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 }

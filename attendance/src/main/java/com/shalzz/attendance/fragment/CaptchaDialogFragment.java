@@ -34,18 +34,20 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.CircularIndeterminate;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
-import com.shalzz.attendance.activity.LoginActivity;
 import com.shalzz.attendance.wrapper.MyVolley;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
@@ -57,7 +59,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 	@InjectView(R.id.ivCapImg) ImageView ivCapImg;
     @InjectView(R.id.progressBar1) CircularIndeterminate pbar;
     @InjectView(R.id.etCapTxt) EditText Captxt;
-    @InjectView(R.id.bRefresh) Button bRefreshCaptcha;
+    @InjectView(R.id.bRefresh) ImageButton bRefreshCaptcha;
 	private Context mContext;
 	private String mTag = "Captcha Dialog";
 
@@ -96,44 +98,30 @@ public class CaptchaDialogFragment extends DialogFragment{
         View mView = inflater.inflate(R.layout.captcha_dialog, null);
         ButterKnife.inject(this,mView);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setView(mView)
-		.setTitle("Input Captcha")
-		.setIcon(R.drawable.ic_menu_edit)
-		.setCancelable(true)
-		.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				mListener.onDialogPositiveClick(CaptchaDialogFragment.this);
-			}
-		});    
-		
-		final AlertDialog alertDialog = builder.create(); 
-		alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
+                .positiveText(R.string.log_in)
+                .negativeText(android.R.string.cancel)
+                .customView(mView, false)
+                .autoDismiss(false)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        mListener.onDialogPositiveClick(CaptchaDialogFragment.this);
+                    }
 
-		    @Override
-		    public void onShow(DialogInterface dialog) {
-                final EditText captxt = (EditText) alertDialog.findViewById(R.id.etCapTxt);
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .showListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        Miscellaneous.showKeyboard(getActivity(), Captxt);
+                    }
+                });
 
-        		Miscellaneous.showKeyboard(getActivity(), captxt);
-        		
-		        Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-		        positiveButton.setOnClickListener(new View.OnClickListener() {
-
-		            @Override
-		            public void onClick(View view) {
-		            	if (captxt.getText().toString().length()!=6) {
-		            		captxt.setError("Captcha must be of 6 digits");
-		            		Miscellaneous.showKeyboard(getActivity(), captxt);
-		            	}
-		            	else
-		            		mListener.onDialogPositiveClick(CaptchaDialogFragment.this);
-		            }
-		        });
-		    }
-		});
-
-		return alertDialog;
+		return builder.build();
 	}
 
 	/**
@@ -152,8 +140,8 @@ public class CaptchaDialogFragment extends DialogFragment{
 		// OnClickListener event for the Reload captcha Button
 		bRefreshCaptcha.setOnClickListener(new View.OnClickListener() {			
 			@Override
-			public void onClick(View v) {	
-				Log.i(LoginActivity.class.toString(), "Refreshing Captcha...");
+			public void onClick(View v) {
+                Bugsnag.leaveBreadcrumb("refreshing captcha");
 				getImg();
 				Captxt.setText("");
 			}
@@ -176,11 +164,10 @@ public class CaptchaDialogFragment extends DialogFragment{
 	 */
 	private void getImg() 
 	{
-		Log.i(LoginActivity.class.getName(), "Loading captcha image...");
+        Bugsnag.leaveBreadcrumb("loading captcha image");
 		ImageLoader imageLoader = MyVolley.getInstance().getImageLoader();
 		imageLoader.setBatchedResponseDelay(0);
-		imageLoader.get("https://academics.ddn.upes.ac.in/upes/modules/create_image.php",
-				new ImageLoader.ImageListener() {
+		imageLoader.get(getString(R.string.URL_captcha), new ImageLoader.ImageListener() {
 
 			final ImageView view = ivCapImg;
 			final int errorImageResId = R.drawable.ic_menu_report_image;
@@ -202,7 +189,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 					view.setVisibility(View.VISIBLE);
 					view.setImageBitmap(response.getBitmap());
 					view.setScaleType(ImageView.ScaleType.FIT_XY);
-					Log.i(mTag, "Loaded captcha image.");
+                    Bugsnag.leaveBreadcrumb("captcha loaded");
 				} else {
 					pbar.setVisibility(ProgressBar.VISIBLE);
 					view.setVisibility(View.INVISIBLE);

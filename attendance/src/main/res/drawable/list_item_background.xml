@@ -19,12 +19,10 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:exitFadeDuration="@android:integer/config_mediumAnimTime" >
-    
-    <item android:state_pressed="true" android:drawable="@color/primary_32" >
-        <ripple android:color="@color/primary_32" />
-    </item>
+    android:enterFadeDuration="@android:integer/config_mediumAnimTime" >
+
+    <!--<item android:state_pressed="true" android:drawable="@color/primary_32" />-->
     <item android:state_pressed="false" android:state_activated="true" android:drawable="@color/primary_32" />
     <item android:drawable="@android:color/transparent" />
-    
+
 </selector>

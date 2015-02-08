@@ -78,7 +78,7 @@ public class MyVolley extends Application {
 		sInstance = this;
 
         Bugsnag.init(this);
-        Bugsnag.setNotifyReleaseStages("production", "development", "testing");
+        Bugsnag.setNotifyReleaseStages("production", "testing");
 		
 		// Set a cookie manager
 		Log.i(MyVolley.class.getName(), "Setting CookieHandler");

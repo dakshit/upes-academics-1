@@ -156,10 +156,12 @@ public class ExpandableListAdapter extends BaseAdapter {
         Float percent = mSubjects.get(position).getPercentage();
         holder.subject.setText(mSubjects.get(position).getName());
         holder.percentage.setText(mSubjects.get(position).getPercentage().toString()+"%");
-        holder.classes.setText(mSubjects.get(position).getClassesAttended().intValue()+"/"+mSubjects.get(position).getClassesHeld().intValue());
-        holder.percent.setProgress(percent.intValue());
+        holder.classes.setText(mSubjects.get(position).getClassesAttended().intValue() + "/"
+                + mSubjects.get(position).getClassesHeld().intValue());
         Drawable d = holder.percent.getProgressDrawable();
         d.setLevel(percent.intValue()*100);
+        holder.percent.setProgressDrawable(d);
+        holder.percent.setProgress(percent.intValue());
 
         // In the call log, expand/collapse an actions section for the call log entry when
         // the primary view is tapped.
@@ -254,7 +256,7 @@ public class ExpandableListAdapter extends BaseAdapter {
             views.childView.setVisibility(View.VISIBLE);
             views.childView.setAlpha(1.0f);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                view.setTranslationZ(mExpandedTranslationZ);
+//                view.setTranslationZ(mExpandedTranslationZ);
             }
         } else {
 
@@ -263,9 +265,9 @@ public class ExpandableListAdapter extends BaseAdapter {
             if (views.childView != null) {
                 views.childView.setVisibility(View.GONE);
             }
-            // TODO: implement elevation pre L
+            // TODO: fix elevation
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                view.setTranslationZ(0);
+//                view.setTranslationZ(0);
             }
         }
     }

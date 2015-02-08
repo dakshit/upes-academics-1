@@ -16,7 +16,6 @@ import de.psdev.licensesdialog.model.Notice;
 
 public class AboutSettingsFragment extends PreferenceFragment{
 
-
     private Context mContext;
 
     @Override
@@ -42,7 +41,7 @@ public class AboutSettingsFragment extends PreferenceFragment{
                 final String copyright = "Copyright (C) 2013 - 2014 Shaleen Jain <shaleen.jain95@gmail.com>";
                 final License license = new GnuGeneralPublicLicense30();
                 final Notice notice = new Notice(name, url, copyright, license);
-                new LicensesDialog.Builder(mContext).setNotices(notice).build().show();
+                new LicensesDialog.Builder(mContext).setNotices(notice).setShowFullLicenseText(true).build().show();
                 return true;
             }
         });

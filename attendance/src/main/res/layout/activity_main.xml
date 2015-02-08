@@ -18,10 +18,8 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    tools:ignore="HardcodedText" >
+    android:layout_height="fill_parent" >
 
     <include layout="@layout/toolbar"/>
 
@@ -32,68 +30,73 @@
         android:background="@drawable/background"
         android:layout_below="@+id/toolbar">
 
-    <EditText
-        android:id="@+id/etSapid"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/ivAppName"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="Sap ID"
-        android:imeOptions="flagNoExtractUi"
-        android:inputType="number|textNoSuggestions"
-        android:padding="10dp"
-        android:singleLine="true" >
 
-        <requestFocus />
-    </EditText>
+        <ImageView
+            android:id="@+id/ivAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/background_text"
+            />
 
-    <EditText
-        android:id="@+id/etPass"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/etSapid"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="Password"
-        android:imeOptions="flagNoExtractUi"
-        android:inputType="textPassword|textNoSuggestions"
-        android:padding="10dp"
-        android:singleLine="true" >
-    </EditText>
+        <EditText
+            android:id="@+id/etSapid"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ivAppName"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:ellipsize="end"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/hint_sapid"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="number|textNoSuggestions"
+            android:padding="10dp"
+            android:singleLine="true" >
 
-    <Button
-        android:id="@+id/bLogin"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_below="@+id/etPass"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="Login" />
+            <requestFocus />
+        </EditText>
 
-    <ImageView
-        android:id="@+id/ivAppName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:contentDescription="Upes Academics"
-        android:src="@drawable/background_text"
-        />
+        <EditText
+            android:id="@+id/etPass"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etSapid"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:ellipsize="end"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/hint_password"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="textPassword|textNoSuggestions"
+            android:padding="10dp"
+            android:singleLine="true" >
+        </EditText>
+
+        <Button
+            android:id="@+id/bLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_below="@+id/etPass"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/log_in" />
+
     </RelativeLayout>
 
 </RelativeLayout>
