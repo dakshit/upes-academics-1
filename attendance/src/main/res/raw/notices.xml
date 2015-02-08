@@ -20,10 +20,46 @@
   -->
 <notices>
     <notice>
+        <name>Material Dialogs</name>
+        <url>https://github.com/afollestad/material-dialogs</url>
+        <copyright>Copyright (c) 2014 Aidan Michael Follestad</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>Butter Knife</name>
+        <url>http://jakewharton.github.io/butterknife/</url>
+        <copyright>Copyright 2013 Jake Wharton</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Bugsnag</name>
+        <url>https://bugsnag.com/</url>
+        <copyright>Copyright (c) 2012 Bugsnag</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>Snackbar</name>
+        <url>https://github.com/nispok/snackbar</url>
+        <copyright>Copyright (c) 2014 William Mora</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>Showcase View</name>
+        <url>http://amlcurran.github.io/ShowcaseView/</url>
+        <copyright>Copyright Alex Curran © 2012-2014. All rights reserved.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
         <name>Jsoup</name>
         <url>http://jsoup.org/</url>
         <copyright>Copyright © 2009 - 2013 Jonathan Hedley &lt;jonathan@hedley.net&gt; </copyright>
         <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>okHttp</name>
+        <url>square.github.io/okhttp/</url>
+        <copyright>Copyright 2014 Square, Inc.</copyright>
+        <license>Apache Software License 2.0</license>
     </notice>
     <notice>
         <name>Android Volley</name>
@@ -32,9 +68,9 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>okHttp</name>
-        <url>square.github.io/okhttp/</url>
-        <copyright>Copyright 2014 Square, Inc.</copyright>
+        <name>android-support-recyclerview-v7</name>
+        <url>https://developer.android.com/tools/support-library/features.html#v7-recyclerview</url>
+        <copyright>Copyright (C) 2014 The Android Open Source Project</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
@@ -53,24 +89,6 @@
         <name>android-support-v13</name>
         <url>https://developer.android.com/tools/support-library/features.html#v13</url>
         <copyright>Copyright (C) 2014 The Android Open Source Project</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
-        <name>android-support-recyclerview-v7</name>
-        <url>https://developer.android.com/tools/support-library/features.html#v7-recyclerview</url>
-        <copyright>Copyright (C) 2014 The Android Open Source Project</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
-        <name>snackbar</name>
-        <url>https://github.com/nispok/snackbar</url>
-        <copyright>Copyright (c) 2014 William Mora</copyright>
-        <license>MIT License</license>
-    </notice>
-    <notice>
-        <name>Showcase View</name>
-        <url>http://amlcurran.github.io/ShowcaseView/</url>
-        <copyright>Copyright Alex Curran © 2012-2014. All rights reserved.</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
 </notices>
