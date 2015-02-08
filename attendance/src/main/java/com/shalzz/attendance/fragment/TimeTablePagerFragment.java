@@ -256,7 +256,7 @@ public class TimeTablePagerFragment extends Fragment {
 
     public void updateFragments() {
         for (DayFragment fragment : mTimeTablePagerAdapter.getActiveFragments()) {
-            Log.d("TimeTableActivity", "Update Fragment " + fragment.getDate() + " with new data.");
+//            Log.d("TimeTableActivity", "Update Fragment " + fragment.getDate() + " with new data.");
             fragment.reloadDataSet();
         }
         updateTitle();
@@ -264,7 +264,7 @@ public class TimeTablePagerFragment extends Fragment {
 
     private void updateTitle() {
         DayFragment fragment = mTimeTablePagerAdapter.getFragment(mPreviousPosition);
-        Log.d(myTag,"Dayfragment: " + fragment);
+//        Log.d(myTag,"Dayfragment: " + fragment);
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         if(drawerOpen) {
             String mNavTitles[] = getResources().getStringArray(R.array.drawer_array);
