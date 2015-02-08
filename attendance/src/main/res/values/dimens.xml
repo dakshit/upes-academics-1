@@ -45,8 +45,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="progress_bar_height">8dp</dimen>
-
-    <dimen name="material_vertical_keyline">16dp</dimen>
     <dimen name="material_progress_indeterminate">42dp</dimen>
 
     <!-- Text size for action bar titles -->

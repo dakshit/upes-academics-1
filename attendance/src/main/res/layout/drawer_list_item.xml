@@ -31,10 +31,10 @@
         android:text="New Text"
         android:textColor="@drawable/list_text_color_selector"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:layout_marginLeft= "@dimen/material_vertical_keyline"
-        android:layout_marginStart= "@dimen/material_vertical_keyline"
-        android:layout_marginRight= "@dimen/material_vertical_keyline"
-        android:layout_marginEnd= "@dimen/material_vertical_keyline"
+        android:layout_marginLeft= "@dimen/activity_vertical_margin"
+        android:layout_marginStart= "@dimen/activity_vertical_margin"
+        android:layout_marginRight= "@dimen/activity_vertical_margin"
+        android:layout_marginEnd= "@dimen/activity_vertical_margin"
         android:textSize="18sp"/>
 
 </RelativeLayout>

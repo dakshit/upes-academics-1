@@ -53,8 +53,6 @@
     <!--////  Actual user visible text ////-->
 
     <!--User friendly error messages-->
-    <string name="error_field_required">This field is required</string>
-    <string name="error_invalid_password">This password is too short</string>
     <string name="generic_server_down">It seems the web server is down or not responding.</string>
     <string name="no_internet">No Connection</string>
     <string name="generic_error">Network error occurred.</string>
@@ -64,7 +62,7 @@
     <string name="unavailable_data">No Data available at this time</string>
     <string name="unavailable_timetable">No TimeTable available at this time</string>
     <string name="form_sapid_error">SAP ID should be of 9 digits</string>
-    <string name="form_password_error">Password cannot be empty</string>
+    <string name="form_password_error">This field is required</string>
     <string name="form_captcha_error">Captcha must be of 6 digits</string>
 
     <!--EditText's and TextView's-->
@@ -104,9 +102,7 @@
     <string name="menu_logout">Log Out</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_refresh">Refresh</string>
-    <string name="menu_help">Help</string>
     <string name="menu_search">Search</string>
-    <string name="menu_share">Share</string>
     <string name="menu_today">Scroll to today</string>
     <string name="menu_date">Jump to date</string>
 
