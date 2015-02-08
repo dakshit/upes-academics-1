@@ -23,6 +23,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -198,6 +199,10 @@ public class MainActivity extends ActionBarActivity {
             Log.d(mTag, "previous fag found: " + mPreviousFragment );
             showFragment(fragment);
             selectItem(mCurrentSelectedPosition);
+        }
+        else if(getIntent().getAction()!=null &&
+                getIntent().getAction().equals(Intent.ACTION_MANAGE_NETWORK_USAGE)) {
+            displayView(Fragments.SETTINGS.getValue());
         }
         else {
             displayView(mCurrentSelectedPosition);
