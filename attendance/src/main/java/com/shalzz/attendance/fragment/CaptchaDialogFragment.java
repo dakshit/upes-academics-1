@@ -185,7 +185,7 @@ public class CaptchaDialogFragment extends DialogFragment{
 
 			@Override
 			public void onResponse(ImageContainer response, boolean isImmediate) {
-				if (response.getBitmap() != null) {
+				if (response!=null && response.getBitmap() != null) {
                     if(pbar!=null)
 					    pbar.setVisibility(View.INVISIBLE);
 					view.setVisibility(View.VISIBLE);
