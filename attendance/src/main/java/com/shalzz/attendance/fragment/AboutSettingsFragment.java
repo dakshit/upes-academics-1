@@ -32,20 +32,7 @@ public class AboutSettingsFragment extends PreferenceFragment{
         super.onResume();
 
         PreferenceScreen prefScreen =  getPreferenceScreen();
-        Preference pref = prefScreen.getPreference(0);
-        pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                final String name = "UPES Academics";
-                final String url = "http://www.github.com/shalzz/upes-academics";
-                final String copyright = "Copyright (C) 2013 - 2014 Shaleen Jain <shaleen.jain95@gmail.com>";
-                final License license = new GnuGeneralPublicLicense30();
-                final Notice notice = new Notice(name, url, copyright, license);
-                new LicensesDialog.Builder(mContext).setNotices(notice).setShowFullLicenseText(true).build().show();
-                return true;
-            }
-        });
-        Preference noticePref = prefScreen.getPreference(1);
+        Preference noticePref = prefScreen.getPreference(0);
         noticePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
             @Override
             public boolean onPreferenceClick(Preference preference) {
