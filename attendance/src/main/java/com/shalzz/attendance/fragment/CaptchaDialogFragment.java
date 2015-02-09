@@ -173,7 +173,8 @@ public class CaptchaDialogFragment extends DialogFragment{
 			final int errorImageResId = R.drawable.ic_menu_report_image;
 			@Override
 			public void onErrorResponse(VolleyError error) {
-                pbar.setVisibility(View.INVISIBLE);
+                if(pbar!=null)
+                    pbar.setVisibility(View.INVISIBLE);
                 view.setVisibility(View.VISIBLE);
                 view.setScaleType(ImageView.ScaleType.CENTER);
                 view.setImageResource(errorImageResId);
@@ -185,13 +186,15 @@ public class CaptchaDialogFragment extends DialogFragment{
 			@Override
 			public void onResponse(ImageContainer response, boolean isImmediate) {
 				if (response.getBitmap() != null) {
-					pbar.setVisibility(View.INVISIBLE);
+                    if(pbar!=null)
+					    pbar.setVisibility(View.INVISIBLE);
 					view.setVisibility(View.VISIBLE);
 					view.setImageBitmap(response.getBitmap());
 					view.setScaleType(ImageView.ScaleType.FIT_XY);
                     Bugsnag.leaveBreadcrumb("captcha loaded");
 				} else {
-					pbar.setVisibility(ProgressBar.VISIBLE);
+                    if(pbar!=null)
+					    pbar.setVisibility(ProgressBar.VISIBLE);
 					view.setVisibility(View.INVISIBLE);
 				}
 			}

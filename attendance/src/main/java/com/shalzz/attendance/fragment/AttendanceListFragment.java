@@ -375,7 +375,8 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
             @Override
             public void onParseComplete(int result) {
                 // Stop the refreshing indicator
-                mProgress.setVisibility(View.GONE);
+                if(mProgress!=null)
+                    mProgress.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
                 if(result == 0) {
                     prefs.setLastSyncTime();
