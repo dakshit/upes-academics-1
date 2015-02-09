@@ -84,7 +84,7 @@ public class UserAccount {
 		mUsername = username;
 		mPassword = password;
 		mCaptcha = captcha;
-		
+
 		misc.showProgressDialog("Logging in...", false, pdCancelListener());
 		String mURL = mContext.getResources().getString(R.string.URL_login);
 		MyStringRequest request = new MyStringRequest(Method.POST,
@@ -130,7 +130,8 @@ public class UserAccount {
 					misc.showAlertDialog("Incorrect username or password. Please try again");
 
 				}
-				else if(document.getElementsByTag("title").get(0).text().equals("UPES - Home"))
+				else if(document.getElementsByTag(mContext.getString(R.string.http_tag_title))
+                        .get(0).text().equals(mContext.getString(R.string.session_error_identifier)))
 				{
 					if(retryCount<2)
 					{
@@ -140,7 +141,7 @@ public class UserAccount {
 					else if(retryCount==2)
 					{
 						new MyPreferencesManager(mContext).removePersistenCookies();
-						LoginWithNewHiddenData();										
+						LoginWithNewHiddenData();
 					}
 					else
 					{
@@ -173,7 +174,7 @@ public class UserAccount {
 	 * Sends the Logout request, clears the user details preferences and deletes all user attendance data.
 	 */
 	public void Logout() {
-    
+
 		misc.showProgressDialog("Logging out...", true, pdCancelListener());
         Bugsnag.leaveBreadcrumb("Logging out...");
 
@@ -219,7 +220,7 @@ public class UserAccount {
 		// Remove user Attendance data from database.
 		DatabaseHandler db = new DatabaseHandler(mContext);
 		db.resetTables();
-		
+
 		// Remove Sync Account
 		MySyncManager.removeSyncAccount(mContext);
 
@@ -245,7 +246,7 @@ public class UserAccount {
 		};
 
 	}
-	
+
 	/**
 	 * Logins in with new hidden data in case previous data is corrupted.
 	 */
@@ -281,7 +282,7 @@ public class UserAccount {
 
 				// Get Hidden values
 				Map<String, String> data = new HashMap<String, String>();
-				Elements hiddenvalues = doc.select("input[type=hidden]");
+				Elements hiddenvalues = doc.select(mContext.getString(R.string.selector_hidden_data));
 				for(Element hiddenvalue : hiddenvalues)
 				{
 					String name = hiddenvalue.attr("name");
@@ -296,7 +297,7 @@ public class UserAccount {
 			}
 		};
 	}
-	
+
 	private Response.ErrorListener myErrorListener() {
 		return new Response.ErrorListener() {
 			@Override
