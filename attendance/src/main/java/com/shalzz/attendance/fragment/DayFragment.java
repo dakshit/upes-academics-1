@@ -27,6 +27,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +114,7 @@ public class DayFragment extends Fragment {
         String weekday = DateHelper.getTechnicalWeekday(mDate);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String pref_batch = sharedPref.getString("pref_batch", "");
+        String pref_batch = sharedPref.getString("pref_batch", "NULL");
 
         mDay = pref_batch.equals("NULL") ? db.getDay(weekday): db.getDay(weekday,pref_batch);
 
