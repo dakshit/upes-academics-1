@@ -30,6 +30,7 @@ import com.android.volley.Request.Method;
 import com.android.volley.Request.Priority;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bugsnag.android.Bugsnag;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.shalzz.attendance.activity.LoginActivity;
@@ -172,9 +173,9 @@ public class UserAccount {
 	 * Sends the Logout request, clears the user details preferences and deletes all user attendance data.
 	 */
 	public void Logout() {
-
-		misc.showProgressDialog( "Logging out...", true, pdCancelListener());
-		Log.i(mContext.getClass().getName(), "Logging out...");
+    
+		misc.showProgressDialog("Logging out...", true, pdCancelListener());
+        Bugsnag.leaveBreadcrumb("Logging out...");
 
 		String mURL = mContext.getResources().getString(R.string.URL_logout);
 		MyStringRequest request = new MyStringRequest(Method.POST,
@@ -182,7 +183,7 @@ public class UserAccount {
 				new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {
-				Log.i(mContext.getClass().getName(), "Successfully Logged out...");
+                Bugsnag.leaveBreadcrumb("Successfully Logged out...");
 			}
 		},
 		myErrorListener()) {
@@ -250,7 +251,7 @@ public class UserAccount {
 	 */
 	private void LoginWithNewHiddenData()
 	{
-		Log.i(getClass().getName(),"Collecting hidden data...");
+        Bugsnag.leaveBreadcrumb("Collecting hidden data...");
 		String mURL = mContext.getResources().getString(R.string.URL_home);
 		MyStringRequest request = new MyStringRequest(Method.GET,
 				mURL,
@@ -274,9 +275,9 @@ public class UserAccount {
 			@Override
 			public void onResponse(String response) {
 
-				Log.i(getClass().getName(), "Collected hidden data.");
+                Bugsnag.leaveBreadcrumb("Collected hidden data.");
 				Document doc = Jsoup.parse(response);
-				Log.i(getClass().getName(),"Parsing hidden data...");
+                Bugsnag.leaveBreadcrumb("Parsing hidden data...");
 
 				// Get Hidden values
 				Map<String, String> data = new HashMap<String, String>();
@@ -290,7 +291,7 @@ public class UserAccount {
 						data.put(name, val);
 					}
 				}
-				Log.i(getClass().getName(), "Parsed hidden data.");
+                Bugsnag.leaveBreadcrumb("Parsed hidden data.");
 				Login(mUsername, mPassword, mCaptcha, data);
 			}
 		};

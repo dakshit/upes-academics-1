@@ -42,8 +42,6 @@ import java.util.ArrayList;
 
 public class DataAssembler {
 
-    private static String mTag = "Data Assembler";
-
     public static interface Listener {
         void onParseComplete(int result);
     }
@@ -66,7 +64,7 @@ public class DataAssembler {
 
             Document doc = Jsoup.parse(response[0]);
             Elements tddata = doc.select(mContext.getString(R.string.selector_table_data));
-            Log.i(mTag, "Parsing student details...");
+            Bugsnag.leaveBreadcrumb("Parsing student details...");
 
             if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
             {
@@ -102,7 +100,7 @@ public class DataAssembler {
         protected void onPostExecute(Integer result) {
             if(mListener != null)
                 mListener.onParseComplete(result);
-            Log.i(mTag, "Got student details.");
+            Bugsnag.leaveBreadcrumb("Got student details.");
         }
     }
 
@@ -126,7 +124,7 @@ public class DataAssembler {
         protected void onPostExecute(Integer result) {
             if(mListener != null)
                 mListener.onParseComplete(result);
-            Log.i(mTag, "Response parsing complete.");
+            Bugsnag.leaveBreadcrumb("Response parsing complete.");
         }
     }
 
@@ -147,7 +145,7 @@ public class DataAssembler {
         protected void onPostExecute(Integer result) {
             if(mListener != null)
                 mListener.onParseComplete(result);
-            Log.i(mTag, "Timetable parsing complete.");
+            Bugsnag.leaveBreadcrumb("Timetable parsing complete.");
         }
     }
 
@@ -168,7 +166,7 @@ public class DataAssembler {
         ArrayList<String> subjectName = new ArrayList<>();
         ArrayList<Float> percentage = new ArrayList<>();
 
-        Log.i(mTag, "Parsing response...");
+        Bugsnag.leaveBreadcrumb("Parsing response...");
         Document doc = Jsoup.parse(response);
 
         Elements tddata = doc.select(mContext.getString(R.string.selector_table_data));
