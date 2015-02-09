@@ -52,164 +52,164 @@ import java.util.Map;
 
 public class UserAccount {
 
-	private String mUsername;
-	private String mPassword;
-	private String mCaptcha;
-	private int retryCount = 0;
-	private Miscellaneous misc;
+    private String mUsername;
+    private String mPassword;
+    private String mCaptcha;
+    private int retryCount = 0;
+    private Miscellaneous misc;
 
-	/**
-	 * The activity context used to Log the user from
-	 */
-	private Context mContext;
+    /**
+     * The activity context used to Log the user from
+     */
+    private Context mContext;
 
-	/**
-	 * Constructor to set the Activity context.
-	 * @param context Context
-	 */
-	public UserAccount(Context context) {
-		mContext = context;
-		misc =  new Miscellaneous(mContext);
-	}
+    /**
+     * Constructor to set the Activity context.
+     * @param context Context
+     */
+    public UserAccount(Context context) {
+        mContext = context;
+        misc =  new Miscellaneous(mContext);
+    }
 
-	/**
-	 * Sends the login request and saves the user details.
-	 * @param username Username
-	 * @param password Password
-	 * @param captcha Captcha
-	 * @param data Additional hidden data
-	 */
-	public void Login(final String username, final String password, final String captcha, final Map<String, String> data) {
+    /**
+     * Sends the login request and saves the user details.
+     * @param username Username
+     * @param password Password
+     * @param captcha Captcha
+     * @param data Additional hidden data
+     */
+    public void Login(final String username, final String password, final String captcha, final Map<String, String> data) {
 
-		mUsername = username;
-		mPassword = password;
-		mCaptcha = captcha;
+        mUsername = username;
+        mPassword = password;
+        mCaptcha = captcha;
 
-		misc.showProgressDialog("Logging in...", false, pdCancelListener());
-		String mURL = mContext.getResources().getString(R.string.URL_login);
-		MyStringRequest request = new MyStringRequest(Method.POST,
-				mURL,
-				loginSuccessListener(),
-				myErrorListener()) {
+        misc.showProgressDialog("Logging in...", false, pdCancelListener());
+        String mURL = mContext.getResources().getString(R.string.URL_login);
+        MyStringRequest request = new MyStringRequest(Method.POST,
+                mURL,
+                loginSuccessListener(),
+                myErrorListener()) {
 
-			public Map<String, String> getHeaders() throws com.android.volley.AuthFailureError {
-				Map<String, String> headers = new HashMap<String, String>();
-				headers.put("User-Agent", mContext.getString(R.string.UserAgent));
-				return headers;
-			}
+            public Map<String, String> getHeaders() throws com.android.volley.AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("User-Agent", mContext.getString(R.string.UserAgent));
+                return headers;
+            }
 
-			protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
+            protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
                 data.put("username", username);
-				data.put("passwd", password);
-				data.put("txtCaptcha", captcha);
-				data.put("submit", "Login");
-				data.put("remember", "yes");
-				return data;
-			}
-		};
-		request.setShouldCache(false);
-		request.setPriority(Priority.HIGH);
-		request.setRetryPolicy(new DefaultRetryPolicy(1500, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-		MyVolley.getInstance().addToRequestQueue(request,mContext.getClass().getName());
-	}
+                data.put("passwd", password);
+                data.put("txtCaptcha", captcha);
+                data.put("submit", "Login");
+                data.put("remember", "yes");
+                return data;
+            }
+        };
+        request.setShouldCache(false);
+        request.setPriority(Priority.HIGH);
+        request.setRetryPolicy(new DefaultRetryPolicy(1500, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        MyVolley.getInstance().addToRequestQueue(request,mContext.getClass().getName());
+    }
 
-	private Response.Listener<String> loginSuccessListener() {
-		return new Response.Listener<String>() {
-			@Override
-			public void onResponse(String response) {
+    private Response.Listener<String> loginSuccessListener() {
+        return new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
 
-				Document document = Jsoup.parse(response);
+                Document document = Jsoup.parse(response);
                 String script = document.getElementsByTag("script").get(0).html();
 
-				if(script.equals(mContext.getString(R.string.incorrect_captcha)))
-				{
-					misc.showAlertDialog("Incorrect Captcha!\nPlease try again.");
-				}
-				else if(script.equals(mContext.getString(R.string.incorrect_user_or_pass)))
-				{
-					misc.showAlertDialog("Incorrect username or password. Please try again");
+                if(script.equals(mContext.getString(R.string.incorrect_captcha)))
+                {
+                    misc.showAlertDialog("Incorrect Captcha!\nPlease try again.");
+                }
+                else if(script.equals(mContext.getString(R.string.incorrect_user_or_pass)))
+                {
+                    misc.showAlertDialog("Incorrect username or password. Please try again");
 
-				}
-				else if(document.getElementsByTag(mContext.getString(R.string.http_tag_title))
+                }
+                else if(document.getElementsByTag(mContext.getString(R.string.http_tag_title))
                         .get(0).text().equals(mContext.getString(R.string.session_error_identifier)))
-				{
-					if(retryCount<2)
-					{
-						LoginWithNewHiddenData();
-						retryCount++;
-					}
-					else if(retryCount==2)
-					{
-						new MyPreferencesManager(mContext).removePersistenCookies();
-						LoginWithNewHiddenData();
-					}
-					else
-					{
-						misc.dismissProgressDialog();
+                {
+                    if(retryCount<2)
+                    {
+                        LoginWithNewHiddenData();
+                        retryCount++;
+                    }
+                    else if(retryCount==2)
+                    {
+                        new MyPreferencesManager(mContext).removePersistenCookies();
+                        LoginWithNewHiddenData();
+                    }
+                    else
+                    {
+                        misc.dismissProgressDialog();
                         SnackbarManager.show(
                                 Snackbar.with(mContext)
                                         .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
                                         .textColor(mContext.getResources().getColor(R.color.accent))
                                         .text("Error! Please try again later"), (Activity) mContext);
-					}
-				}
-				else
-				{
-					MyPreferencesManager settings = new MyPreferencesManager(mContext);
-					settings.savePersistentCookies();
-					// Used for future re-logins
-					settings.saveUser(mUsername, mPassword);
+                    }
+                }
+                else
+                {
+                    MyPreferencesManager settings = new MyPreferencesManager(mContext);
+                    settings.savePersistentCookies();
+                    // Used for future re-logins
+                    settings.saveUser(mUsername, mPassword);
 
-					misc.dismissProgressDialog();
-					Intent ourIntent = new Intent(mContext, MainActivity.class);
-					ourIntent.putExtra("SAPID", mUsername);
-					mContext.startActivity(ourIntent);
-					((Activity) mContext).finish();
-				}
-			}
-		};
-	}
+                    misc.dismissProgressDialog();
+                    Intent ourIntent = new Intent(mContext, MainActivity.class);
+                    ourIntent.putExtra("SAPID", mUsername);
+                    mContext.startActivity(ourIntent);
+                    ((Activity) mContext).finish();
+                }
+            }
+        };
+    }
 
-	/**
-	 * Sends the Logout request, clears the user details preferences and deletes all user attendance data.
-	 */
-	public void Logout() {
+    /**
+     * Sends the Logout request, clears the user details preferences and deletes all user attendance data.
+     */
+    public void Logout() {
 
-		misc.showProgressDialog("Logging out...", true, pdCancelListener());
+        misc.showProgressDialog("Logging out...", true, pdCancelListener());
         Bugsnag.leaveBreadcrumb("Logging out...");
 
-		String mURL = mContext.getResources().getString(R.string.URL_logout);
-		MyStringRequest request = new MyStringRequest(Method.POST,
-				mURL,
-				new Response.Listener<String>() {
-			@Override
-			public void onResponse(String response) {
-                Bugsnag.leaveBreadcrumb("Successfully Logged out...");
-			}
-		},
-		myErrorListener()) {
+        String mURL = mContext.getResources().getString(R.string.URL_logout);
+        MyStringRequest request = new MyStringRequest(Method.POST,
+                mURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Bugsnag.leaveBreadcrumb("Successfully Logged out...");
+                    }
+                },
+                myErrorListener()) {
 
-			public Map<String, String> getHeaders() throws com.android.volley.AuthFailureError {
-				Map<String, String> headers = new HashMap<String, String>();
-				headers.put("User-Agent", mContext.getString(R.string.UserAgent));
-				return headers;
-			}
+            public Map<String, String> getHeaders() throws com.android.volley.AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("User-Agent", mContext.getString(R.string.UserAgent));
+                return headers;
+            }
 
-			protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
-				Map<String, String> params = new HashMap<String, String>();
-				params.put("submit", "Logout");
-				params.put("option", "logout");
-				params.put("op2", "logout");
-				params.put("lang", "english");
-				params.put("return", mContext.getResources().getString(R.string.URL_home));
-				params.put("message", "0");
-				return params;
-			}
-		};
-		request.setShouldCache(false);
-		request.setPriority(Priority.IMMEDIATE);
-		request.setRetryPolicy(new DefaultRetryPolicy(1500, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-		MyVolley.getInstance().addToRequestQueue(request,"LOGOUT");
+            protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("submit", "Logout");
+                params.put("option", "logout");
+                params.put("op2", "logout");
+                params.put("lang", "english");
+                params.put("return", mContext.getResources().getString(R.string.URL_home));
+                params.put("message", "0");
+                return params;
+            }
+        };
+        request.setShouldCache(false);
+        request.setPriority(Priority.IMMEDIATE);
+        request.setRetryPolicy(new DefaultRetryPolicy(1500, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        MyVolley.getInstance().addToRequestQueue(request,"LOGOUT");
 
         MainActivity.LOGGED_OUT = true;
 
@@ -217,96 +217,96 @@ public class UserAccount {
         MyPreferencesManager settings = new MyPreferencesManager(mContext);
         settings.removeUser();
 
-		// Remove user Attendance data from database.
-		DatabaseHandler db = new DatabaseHandler(mContext);
-		db.resetTables();
+        // Remove user Attendance data from database.
+        DatabaseHandler db = new DatabaseHandler(mContext);
+        db.resetTables();
 
-		// Remove Sync Account
-		MySyncManager.removeSyncAccount(mContext);
+        // Remove Sync Account
+        MySyncManager.removeSyncAccount(mContext);
 
         // Destroy current activity and start Login Activity
-		misc.dismissProgressDialog();
-		Intent ourIntent = new Intent(mContext, LoginActivity.class);
-		mContext.startActivity(ourIntent);
-		((Activity) mContext).finish();
-	}
+        misc.dismissProgressDialog();
+        Intent ourIntent = new Intent(mContext, LoginActivity.class);
+        mContext.startActivity(ourIntent);
+        ((Activity) mContext).finish();
+    }
 
-	/**
-	 * Progress Dialog cancel Listener.
-	 * @return OnCancelListener
-	 */
-	DialogInterface.OnCancelListener pdCancelListener() {
-		return new DialogInterface.OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				// Cancel all pending requests when user presses back button.
-				MyVolley.getInstance().cancelPendingRequests(mContext.getClass().getName());
-				MyVolley.getInstance().cancelPendingRequests("LOGOUT");
-			}
-		};
+    /**
+     * Progress Dialog cancel Listener.
+     * @return OnCancelListener
+     */
+    DialogInterface.OnCancelListener pdCancelListener() {
+        return new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // Cancel all pending requests when user presses back button.
+                MyVolley.getInstance().cancelPendingRequests(mContext.getClass().getName());
+                MyVolley.getInstance().cancelPendingRequests("LOGOUT");
+            }
+        };
 
-	}
+    }
 
-	/**
-	 * Logins in with new hidden data in case previous data is corrupted.
-	 */
-	private void LoginWithNewHiddenData()
-	{
+    /**
+     * Logins in with new hidden data in case previous data is corrupted.
+     */
+    private void LoginWithNewHiddenData()
+    {
         Bugsnag.leaveBreadcrumb("Collecting hidden data...");
-		String mURL = mContext.getResources().getString(R.string.URL_home);
-		MyStringRequest request = new MyStringRequest(Method.GET,
-				mURL,
-				getHiddenDataSuccessListener(),
-				myErrorListener()) {
+        String mURL = mContext.getResources().getString(R.string.URL_home);
+        MyStringRequest request = new MyStringRequest(Method.GET,
+                mURL,
+                getHiddenDataSuccessListener(),
+                myErrorListener()) {
 
-			public Map<String, String> getHeaders() throws com.android.volley.AuthFailureError {
-				Map<String, String> headers = new HashMap<String, String>();
-				headers.put("User-Agent", mContext.getString(R.string.UserAgent));
-				return headers;
-			}
-		};
-		request.setShouldCache(false);
-		request.setPriority(Priority.HIGH);
-		request.setRetryPolicy(new DefaultRetryPolicy(1500, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-		MyVolley.getInstance().addToRequestQueue(request,mContext.getClass().getName());
-	}
+            public Map<String, String> getHeaders() throws com.android.volley.AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("User-Agent", mContext.getString(R.string.UserAgent));
+                return headers;
+            }
+        };
+        request.setShouldCache(false);
+        request.setPriority(Priority.HIGH);
+        request.setRetryPolicy(new DefaultRetryPolicy(1500, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        MyVolley.getInstance().addToRequestQueue(request,mContext.getClass().getName());
+    }
 
-	private Response.Listener<String> getHiddenDataSuccessListener() {
-		return new Response.Listener<String>() {
-			@Override
-			public void onResponse(String response) {
+    private Response.Listener<String> getHiddenDataSuccessListener() {
+        return new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
 
                 Bugsnag.leaveBreadcrumb("Collected hidden data.");
-				Document doc = Jsoup.parse(response);
+                Document doc = Jsoup.parse(response);
                 Bugsnag.leaveBreadcrumb("Parsing hidden data...");
 
-				// Get Hidden values
-				Map<String, String> data = new HashMap<String, String>();
-				Elements hiddenvalues = doc.select(mContext.getString(R.string.selector_hidden_data));
-				for(Element hiddenvalue : hiddenvalues)
-				{
-					String name = hiddenvalue.attr("name");
-					String val = hiddenvalue.attr("value");
-					if(name.length()!=0 && val.length()!=0)
-					{
-						data.put(name, val);
-					}
-				}
+                // Get Hidden values
+                Map<String, String> data = new HashMap<String, String>();
+                Elements hiddenvalues = doc.select(mContext.getString(R.string.selector_hidden_data));
+                for(Element hiddenvalue : hiddenvalues)
+                {
+                    String name = hiddenvalue.attr("name");
+                    String val = hiddenvalue.attr("value");
+                    if(name.length()!=0 && val.length()!=0)
+                    {
+                        data.put(name, val);
+                    }
+                }
                 Bugsnag.leaveBreadcrumb("Parsed hidden data.");
-				Login(mUsername, mPassword, mCaptcha, data);
-			}
-		};
-	}
+                Login(mUsername, mPassword, mCaptcha, data);
+            }
+        };
+    }
 
-	private Response.ErrorListener myErrorListener() {
-		return new Response.ErrorListener() {
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				String msg = MyVolleyErrorHelper.getMessage(error, mContext);
-				misc.dismissProgressDialog();
+    private Response.ErrorListener myErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String msg = MyVolleyErrorHelper.getMessage(error, mContext);
+                misc.dismissProgressDialog();
                 Miscellaneous.showSnackBar(mContext,msg);
-				Log.e(mContext.getClass().getName(), msg);
-			}
-		};
-	}
+                Log.e(mContext.getClass().getName(), msg);
+            }
+        };
+    }
 }
