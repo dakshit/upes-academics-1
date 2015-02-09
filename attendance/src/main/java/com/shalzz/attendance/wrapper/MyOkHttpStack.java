@@ -66,20 +66,6 @@ public class MyOkHttpStack extends HurlStack {
 			Log.i("MyOkHttpStack","Proxy removed!");
             okUrlFactory.client().setProxy(null);
 		}
-
-        /* fix the SslHandShake exception */
-        Bugsnag.leaveBreadcrumb("Adding CA to trusted keystore");
-        MySSLSocketFactory sslf;
-        try {
-            KeyStore ks = MySSLSocketFactory.getKeystoreOfCA(MyVolley.getAppContext().getResources().openRawResource(R.raw.gd_bundle));
-            sslf = new MySSLSocketFactory(ks);
-            okUrlFactory.client().setSslSocketFactory(sslf.getSSLSocketFactory());
-        }
-        catch (Exception e) {
-            Bugsnag.notify(e);
-            e.printStackTrace();
-        }
-
 		return okUrlFactory.open(url);
 	} 
 }
