@@ -56,7 +56,6 @@
 
     <style name="ShowcaseTheme" parent="ShowcaseView">
         <item name="sv_backgroundColor">#7706607a</item>
-        <item name="sv_showcaseColor">#25467A</item>
         <item name="sv_buttonText">Close</item>
         <item name="sv_tintButtonColor">false</item>
         <item name="sv_titleTextAppearance">@style/ShowcaseThemeTitle</item>
