@@ -123,11 +123,11 @@ public class UserAccount {
 
                 if(script.equals(mContext.getString(R.string.incorrect_captcha)))
                 {
-                    misc.showAlertDialog("Incorrect Captcha!\nPlease try again.");
+                    misc.showAlertDialog(mContext.getString(R.string.alert_incorrect_captcha));
                 }
                 else if(script.equals(mContext.getString(R.string.incorrect_user_or_pass)))
                 {
-                    misc.showAlertDialog("Incorrect username or password. Please try again");
+                    misc.showAlertDialog(mContext.getString(R.string.alert_incorrect_password));
 
                 }
                 else if(document.getElementsByTag(mContext.getString(R.string.http_tag_title))

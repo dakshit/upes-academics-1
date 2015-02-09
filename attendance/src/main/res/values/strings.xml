@@ -64,6 +64,8 @@
     <string name="form_sapid_error">SAP ID should be of 9 digits</string>
     <string name="form_password_error">This field is required</string>
     <string name="form_captcha_error">Captcha must be of 6 digits</string>
+    <string name="alert_incorrect_captcha">Incorrect Captcha!\nPlease try again.</string>
+    <string name="alert_incorrect_password">Incorrect username or password. Please try again</string>
 
     <!--EditText's and TextView's-->
     <string name="no_classes">You don\'t have any classes on this day :)</string>
