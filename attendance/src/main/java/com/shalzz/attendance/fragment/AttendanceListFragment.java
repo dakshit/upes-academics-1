@@ -189,8 +189,8 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
 
         DatabaseHandler db = new DatabaseHandler(mContext);
         if(db.getRowCount()<=0) {
-            if(getActivity().getIntent().hasExtra("SAPID")) {
-                String SAPID = getActivity().getIntent().getExtras().getString("SAPID");
+            if(getActivity().getIntent().hasExtra(UserAccount.INTENT_EXTRA_USERNAME)) {
+                String SAPID = getActivity().getIntent().getExtras().getString(UserAccount.INTENT_EXTRA_USERNAME);
                 MySyncManager.addPeriodicSync(mContext, SAPID);
                 Bugsnag.setUserName(SAPID);
             }

@@ -64,6 +64,11 @@ public class UserAccount {
     private Context mContext;
 
     /**
+     * The name used to set and get the username(sapid or enrollment no) intent extra
+     */
+    public static final String INTENT_EXTRA_USERNAME = "SAPID";
+
+    /**
      * Constructor to set the Activity context.
      * @param context Context
      */
@@ -162,7 +167,7 @@ public class UserAccount {
 
                     misc.dismissProgressDialog();
                     Intent ourIntent = new Intent(mContext, MainActivity.class);
-                    ourIntent.putExtra("SAPID", mUsername);
+                    ourIntent.putExtra(INTENT_EXTRA_USERNAME, mUsername);
                     mContext.startActivity(ourIntent);
                     ((Activity) mContext).finish();
                 }
