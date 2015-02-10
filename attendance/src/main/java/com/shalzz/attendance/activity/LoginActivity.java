@@ -173,7 +173,7 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
 
     private void getHiddenData()
     {
-        Log.i(myTag,"Collecting hidden data...");
+        Bugsnag.leaveBreadcrumb("Collecting hidden data...");
         String mURL = getResources().getString(R.string.URL_home);
         MyStringRequest request = new MyStringRequest(Method.GET,
                 mURL,
@@ -198,9 +198,8 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
             @Override
             public void onResponse(String response) {
 
-                Log.i(getClass().getName(), "Collected hidden data.");
+                Bugsnag.leaveBreadcrumb("Collected hidden data.");
                 Document doc = Jsoup.parse(response);
-                Log.i(getClass().getName(),"Parsing hidden data...");
 
                 // Get Hidden values
                 Elements hiddenvalues = doc.select(getString(R.string.selector_hidden_data));
@@ -213,7 +212,7 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
                         data.put(name, val);
                     }
                 }
-                Log.i(getClass().getName(), "Parsed hidden data.");
+                Bugsnag.leaveBreadcrumb("Parsed hidden data.");
             }
         };
     }

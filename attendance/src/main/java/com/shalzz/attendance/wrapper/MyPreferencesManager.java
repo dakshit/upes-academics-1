@@ -79,8 +79,7 @@ public class MyPreferencesManager {
 		Iterator<String> keyset = pcookies.getAll().keySet().iterator();
 		if(keyset.hasNext())
 		{
-			Log.i(mContext.getClass().getName(), "Persistent cookies found.");
-            Bugsnag.leaveBreadcrumb("Loading cookies...");
+            Bugsnag.leaveBreadcrumb("Persistent cookies found.");
 			while(keyset.hasNext())
 			{
 				String cookiename = keyset.next();
@@ -100,7 +99,7 @@ public class MyPreferencesManager {
 				}
 				else
 				{
-					Log.i(mContext.getClass().getName(), "Persistent cookies not found.");
+                    Bugsnag.leaveBreadcrumb("Persistent cookies not found.");
 				}
 			}
 		}

@@ -148,7 +148,7 @@ public class MainActivity extends ActionBarActivity {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN, mDrawerList);
             mDrawerLayout.setScrimColor(Color.TRANSPARENT);
             isDrawerLocked = true;
-            Log.i(mTag,"Tablet layout applied");
+            Bugsnag.leaveBreadcrumb("Tablet layout applied");
         }
 
         // set Drawer header
@@ -203,6 +203,7 @@ public class MainActivity extends ActionBarActivity {
         else if(getIntent().getAction()!=null &&
                 getIntent().getAction().equals(Intent.ACTION_MANAGE_NETWORK_USAGE)) {
             displayView(Fragments.SETTINGS.getValue());
+            Bugsnag.leaveBreadcrumb("MANAGE_NETWORK_USAGE intent received");
         }
         else {
             displayView(mCurrentSelectedPosition);
@@ -377,11 +378,12 @@ public class MainActivity extends ActionBarActivity {
         }
         // Custom back stack
         else if (shouldPopFromBackStack()) {
-            if (DEBUG_FRAGMENTS) {
-                Log.d(mTag, this + " Back: Popping from back stack");
-            }
-            if(!getFragmentManager().popBackStackImmediate())
+            if(!getFragmentManager().popBackStackImmediate()) {
                 popFromBackStack();
+                Bugsnag.leaveBreadcrumb(" Back: Popping from custom back stack");
+            } else {
+                Bugsnag.leaveBreadcrumb(" Back: Popping from internal back stack");
+            }
         }
         else
             super.onBackPressed();

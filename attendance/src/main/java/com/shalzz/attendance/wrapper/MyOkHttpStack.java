@@ -19,13 +19,11 @@
 
 package com.shalzz.attendance.wrapper;
 
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.HurlStack;
 import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.Miscellaneous;
-import com.shalzz.attendance.R;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
 
@@ -34,7 +32,6 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
-import java.security.KeyStore;
 
 public class MyOkHttpStack extends HurlStack {
     private final OkUrlFactory okUrlFactory;
@@ -55,7 +52,7 @@ public class MyOkHttpStack extends HurlStack {
 	protected HttpURLConnection createConnection(URL url) throws IOException {
 		if(Miscellaneous.useProxy())
 		{
-			Log.i("MyOkHttpStack","Using Proxy!");
+            Bugsnag.leaveBreadcrumb("Using Proxy!");
 			Toast.makeText(MyVolley.getAppContext(), "Using Proxy!", Toast.LENGTH_LONG).show();
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy.ddn.upes.ac.in", 8080));
             okUrlFactory.client().setProxy(proxy);
@@ -63,7 +60,7 @@ public class MyOkHttpStack extends HurlStack {
 		else if(okUrlFactory.client().getProxy()!=null)
 		{
 			Toast.makeText(MyVolley.getAppContext(), "Proxy removed!", Toast.LENGTH_LONG).show();
-			Log.i("MyOkHttpStack","Proxy removed!");
+            Bugsnag.leaveBreadcrumb("Proxy removed!");
             okUrlFactory.client().setProxy(null);
 		}
 		return okUrlFactory.open(url);
