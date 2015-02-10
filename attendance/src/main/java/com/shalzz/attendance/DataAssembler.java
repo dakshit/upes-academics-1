@@ -93,6 +93,9 @@ public class DataAssembler {
                 DatabaseHandler db = new DatabaseHandler(mContext);
                 db.addOrUpdateListHeader(header);
                 db.close();
+
+                Bugsnag.setUserId("" + header.getSAPId());
+                Bugsnag.setUserName(header.getName());
             }
             return 0;
         }

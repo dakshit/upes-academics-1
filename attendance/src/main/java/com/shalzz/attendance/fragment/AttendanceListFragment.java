@@ -192,6 +192,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
             if(getActivity().getIntent().hasExtra("SAPID")) {
                 String SAPID = getActivity().getIntent().getExtras().getString("SAPID");
                 MySyncManager.addPeriodicSync(mContext, SAPID);
+                Bugsnag.setUserName(SAPID);
             }
             DataAPI.getAttendance(mContext, successListener(), errorListener());
             mProgress.setVisibility(View.VISIBLE);

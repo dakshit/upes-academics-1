@@ -261,9 +261,6 @@ public class MainActivity extends ActionBarActivity {
             TextView tv_course = (TextView) Drawerheader.findViewById(R.id.drawer_header_course);
             tv_name.setText(listheader.getName());
             tv_course.setText(listheader.getCourse());
-
-            Bugsnag.setUserId("" + listheader.getSAPId());
-            Bugsnag.setUserName(listheader.getName());
         }
     }
 
