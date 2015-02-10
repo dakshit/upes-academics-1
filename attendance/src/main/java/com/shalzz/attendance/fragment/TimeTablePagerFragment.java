@@ -317,7 +317,8 @@ public class TimeTablePagerFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // Stop the refreshing indicator
-                mProgress.setVisibility(View.GONE);
+                if(mProgress!=null)
+                    mProgress.setVisibility(View.GONE);
                 mViewPager.setVisibility(View.VISIBLE);
                 mSwipeRefreshLayout.setRefreshing(false);
                 String msg = MyVolleyErrorHelper.getMessage(error, mContext);

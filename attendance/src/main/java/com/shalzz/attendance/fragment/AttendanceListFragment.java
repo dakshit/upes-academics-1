@@ -396,7 +396,8 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
             @Override
             public void onErrorResponse(VolleyError error) {
                 // Stop the refreshing indicator
-                mProgress.setVisibility(View.GONE);
+                if(mProgress!=null)
+                    mProgress.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
 
                 String msg = MyVolleyErrorHelper.getMessage(error, mContext);

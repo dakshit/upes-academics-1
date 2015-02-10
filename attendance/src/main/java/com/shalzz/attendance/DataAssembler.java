@@ -94,7 +94,8 @@ public class DataAssembler {
                 db.addOrUpdateListHeader(header);
                 db.close();
 
-                Bugsnag.setUserId("" + header.getSAPId());
+                if(header.getSAPId()!=0)
+                    Bugsnag.setUserId("" + header.getSAPId());
                 Bugsnag.setUserName(header.getName());
             }
             return 0;
