@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity {
     @InjectView(R.id.list_slidermenu) ListView mDrawerList;
     @InjectView(R.id.drop_shadow) public View dropShadow;
 
-    private int mCurrentSelectedPosition = 0;
+    private int mCurrentSelectedPosition = Fragments.ATTENDANCE.getValue();
     private static MainActivity mActivity;
     private String[] mNavTitles;
     private CharSequence mDrawerTitle;
@@ -188,7 +188,7 @@ public class MainActivity extends ActionBarActivity {
             mDrawerLayout.setDrawerListener(mDrawerToggle);
         }
 
-        // Select either the default item (0) or the last selected item.
+        // Select either the default item (Fragments.ATTENDANCE) or the last selected item.
         mCurrentSelectedPosition = reloadCurrentFragment();
 
         // Recycle fragment
@@ -419,7 +419,7 @@ public class MainActivity extends ActionBarActivity {
         }
         final FragmentTransaction ft = mFragmentManager.beginTransaction();
         final Fragment installed = getInstalledFragment();
-        int position = 0 ;
+        int position = Fragments.ATTENDANCE.getValue() ;
         Log.i(mTag, this + " backstack: [pop] " + installed.getClass().getSimpleName() + " -> "
                 + mPreviousFragment.getClass().getSimpleName());
 
