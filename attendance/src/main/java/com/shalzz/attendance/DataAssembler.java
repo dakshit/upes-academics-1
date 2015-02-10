@@ -219,12 +219,12 @@ public class DataAssembler {
                 ++i;
             }
 
-            db.deleteAllSubjects();
             Elements total = doc.select(mContext.getString(R.string.selector_table_header));
             ListFooter footer = new ListFooter();
             footer.setAttended(Float.parseFloat(total.get(10).text()));
             footer.setHeld(Float.parseFloat(total.get(9).text()));
             footer.setPercentage(Float.parseFloat(total.get(12).text()));
+            db.deleteAllSubjects();
             db.addOrUpdateListFooter(footer);
 
             for(i=0;i<claHeld.size();i++)

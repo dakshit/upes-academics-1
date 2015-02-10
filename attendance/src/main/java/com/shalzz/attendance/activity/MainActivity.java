@@ -380,13 +380,15 @@ public class MainActivity extends ActionBarActivity {
         else if (shouldPopFromBackStack()) {
             if(!getFragmentManager().popBackStackImmediate()) {
                 popFromBackStack();
-                Bugsnag.leaveBreadcrumb(" Back: Popping from custom back stack");
+                Bugsnag.leaveBreadcrumb("Back: Popping from custom back stack");
             } else {
-                Bugsnag.leaveBreadcrumb(" Back: Popping from internal back stack");
+                Bugsnag.leaveBreadcrumb("Back: Popping from internal back stack");
             }
         }
-        else
+        else {
             super.onBackPressed();
+            Bugsnag.leaveBreadcrumb("App closed");
+        }
     }
 
     /**

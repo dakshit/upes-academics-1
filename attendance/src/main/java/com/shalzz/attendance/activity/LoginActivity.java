@@ -173,7 +173,6 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
 
     private void getHiddenData()
     {
-        Bugsnag.leaveBreadcrumb("Collecting hidden data...");
         String mURL = getResources().getString(R.string.URL_home);
         MyStringRequest request = new MyStringRequest(Method.GET,
                 mURL,
