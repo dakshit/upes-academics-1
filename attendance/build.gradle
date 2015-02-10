@@ -27,7 +27,7 @@ android {
     defaultConfig {
         applicationId 'com.shalzz.attendance'
         minSdkVersion 14
-        targetSdkVersion 19 // fixme
+        targetSdkVersion 21
 
         resConfigs "en"
         resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
