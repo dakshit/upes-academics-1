@@ -514,21 +514,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		String selectQuery = "SELECT  * FROM " + TABLE_HEADER + ";";
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
-		if (cursor != null)
-			cursor.moveToFirst();
+        ListHeader header = new ListHeader();
+		if (cursor.moveToFirst()) {
+            header.setName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_STU_NAME)));
+            header.setFatherName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_FATHER_NAME)));
+            header.setCourse(cursor.getString(cursor.getColumnIndexOrThrow(KEY_COURSE)));
+            header.setSection(cursor.getString(cursor.getColumnIndexOrThrow(KEY_SECTION)));
+            header.setSAPId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SAPID)));
+            header.setRollNo(cursor.getString(cursor.getColumnIndexOrThrow(KEY_ROLLNO)));
+        }
 
-		ListHeader header = new ListHeader();
-        assert cursor != null;
-        header.setName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_STU_NAME)));
-		header.setFatherName(cursor.getString(cursor.getColumnIndexOrThrow(KEY_FATHER_NAME)));
-		header.setCourse(cursor.getString(cursor.getColumnIndexOrThrow(KEY_COURSE)));
-		header.setSection(cursor.getString(cursor.getColumnIndexOrThrow(KEY_SECTION)));
-		header.setSAPId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SAPID)));
-		header.setRollNo(cursor.getString(cursor.getColumnIndexOrThrow(KEY_ROLLNO)));
-
-		db.close();
-		cursor.close();
-
+        db.close();
+        cursor.close();
 		return header;
 	}
 
@@ -556,16 +553,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		String selectQuery = "SELECT  * FROM " + TABLE_FOOTER + ";";
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
-		if (cursor != null)
-			cursor.moveToFirst();
-
-		ListFooter footer = new ListFooter();
-        assert cursor != null;
-        footer.setSNo(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SNO)));
-		footer.setHeld(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_HELD)));
-		footer.setAttended(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_ATTEND)));
-		footer.setPercentage(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_PERCANTAGE)));
-
+        ListFooter footer = new ListFooter();
+        if (cursor.moveToFirst()) {
+            footer.setSNo(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SNO)));
+            footer.setHeld(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_HELD)));
+            footer.setAttended(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_ATTEND)));
+            footer.setPercentage(cursor.getFloat(cursor.getColumnIndexOrThrow(KEY_TOTAL_PERCANTAGE)));
+        }
 		db.close();
 		cursor.close();
 
