@@ -22,7 +22,6 @@ package com.shalzz.attendance;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.model.Day;
@@ -30,14 +29,12 @@ import com.shalzz.attendance.model.ListFooter;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Period;
 import com.shalzz.attendance.model.Subject;
-import com.shalzz.attendance.wrapper.DateHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class DataAssembler {

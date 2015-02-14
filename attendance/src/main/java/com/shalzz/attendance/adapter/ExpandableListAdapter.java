@@ -256,7 +256,7 @@ public class ExpandableListAdapter extends BaseAdapter {
             views.childView.setVisibility(View.VISIBLE);
             views.childView.setAlpha(1.0f);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                view.setTranslationZ(mExpandedTranslationZ);
+                view.setTranslationZ(mExpandedTranslationZ);
             }
         } else {
 
@@ -267,7 +267,7 @@ public class ExpandableListAdapter extends BaseAdapter {
             }
             // TODO: fix elevation
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                view.setTranslationZ(0);
+                view.setTranslationZ(0);
             }
         }
     }
@@ -431,7 +431,8 @@ public class ExpandableListAdapter extends BaseAdapter {
     }
 
     public void setDataSet(List<Subject> subjects) {
-        mSubjects = subjects;
+        if(subjects != null)
+            mSubjects = subjects;
         notifyDataSetChanged();
     }
 }

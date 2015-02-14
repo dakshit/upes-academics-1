@@ -133,7 +133,6 @@ public class UserAccount {
                 else if(script.equals(mContext.getString(R.string.incorrect_user_or_pass)))
                 {
                     misc.showAlertDialog(mContext.getString(R.string.alert_incorrect_password));
-
                 }
                 else if(document.getElementsByTag(mContext.getString(R.string.http_tag_title))
                         .get(0).text().equals(mContext.getString(R.string.session_error_identifier)))
@@ -287,11 +286,11 @@ public class UserAccount {
 
                 // Get Hidden values
                 Map<String, String> data = new HashMap<String, String>();
-                Elements hiddenvalues = doc.select(mContext.getString(R.string.selector_hidden_data));
-                for(Element hiddenvalue : hiddenvalues)
+                Elements hiddenValues = doc.select(mContext.getString(R.string.selector_hidden_data));
+                for(Element hiddenValue : hiddenValues)
                 {
-                    String name = hiddenvalue.attr("name");
-                    String val = hiddenvalue.attr("value");
+                    String name = hiddenValue.attr("name");
+                    String val = hiddenValue.attr("value");
                     if(name.length()!=0 && val.length()!=0)
                     {
                         data.put(name, val);

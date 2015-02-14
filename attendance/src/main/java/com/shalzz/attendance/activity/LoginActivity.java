@@ -140,6 +140,7 @@ public class LoginActivity extends ActionBarActivity implements CaptchaDialogFra
     public void showCaptchaDialog() {
         DialogFragment dialog = new CaptchaDialogFragment();
         dialog.show(getSupportFragmentManager(), "CaptchaDialogFragment");
+        Bugsnag.addToTab("User","LoggingInAs",etSapid.getText().toString());
     }
 
     @Override

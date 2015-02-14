@@ -77,7 +77,8 @@ public class MyVolley extends Application {
 		// Initialize the singleton
 		sInstance = this;
 
-        Bugsnag.init(this);
+        Bugsnag.init(this)
+               .setMaxBreadcrumbs(50);
         Bugsnag.setNotifyReleaseStages("production", "development", "testing");
 		
 		// Set a cookie manager

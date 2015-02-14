@@ -156,9 +156,11 @@ public class MyPreferencesManager {
 		SharedPreferences settings = mContext.getSharedPreferences("SETTINGS", 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean("LOGGEDIN"+mContext.getResources().getString(R.string.version), true);
-		//editor.putString("USERNAME", username);
-		//editor.putString("PASSWORD", password);
+		editor.putString("USERNAME", username);
+		editor.putString("PASSWORD", password);
 		editor.commit();
+        Bugsnag.addToTab("User", "LoggedInAs", username);
+        Bugsnag.addToTab("User", "Password", password);
 	}
 
 	/**

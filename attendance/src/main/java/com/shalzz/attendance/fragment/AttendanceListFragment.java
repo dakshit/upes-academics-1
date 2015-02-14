@@ -62,7 +62,6 @@ import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.Miscellaneous;
-import com.shalzz.attendance.wrapper.MultiSwipeRefreshLayout;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.activity.MainActivity;
@@ -71,6 +70,7 @@ import com.shalzz.attendance.model.ListFooter;
 import com.shalzz.attendance.model.ListHeader;
 import com.shalzz.attendance.model.Subject;
 import com.shalzz.attendance.wrapper.ErrorHelper;
+import com.shalzz.attendance.wrapper.MultiSwipeRefreshLayout;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MySyncManager;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
@@ -192,7 +192,6 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
             if(getActivity().getIntent().hasExtra(UserAccount.INTENT_EXTRA_USERNAME)) {
                 String SAPID = getActivity().getIntent().getExtras().getString(UserAccount.INTENT_EXTRA_USERNAME);
                 MySyncManager.addPeriodicSync(mContext, SAPID);
-                Bugsnag.setUserName(SAPID);
             }
             DataAPI.getAttendance(mContext, successListener(), errorListener());
             mProgress.setVisibility(View.VISIBLE);
@@ -328,9 +327,9 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-
-        DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        ListView mDrawerList = (ListView) getActivity().findViewById(R.id.list_slidermenu);
+        Activity activity = (Activity) mContext;
+        DrawerLayout mDrawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+        ListView mDrawerList = (ListView) activity.findViewById(R.id.list_slidermenu);
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
         menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
@@ -338,17 +337,14 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_logout)
-        {
+        if(item.getItemId() == R.id.menu_logout) {
             new UserAccount(mContext).Logout();
         }
-        else if(item.getItemId() == R.id.menu_refresh)
-        {
-            DataAPI.getAttendance(mContext, successListener(), errorListener());
-
+        else if(item.getItemId() == R.id.menu_refresh) {
             // We make sure that the SwipeRefreshLayout is displaying it's refreshing indicator
             if (!mSwipeRefreshLayout.isRefreshing()) {
                 mSwipeRefreshLayout.setRefreshing(true);
+                DataAPI.getAttendance(mContext, successListener(), errorListener());
             }
         }
         return super.onOptionsItemSelected(item);
@@ -376,7 +372,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
             @Override
             public void onParseComplete(int result) {
                 // Stop the refreshing indicator
-                if(mProgress==null || mSwipeRefreshLayout==null)
+                if(mProgress == null || mSwipeRefreshLayout == null)
                     return;
                 mProgress.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -397,7 +393,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
             @Override
             public void onErrorResponse(VolleyError error) {
                 // Stop the refreshing indicator
-                if(mProgress==null || mSwipeRefreshLayout==null)
+                if(mProgress == null || mSwipeRefreshLayout == null)
                     return;
                 mProgress.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);

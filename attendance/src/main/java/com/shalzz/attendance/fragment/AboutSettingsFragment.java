@@ -10,9 +10,6 @@ import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.R;
 
 import de.psdev.licensesdialog.LicensesDialog;
-import de.psdev.licensesdialog.licenses.GnuGeneralPublicLicense30;
-import de.psdev.licensesdialog.licenses.License;
-import de.psdev.licensesdialog.model.Notice;
 
 public class AboutSettingsFragment extends PreferenceFragment{
 

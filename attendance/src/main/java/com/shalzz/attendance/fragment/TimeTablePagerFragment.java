@@ -52,13 +52,13 @@ import com.shalzz.attendance.DataAPI;
 import com.shalzz.attendance.DataAssembler;
 import com.shalzz.attendance.DatabaseHandler;
 import com.shalzz.attendance.Miscellaneous;
-import com.shalzz.attendance.wrapper.MultiSwipeRefreshLayout;
 import com.shalzz.attendance.R;
 import com.shalzz.attendance.UserAccount;
 import com.shalzz.attendance.activity.MainActivity;
 import com.shalzz.attendance.adapter.TimeTablePagerAdapter;
 import com.shalzz.attendance.wrapper.DateHelper;
 import com.shalzz.attendance.wrapper.ErrorHelper;
+import com.shalzz.attendance.wrapper.MultiSwipeRefreshLayout;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
 import com.shalzz.attendance.wrapper.MyVolleyErrorHelper;
 
@@ -169,11 +169,13 @@ public class TimeTablePagerFragment extends Fragment {
         mViewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mSwipeRefreshLayout.setEnabled(false);
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_UP:
-                        mSwipeRefreshLayout.setEnabled(true);
-                        break;
+                if(mSwipeRefreshLayout != null) {
+                    mSwipeRefreshLayout.setEnabled(false);
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_UP:
+                            mSwipeRefreshLayout.setEnabled(true);
+                            break;
+                    }
                 }
                 return false;
             }
@@ -220,21 +222,17 @@ public class TimeTablePagerFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_logout)
-        {
+        if(item.getItemId() == R.id.menu_logout) {
             new UserAccount(mContext).Logout();
         }
-        else if(item.getItemId() == R.id.menu_refresh)
-        {
-            DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
-
+        else if(item.getItemId() == R.id.menu_refresh) {
             // We make sure that the SwipeRefreshLayout is displaying it's refreshing indicator
             if (!mSwipeRefreshLayout.isRefreshing()) {
                 mSwipeRefreshLayout.setRefreshing(true);
+                DataAPI.getTimeTable(mContext, timeTableSuccessListener(), myErrorListener());
             }
         }
-        else if(item.getItemId() == R.id.menu_date)
-        {
+        else if(item.getItemId() == R.id.menu_date) {
             Calendar today = Calendar.getInstance();
             today.setTime(mToday);
             DatePickerDialog mDatePickerDialog = new DatePickerDialog(mContext,onDateSetListner()
@@ -243,8 +241,7 @@ public class TimeTablePagerFragment extends Fragment {
                     ,today.get(Calendar.DAY_OF_MONTH));
             mDatePickerDialog.show();
         }
-        else if(item.getItemId() == R.id.menu_today)
-        {
+        else if(item.getItemId() == R.id.menu_today) {
             if(mTimeTablePagerAdapter.getDate() != mToday) {
                 mTimeTablePagerAdapter.setDate(mToday);
             }
