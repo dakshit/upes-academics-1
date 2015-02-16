@@ -24,7 +24,7 @@
     <!--Semantic versioning: MAJOR.MINOR.PATCH-->
     <!-- DON'T update this for PATCH release -->
     <string name="version" translatable="false">2.2</string>
-    <string name="pref_version" translatable="false">v2.2.1</string>
+    <string name="pref_version" translatable="false">v2.2.2</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-4430276599804177/4801693846</string>
 
     <!--Network related strings-->
