@@ -159,8 +159,6 @@ public class MyPreferencesManager {
 		editor.putString("USERNAME", username);
 		editor.putString("PASSWORD", password);
 		editor.commit();
-        Bugsnag.addToTab("User", "LoggedInAs", username);
-        Bugsnag.addToTab("User", "Password", password);
 	}
 
 	/**
