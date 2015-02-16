@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mm_ad_width">480</dimen>
+    <dimen name="mm_ad_height">60</dimen>
+</resources>

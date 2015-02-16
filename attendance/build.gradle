@@ -53,6 +53,7 @@ android {
     }
 
     dependencies {
+        compile files('libs/MMSDK.jar')
         // google support libraries
         compile 'com.google.android.gms:play-services:6.+'
         compile 'com.android.support:recyclerview-v7:21.0.+'

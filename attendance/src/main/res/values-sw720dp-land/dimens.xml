@@ -35,5 +35,7 @@
     <dimen name="action_bar_subtitle_bottom_margin">2dip</dimen>
 
     <dimen name="drawer_content_padding">280dp</dimen>
-
+    
+    <dimen name="mm_ad_width">728</dimen>
+    <dimen name="mm_ad_height">90</dimen>
 </resources>
