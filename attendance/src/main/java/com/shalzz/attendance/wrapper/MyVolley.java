@@ -32,7 +32,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.Volley;
 import com.bugsnag.android.Bugsnag;
-import com.millennialmedia.android.MMSDK;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -74,7 +73,6 @@ public class MyVolley extends Application {
 	public void onCreate() {
 		super.onCreate();
 		MyVolley.mContext = getApplicationContext();
-        MMSDK.initialize(this);
 		
 		// Initialize the singleton
 		sInstance = this;

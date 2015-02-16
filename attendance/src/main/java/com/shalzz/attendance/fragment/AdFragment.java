@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.millennialmedia.android.MMAdView;
-import com.millennialmedia.android.MMRequest;
 import com.shalzz.attendance.R;
 
 public class AdFragment extends Fragment {
@@ -24,15 +22,11 @@ public class AdFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        //Find the ad view for reference
-        MMAdView adViewFromXml = (MMAdView) getView().findViewById(R.id.adView);
-        MMRequest request = new MMRequest();
-        request.setEducation(MMRequest.EDUCATION_SOME_COLLEGE);
-        request.setEthnicity(MMRequest.ETHNICITY_INDIAN);
-        request.setAge("23");
-        adViewFromXml.setMMRequest(request);
-        adViewFromXml.getAd();
-
+        AdView mAdView = (AdView) getView().findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("F9687B4F94B9427327A76A24D717C6B5")
+                .build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override

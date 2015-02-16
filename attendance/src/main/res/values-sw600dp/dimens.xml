@@ -36,6 +36,4 @@
     <!-- Bottom margin for action bar subtitles -->
     <dimen name="action_bar_subtitle_bottom_margin">4dip</dimen>
 
-    <dimen name="mm_ad_width">480</dimen>
-    <dimen name="mm_ad_height">60</dimen>
 </resources>
