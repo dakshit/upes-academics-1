@@ -5,7 +5,7 @@
         android:key="pref_info_notices"
         android:summary="License details for 3rd party open source software's"
         android:title="Open source license" />
-
+    <!--TODO: add donate option-->
     <Preference
         android:key="pref_info_version"
         android:summary="@string/pref_version"

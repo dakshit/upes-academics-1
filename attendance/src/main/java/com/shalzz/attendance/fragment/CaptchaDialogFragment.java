@@ -94,11 +94,12 @@ public class CaptchaDialogFragment extends DialogFragment{
     @Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        final Context context = getActivity();
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View mView = inflater.inflate(R.layout.captcha_dialog, null);
         ButterKnife.inject(this,mView);
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                 .positiveText(R.string.log_in)
                 .negativeText(android.R.string.cancel)
                 .customView(mView, false)
@@ -117,7 +118,7 @@ public class CaptchaDialogFragment extends DialogFragment{
                 .showListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
-                        Miscellaneous.showKeyboard(getActivity(), Captxt);
+                        Miscellaneous.showKeyboard(context, Captxt);
                     }
                 });
 

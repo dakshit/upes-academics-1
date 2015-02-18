@@ -262,6 +262,10 @@ public class MainActivity extends ActionBarActivity {
             TextView tv_course = (TextView) Drawerheader.findViewById(R.id.drawer_header_course);
             tv_name.setText(listheader.getName());
             tv_course.setText(listheader.getCourse());
+
+            if(listheader.getSAPId()!=0)
+                Bugsnag.setUserId("" + listheader.getSAPId());
+            Bugsnag.setUserName(listheader.getName());
         }
     }
 
@@ -434,7 +438,7 @@ public class MainActivity extends ActionBarActivity {
             position = Fragments.ATTENDANCE.getValue();
         } else if (mPreviousFragment instanceof TimeTablePagerFragment) {
             position = Fragments.TIMETABLE.getValue();
-            ((TimeTablePagerFragment) mPreviousFragment).updateFragments();
+            //((TimeTablePagerFragment) mPreviousFragment).updateFragments();
             // fixme: this is a crude hack for viewpager not redrawing itself
             showFragment(new TimeTablePagerFragment());
         }
