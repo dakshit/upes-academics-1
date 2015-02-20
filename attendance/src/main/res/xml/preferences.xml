@@ -21,7 +21,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="Attendance" >
-        <ListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="3"
             android:dialogTitle="Limit expanded subjects to"
             android:entries="@array/pref_subject_limit_entries"
@@ -36,7 +36,7 @@
             <!--android:key="pref_mute"-->
             <!--android:summary="Automatically mutes the phone during lessons"-->
             <!--android:title="Mute during lessons" />-->
-        <ListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="NULL"
             android:dialogTitle="Select your batch"
             android:entries="@array/pref_batch_entries"
@@ -51,7 +51,7 @@
             android:summary="Periodically sync your attendance and timetable"
             android:title="Auto Refresh" />
 
-        <ListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="360"
             android:dependency="data_sync"
             android:dialogTitle="Refresh Interval"

@@ -20,8 +20,6 @@
 package com.shalzz.attendance;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -36,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
@@ -46,8 +45,8 @@ import java.net.PasswordAuthentication;
 
 public class Miscellaneous {
 
-	private AlertDialog.Builder builder = null;
-	private ProgressDialog pd = null;
+	private MaterialDialog.Builder builder = null;
+	private MaterialDialog pd = null;
 	private Context mContext;
 
 	public Miscellaneous(Context context) {
@@ -97,18 +96,18 @@ public class Miscellaneous {
 	 * Displays the default Progress Dialog.
 	 * @param mMessage The message to display
 	 */
-	public void showProgressDialog(String mMessage , boolean cancable, DialogInterface.OnCancelListener progressDialogCancelListener) {
+	public void showProgressDialog(String mMessage , boolean cancelable, DialogInterface.OnCancelListener progressDialogCancelListener) {
 		// lazy initialise
 		if(pd==null)
 		{
 			// Setup the Progress Dialog
-			pd = new ProgressDialog(mContext);
-			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pd.setMessage(mMessage);
-			pd.setIndeterminate(true);
-			pd.setCancelable(cancable);
-			pd.setCanceledOnTouchOutside(false);
-			pd.setOnCancelListener(progressDialogCancelListener);
+            pd = new MaterialDialog.Builder(mContext)
+                    .content(mMessage)
+                    .cancelable(cancelable)
+                    .autoDismiss(false)
+                    .cancelListener(progressDialogCancelListener)
+                    .progress(true, 0)
+                    .build();
 		}
 		pd.show();
 	}
@@ -127,21 +126,14 @@ public class Miscellaneous {
 	 */
 	public void showAlertDialog(String mMessage) {
 		// lazy initialise
-		if(builder==null)
-		{
-			builder = new AlertDialog.Builder(mContext);
-			builder.setCancelable(true);
-			builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
+		if(builder==null) {
+			builder = new MaterialDialog.Builder(mContext)
+			.cancelable(true)
+			.positiveText(android.R.string.ok);
 		}
 		dismissProgressDialog();
-		builder.setMessage(mMessage);
-		AlertDialog alert = builder.create();
-		alert.show();
+		builder.content(mMessage)
+                .show();
 	}
 
     /**

@@ -7,11 +7,11 @@
         android:summary="Automatically set proxy when connected to UPESNET"
         android:title="Enable Proxy" />
 
-    <EditTextPreference
+    <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
         android:dependency="pref_key_use_proxy"
         android:key="pref_key_proxy_username"
         android:title="Username" />
-    <EditTextPreference
+    <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
         android:dependency="pref_key_use_proxy"
         android:inputType="textPassword"
         android:key="pref_key_proxy_password"
