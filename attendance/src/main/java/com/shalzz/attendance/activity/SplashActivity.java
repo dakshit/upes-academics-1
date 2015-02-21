@@ -36,12 +36,7 @@ public class SplashActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.splash);
         Bugsnag.setContext("SplashActivity");
-
-        // set toolbar as actionbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         // Set all default values once for this application
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
