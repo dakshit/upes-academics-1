@@ -1,21 +1,39 @@
 UPES Academics
 ===========
-UPES Academics Android Application ([Play Store][1]).
+UPES Academics Android Application.
 
-Contribute
-==========
+<a href="https://play.google.com/store/apps/details?id=com.shalzz.attendance">
+  <img alt="Get it on Google Play"
+       src="https://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
+</a>
+
+---
+
+### What's New
+
+See the project's Releases page for a list of versions with their changelogs.
+
+[ ![View Releases](http://dabuttonfactory.com/b.png?t=View%20Releases&f=sans-serif-Bold&ts=14&tc=ffffff&c=5&bgt=unicolored&bgc=1466A7&hp=20&vp=11) ][1]
+
+---
+
+### Contribute
+
 Please do! I'm happy to review and accept pull requests.<br>
 Use [GitHub issues][2] and [Pull Requests][3].
 
-Donate
-==========
+---
+
+### Donate
+
 Donate to keep development going
 
 Bitcoin  - 1G6KuJST6whifh1CjksKF84Sbwj34RbcgR
 Litecoin - LgMNbL7NghShS2t62rFjSpjzsGs8Jro7sV
 
-Licensing
-==========
+---
+
+### Licensing
 
 	Copyright (C) 2013 - 2015 Shaleen Jain <shaleen.jain95@gmail.com>
 	
@@ -34,6 +52,8 @@ Licensing
 	
 Please see the file called LICENSE.txt for more details.
 
-[1]: https://play.google.com/store/apps/details?id=com.shalzz.attendance
+---
+
+[1]: https://github.com/Shalzz/upes-academics/releases
 [2]: https://github.com/Shalzz/upes-academics/issues
 [3]: https://github.com/Shalzz/upes-academics/pulls
