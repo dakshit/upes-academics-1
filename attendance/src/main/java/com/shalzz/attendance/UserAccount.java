@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -123,6 +124,9 @@ public class UserAccount {
             @Override
             public void onResponse(String response) {
 
+                Resources resources = mContext.getResources();
+                String session_error_identifier = resources.getString(R.string.session_error_identifier);
+                String http_tag_title = resources.getString(R.string.http_tag_title);
                 Document document = Jsoup.parse(response);
                 String script = document.getElementsByTag("script").get(0).html();
 
@@ -134,8 +138,8 @@ public class UserAccount {
                 {
                     misc.showAlertDialog(mContext.getString(R.string.alert_incorrect_password));
                 }
-                else if(document.getElementsByTag(mContext.getString(R.string.http_tag_title))
-                        .get(0).text().equals(mContext.getString(R.string.session_error_identifier)))
+                else if(document.getElementsByTag(http_tag_title).size()==0 ||
+                        document.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
                 {
                     if(retryCount<2)
                     {
