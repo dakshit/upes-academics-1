@@ -32,8 +32,6 @@ import com.android.volley.Request.Priority;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bugsnag.android.Bugsnag;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
 import com.shalzz.attendance.activity.LoginActivity;
 import com.shalzz.attendance.activity.MainActivity;
 import com.shalzz.attendance.wrapper.MyPreferencesManager;
@@ -154,11 +152,7 @@ public class UserAccount {
                     else
                     {
                         misc.dismissProgressDialog();
-                        SnackbarManager.show(
-                                Snackbar.with(mContext)
-                                        .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
-                                        .textColor(mContext.getResources().getColor(R.color.accent))
-                                        .text("Error! Please try again later"), (Activity) mContext);
+                        Miscellaneous.showSnackBar(mContext, R.string.general_try_again_error);
                     }
                 }
                 else
