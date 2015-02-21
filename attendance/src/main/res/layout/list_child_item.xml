@@ -18,25 +18,17 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/child_view"
-    android:layout_height="0dp" >
-
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:layout_marginLeft="20dp"-->
-        <!--android:layout_marginRight="20dp"-->
-        <!--android:background="@color/divider" />-->
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tvClass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
         android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:gravity="center"
         android:text="You have attended 0 out of 0 classes"
         android:textSize="15sp" />
@@ -45,21 +37,13 @@
         android:id="@+id/tvAbsent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/tvClass"
         android:layout_toLeftOf="@+id/tvProjected"
-        android:paddingLeft="5dp"
+        android:layout_toStartOf="@+id/tvProjected"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:text="Days Absent:"
         android:textSize="15sp" />
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tvAbsent"
-        android:layout_marginLeft="5dp"
-        android:src="@drawable/ic_dialog_alert_holo_light" />
 
     <TextView
         android:id="@+id/tvProjected"
@@ -69,15 +53,27 @@
         android:layout_alignBottom="@+id/tvAbsent"
         android:textColor="@android:color/darker_gray"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:padding="5dp"
         android:text="*99%" />
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAbsent"
+        android:layout_toLeftOf="@+id/tvReach"
+        android:layout_toStartOf="@+id/tvReach"
+        android:layout_alignBottom="@+id/tvReach"
+        android:padding="5dp"
+        android:src="@drawable/alert" />
+
     <TextView
         android:id="@+id/tvReach"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/tvAbsent"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
         android:padding="5dp"
         android:text="Attend x more classes to reach 75%"

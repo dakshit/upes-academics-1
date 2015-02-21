@@ -78,6 +78,7 @@
     <string name="swipe_info">To switch to any other day, either swipe across the screen or
         click the jump to date in the top right corner.</string>
     <string name="last_refresh">Last refreshed <xliff:g id="time">%d</xliff:g> hours ago</string>
+    <string name="atten_list_footer_total">Total Attendance:</string>
 
     <!--Preferences-->
     <string name="pref_subjectLimit">Limit Expanded Subjects</string>

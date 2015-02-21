@@ -28,6 +28,8 @@
         android:inflatedId="@+id/subTree"
         android:layout="@layout/list_child_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin" />
 
 </LinearLayout>
