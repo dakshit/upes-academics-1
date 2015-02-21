@@ -342,7 +342,7 @@ public class TimeTablePagerFragment extends Fragment {
                     scrollToToday();
                     updateTitle();
                 }
-                ErrorHelper.showSnackbar(result,mContext);
+                ErrorHelper.handleError(result, mContext);
             }
         };
     }

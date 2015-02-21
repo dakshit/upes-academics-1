@@ -1,29 +1,37 @@
 package com.shalzz.attendance.wrapper;
 
 import android.content.Context;
-import android.content.res.Resources;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.bugsnag.android.Bugsnag;
 import com.shalzz.attendance.Miscellaneous;
 import com.shalzz.attendance.R;
 
 public class ErrorHelper {
 
-    public static void showSnackbar(int result, Context mContext) {
-
-        Resources resources = mContext.getResources();
-        String session_error = resources.getString(R.string.session_error);
-        String unavailable_data = resources.getString(R.string.unavailable_data);
-        String unavailable_timetable = resources.getString(R.string.unavailable_timetable);
+    public static void handleError(int result, Context mContext) {
 
         switch (result) {
             case -1:
-                Miscellaneous.showMultilineSnackBar(mContext, session_error);
+                Miscellaneous.showMultilineSnackBar(mContext, R.string.session_error);
+                Bugsnag.leaveBreadcrumb("Login Session Expired");
                 break;
             case -2:
-                Miscellaneous.showSnackBar(mContext, unavailable_data);
+                Miscellaneous.showSnackBar(mContext, R.string.unavailable_data_error_msg);
+                Bugsnag.leaveBreadcrumb("Data not available");
                 break;
             case -3:
-                Miscellaneous.showSnackBar(mContext, unavailable_timetable);
+                Miscellaneous.showSnackBar(mContext, R.string.unavailable_timetable_error_msg);
+                Bugsnag.leaveBreadcrumb("No TimeTable");
+                break;
+            case -4:
+                new MaterialDialog.Builder(mContext)
+                        .positiveText(android.R.string.ok)
+                        .title(R.string.expired_password_error_title)
+                        .content(R.string.expired_password_error_msg)
+                        .cancelable(false)
+                        .show();
+                Bugsnag.leaveBreadcrumb("Password Expired");
                 break;
             default:
                 break;

@@ -80,7 +80,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class AttendanceListFragment extends ListFragment implements ExpandableListAdapter.SubjectItemExpandedListener{
+public class AttendanceListFragment extends ListFragment implements 
+        ExpandableListAdapter.SubjectItemExpandedListener {
 
     /**
      * The {@link android.support.v4.widget.SwipeRefreshLayout} that detects swipe gestures and
@@ -383,7 +384,7 @@ public class AttendanceListFragment extends ListFragment implements ExpandableLi
                 }
                 else
                     MainActivity.getInstance().updateDrawerHeader();
-                ErrorHelper.showSnackbar(result, mContext);
+                ErrorHelper.handleError(result, mContext);
             }
         };
     }

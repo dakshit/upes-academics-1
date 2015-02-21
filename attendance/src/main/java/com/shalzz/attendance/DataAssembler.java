@@ -58,15 +58,19 @@ public class DataAssembler {
             Resources resources = mContext.getResources();
             String session_error_identifier = resources.getString(R.string.session_error_identifier);
             String http_tag_title = resources.getString(R.string.http_tag_title);
+            String http_tag_div = resources.getString(R.string.http_tag_div);
+            String expired_password = resources.getString(R.string.expired_password);
 
             Document doc = Jsoup.parse(response[0]);
             Elements tddata = doc.select(mContext.getString(R.string.selector_table_data));
             Bugsnag.leaveBreadcrumb("Parsing student details...");
 
-            if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
-            {
-                Bugsnag.leaveBreadcrumb("Login Session Expired");
+            if(doc.getElementsByTag(http_tag_title).size()==0 ||
+                    doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier)) {
                 return -1;
+            }
+            else if(doc.getElementsByClass(http_tag_div).text().equals(expired_password)) {
+                return -4;
             }
             else if (tddata != null && tddata.size() > 0) {
                 int i = 0;
@@ -153,6 +157,7 @@ public class DataAssembler {
         String unavailable_data_identifier = resources.getString(R.string.unavailable_data_identifier);
         String http_tag_title = resources.getString(R.string.http_tag_title);
         String http_tag_div = resources.getString(R.string.http_tag_div);
+        String expired_password = resources.getString(R.string.expired_password);
 
         DatabaseHandler db = new DatabaseHandler(mContext);
 
@@ -168,14 +173,15 @@ public class DataAssembler {
 
         Elements tddata = doc.select(mContext.getString(R.string.selector_table_data));
 
-        if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
-        {
-            Bugsnag.leaveBreadcrumb("Login Session Expired");
+        if(doc.getElementsByTag(http_tag_title).size()==0 ||
+                doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier)) {
             return -1;
         }
         else if(doc.getElementsByClass(http_tag_div).text().equals(unavailable_data_identifier)) {
-            Bugsnag.leaveBreadcrumb("Data not available");
             return -2;
+        }
+        else if(doc.getElementsByClass(http_tag_div).text().equals(expired_password)) {
+            return -4;
         }
         else if (tddata != null && tddata.size() > 0)
         {
@@ -243,6 +249,7 @@ public class DataAssembler {
         String unavailable_timetable_identifier = resources.getString(R.string.unavailable_timetable_identifier);
         String http_tag_title = resources.getString(R.string.http_tag_title);
         String http_tag_div = resources.getString(R.string.http_tag_div);
+        String expired_password = resources.getString(R.string.expired_password);
 
         DatabaseHandler db = new DatabaseHandler(mContext);
 
@@ -265,17 +272,17 @@ public class DataAssembler {
         days.add(fri);
         days.add(sat);
 
-        if(doc.getElementsByTag(http_tag_title).size()==0 || doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier))
-        {
-            Bugsnag.leaveBreadcrumb("Login Session Expired");
+        if(doc.getElementsByTag(http_tag_title).size()==0 ||
+                doc.getElementsByTag(http_tag_title).text().equals(session_error_identifier)) {
             return -1;
         }
         else if(doc.getElementsByClass(http_tag_div).text().equals(unavailable_timetable_identifier)) {
-            Bugsnag.leaveBreadcrumb("No TimeTable");
             return -3;
         }
-        else if (thdata != null && thdata.size() > 0)
-        {
+        else if(doc.getElementsByClass(http_tag_div).text().equals(expired_password)) {
+            return -4;
+        }
+        else if (thdata != null && thdata.size() > 0) {
             int i=0;
             for(Element element : thdata)
             {
