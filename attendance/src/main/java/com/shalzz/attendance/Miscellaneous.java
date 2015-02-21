@@ -152,15 +152,28 @@ public class Miscellaneous {
     /**
      * Material design snack bar
      * @param context activity context
-     * @param msg message to be displayed
+     * @param msgRes Resource id of the message to be displayed
      */
-    public static void showMultilineSnackBar(Context context, String msg) {
+    public static void showSnackBar(Context context, int msgRes) {
+        SnackbarManager.show(
+                Snackbar.with(context)
+                        .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+                        .textColor(context.getResources().getColor(R.color.accent))
+                        .text(context.getString(msgRes)), (Activity) context);
+    }
+
+    /**
+     * Material design snack bar
+     * @param context activity context
+     * @param msgRes Resourse id of the message to be displayed
+     */
+    public static void showMultilineSnackBar(Context context, int msgRes) {
         SnackbarManager.show(
                 Snackbar.with(context)
                         .type(SnackbarType.MULTI_LINE)
                         .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
                         .textColor(context.getResources().getColor(R.color.accent))
-                        .text(msg), (Activity) context);
+                        .text(context.getString(msgRes)), (Activity) context);
     }
 
 	/**
