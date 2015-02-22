@@ -1,6 +1,6 @@
 UPES Academics
 ===========
-UPES Academics Android Application.
+UPES Academics - a student attendance and timetable viewing application for <br> University of Petroleum and Energy studies
 
 <a href="https://play.google.com/store/apps/details?id=com.shalzz.attendance">
   <img alt="Get it on Google Play"
@@ -28,8 +28,8 @@ Use [GitHub issues][2] and [Pull Requests][3].
 
 Donate to keep development going
 
-Bitcoin  - 1G6KuJST6whifh1CjksKF84Sbwj34RbcgR
-Litecoin - LgMNbL7NghShS2t62rFjSpjzsGs8Jro7sV
+Bitcoin  - `1G6KuJST6whifh1CjksKF84Sbwj34RbcgR`<br>
+Litecoin - `LgMNbL7NghShS2t62rFjSpjzsGs8Jro7sV`
 
 ---
 
