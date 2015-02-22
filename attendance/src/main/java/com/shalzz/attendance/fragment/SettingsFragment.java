@@ -109,6 +109,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 
                 transaction.replace(R.id.frame_container, mFragment, MainActivity.FRAGMENT_TAG);
                 transaction.addToBackStack(null);
+                ((MainActivity)getActivity()).mPopSettingsBackStack = true;
 
                 transaction.commit();
 				return true;
@@ -125,6 +126,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 
                 transaction.replace(R.id.frame_container, mFragment, MainActivity.FRAGMENT_TAG);
                 transaction.addToBackStack(null);
+                ((MainActivity)getActivity()).mPopSettingsBackStack = true;
 
                 transaction.commit();
                 return true;

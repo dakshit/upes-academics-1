@@ -105,7 +105,8 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Debug flag
      */
-    private final Boolean DEBUG_FRAGMENTS = true;
+    private final boolean DEBUG_FRAGMENTS = true;
+    public boolean mPopSettingsBackStack;
 
     // Views
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
@@ -311,6 +312,7 @@ public class MainActivity extends ActionBarActivity {
         if (fragment != null) {
             showFragment(fragment);
             selectItem(position);
+            mPopSettingsBackStack = false;
         } else {
             Log.e(mTag, "Error in creating fragment");
         }
@@ -382,10 +384,11 @@ public class MainActivity extends ActionBarActivity {
         }
         // Custom back stack
         else if (shouldPopFromBackStack()) {
-            if(!getFragmentManager().popBackStackImmediate()) {
+            if(getFragmentManager().getBackStackEntryCount() == 0 || !mPopSettingsBackStack) {
                 popFromBackStack();
                 Bugsnag.leaveBreadcrumb("Back: Popping from custom back stack");
-            } else {
+            } else if(mPopSettingsBackStack) {
+                getFragmentManager().popBackStackImmediate();
                 Bugsnag.leaveBreadcrumb("Back: Popping from internal back stack");
             }
         }
